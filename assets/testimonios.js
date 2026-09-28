@@ -1,5 +1,5 @@
 /* =========================================================================
-   Mercado Media Luna — testimonios (portada, /evento y /sabado-26)
+   Mercado Media Luna — testimonios (portada y /evento)
    Una sola tarjeta por comprador: foto, estrellas, sus palabras, nombre y
    rubro. Al tocar la foto se reproduce su video ahí mismo.
    · Las citas son textuales, sacadas del video de cada uno.

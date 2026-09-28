@@ -650,6 +650,10 @@ input[type=range]{ width:100%; accent-color:var(--accent); height:32px }
   .tgrid{
     display:flex; overflow-x:auto; scroll-snap-type:x mandatory; gap:14px;
     margin-inline:calc(var(--gutter) * -1); padding:0 var(--gutter) 10px; scroll-padding-inline:var(--gutter);
+    /* desde el inicio: centrado, lo que se sale por la izquierda no se puede
+       deslizar (la tarjeta de la izquierda quedaba cortada e inalcanzable) */
+    justify-content:flex-start;
+    overscroll-behavior-x:contain; -webkit-overflow-scrolling:touch;
   }
   .tgrid .tcard{ flex:0 0 min(80vw, 320px); scroll-snap-align:start }
 }
@@ -1087,7 +1091,7 @@ body.en-embudo .wa-float{ opacity:0; visibility:hidden; pointer-events:none; tra
 .pagina-evento .hablemos-copy .small a{ color:var(--accent) }
 
 /* =========================================================================
-   /sabado-26 — evento en vivo de una sola fecha (desde el 25/09/2026)
+   Página del evento con oferta (nació como /sabado-26 el 25/09/2026; desde el 28/09 es /evento)
    Las clases van con prefijo sab- para no pisar nada del resto del sitio.
    ========================================================================= */
 .ev-hero{ position:relative }
@@ -1096,7 +1100,8 @@ body.en-embudo .wa-float{ opacity:0; visibility:hidden; pointer-events:none; tra
 .sab-hero{ padding-bottom:clamp(72px,9vh,104px) }
 .sab-hero h1{ font-size:clamp(29px,3.9vw,46px); max-width:22ch }
 
-/* según la fase del evento (evento.js pone data-fase en <body>) */
+/* según la fase del evento (evento.js pone data-fase en <body>; "terminado"
+   solo existe para un evento de una sola fecha) */
 .sab-solo-fin{ display:none }
 body[data-fase="terminado"] .sab-solo-activo{ display:none !important }
 body[data-fase="terminado"] .sab-solo-fin{ display:block }
@@ -1211,7 +1216,7 @@ body[data-fase="terminado"] .sab-solo-fin{ display:block }
 .sab-terminado .btn{ margin-top:8px }
 
 /* =========================================================================
-   Registro con protagonismo (25/09/2026) — portada, /evento y /sabado-26
+   Registro con protagonismo (25/09/2026) — portada y /evento
    El registro es la conversión de todas las páginas, y con el mismo azul
    que el resto se perdía. Aquí cambia de escenario: cinta ámbar arriba,
    resplandor cálido detrás del chat y un chat con cabecera ámbar. El ámbar
@@ -1271,7 +1276,7 @@ body[data-fase="terminado"] .sab-solo-fin{ display:block }
 @media (max-width:899px){ .chat{ border-radius:14px } }
 
 /* =========================================================================
-   /sabado-26 — el video de introducción (se reproduce solo, sin sonido)
+   /evento — el video de introducción (arranca solo)
    ========================================================================= */
 .sab-video{ margin:0 0 18px; max-width:560px }
 @media (min-width:1040px){ .sab-video{ margin-left:auto } }
@@ -1337,3 +1342,21 @@ body[data-fase="terminado"] .sab-solo-fin{ display:block }
 @keyframes sonido-llama{ 0%,100%{ box-shadow:0 12px 34px rgba(4,12,22,.55), 0 0 0 6px rgba(242,169,59,.25) } 50%{ box-shadow:0 12px 34px rgba(4,12,22,.55), 0 0 0 12px rgba(242,169,59,.12) } }
 @media (prefers-reduced-motion:reduce){ .sab-sonido{ animation:none } }
 .sab-video .sab-video-nota{ margin:10px 0 0; text-align:center; font-weight:700; color:var(--accent) }
+
+/* =========================================================================
+   /evento — el cupo del descuento es un total que se agota (28/09/2026)
+   evento.js pone data-promo="activa|agotada" en <body> según
+   config.js → evento.cupo.quedan. Todo lo que lleva .promo es de la oferta.
+   ========================================================================= */
+.promo-fin{ display:none }
+body[data-promo="agotada"] .promo{ display:none !important }
+body[data-promo="agotada"] .promo-fin{ display:block }
+body[data-promo-puestos="agotado"] .sab-precio{ display:none }
+/* agotada del todo: la columna de la oferta desaparece y el hero queda en una */
+body[data-promo="agotada"] .ev-hero-video{ display:none }
+@media (min-width:1040px){ body[data-promo="agotada"] .sab-hero .ev-hero-inner{ grid-template-columns:minmax(0,1fr) } }
+p.sab-cupo{ margin:14px 0 0; padding:10px 12px; border-radius:8px; background:var(--accent-muted); color:var(--text-primary); font-weight:700; font-size:14px; line-height:1.4 }
+.sab-cupo[hidden]{ display:none }
+.sab-condiciones li[data-cupo]{ font-weight:700; color:var(--text-primary) }
+.sab-prod.agotado .sab-prod-evento{ display:none }
+.sab-prod-agotado{ margin:0 0 10px; display:inline-block; padding:4px 10px; border-radius:999px; background:var(--canvas-deep); border:1px solid var(--rule-strong); color:var(--text-primary); font-weight:800; font-size:13px; letter-spacing:.02em }

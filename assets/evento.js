@@ -1,7 +1,9 @@
 /* =========================================================================
-   Mercado Media Luna — páginas de evento: /evento (todos los miércoles) y
-   /sabado-26 (una sola fecha). Cada página elige su configuración con
-   <body data-evento="evento|sabado"> → assets/config.js
+   Mercado Media Luna — la página del evento: /evento, todos los miércoles
+   (desde el 28/09/2026 es la página del sábado 26 con la fecha de los
+   miércoles). La configuración sale de <body data-evento="evento"> →
+   assets/config.js. También sirve para un evento de una sola fecha si su
+   bloque trae "fecha" y "cierreOferta".
    Autocontenida: no depende de app.js ni de embudo.js, que son del hero
    y del formulario largo de la portada.
    Reglas del proyecto que se respetan aquí:
@@ -9,7 +11,8 @@
      de entrega ni disponibilidad;
    · la web no guarda nada: el mensaje lo manda el visitante desde su propio
      WhatsApp;
-   · YouTube no se carga hasta que el visitante toca reproducir.
+   · YouTube: los testimonios se cargan al tocar la foto; el video de
+     introducción arranca solo (ver 3b).
    ========================================================================= */
 (function () {
   'use strict';
@@ -41,43 +44,150 @@
   }
 
   /* =====================================================================
-     2 · El próximo miércoles a las 7:30 p.m., hora de Lima
+     2 · La fecha: el próximo miércoles a las 7:30 p.m., hora de Lima
      Perú no cambia de hora en todo el año: el desfase con UTC es fijo,
      así que la cuenta sale igual desde cualquier país.
+     Dos fases, como tuvo el sábado 26:
+       antes  → cuenta hasta las 7:30 p.m. del miércoles;
+       envivo → desde las 7:30 p.m. hasta las 11:59:59 p.m. de ese miércoles,
+                cuenta hasta el cierre del descuento.
+     Pasada la medianoche, la página pasa sola al miércoles siguiente.
      ===================================================================== */
   var LIMA_MIN = -5 * 60;                 // America/Lima = UTC-5, sin horario de verano
   var DIA = EV.diaSemana == null ? 3 : EV.diaSemana;
   var HORA = EV.hora == null ? 19 : EV.hora;
   var MINUTO = EV.minuto == null ? 30 : EV.minuto;
-  var GRACIA_MS = 2 * 60 * 60 * 1000;     // mientras dura la sesión sigue diciendo "hoy"
+  var SEMANA_MS = 7 * 86400000;
+  var GRACIA_MS = 2 * 60 * 60 * 1000;     // solo para un evento de fecha fija sin cierreOferta
 
-  function proximaSesion(ahora) {
-    var lima = new Date(ahora.getTime() + LIMA_MIN * 60000);   // reloj de pared de Lima
+  function relojLima(d) { return new Date(d.getTime() + LIMA_MIN * 60000); }   // reloj de pared de Lima
+  function desdeLima(ms) { return new Date(ms - LIMA_MIN * 60000); }            // instante real
+
+  /* la sesión de esta semana si todavía no cerró; si ya cerró, la siguiente */
+  function sesionSemanal(ahora) {
+    var lima = relojLima(ahora);
     var faltanDias = (DIA - lima.getUTCDay() + 7) % 7;
-    var destino = Date.UTC(lima.getUTCFullYear(), lima.getUTCMonth(), lima.getUTCDate() + faltanDias, HORA, MINUTO, 0);
-    if (destino <= lima.getTime() - GRACIA_MS) destino += 7 * 86400000;
-    return new Date(destino - LIMA_MIN * 60000);               // instante real
+    var y = lima.getUTCFullYear(), mes = lima.getUTCMonth(), dia = lima.getUTCDate() + faltanDias;
+    var ini = Date.UTC(y, mes, dia, HORA, MINUTO, 0);
+    var fin = Date.UTC(y, mes, dia, 23, 59, 59);
+    if (fin <= lima.getTime()) { ini += SEMANA_MS; fin += SEMANA_MS; }
+    return { inicio: desdeLima(ini), cierre: desdeLima(fin) };
   }
+  function proximaSesion(ahora) { return sesionSemanal(ahora).inicio; }
 
-  /* Evento de fecha fija (el sábado 26): tres fases.
-     antes     → cuenta hasta el inicio;
-     envivo    → desde el inicio hasta el cierre de la oferta, cuenta hasta el cierre;
-     terminado → ya pasó: la página lo dice y manda al evento de los miércoles. */
+  /* Evento de una sola fecha (así fue el sábado 26): tres fases, y la tercera,
+     terminado, dice que ya pasó. Sin "fecha" en la configuración, semanal. */
   var FECHA_FIJA = EV.fecha ? new Date(EV.fecha) : null;
   var CIERRE = EV.cierreOferta ? new Date(EV.cierreOferta) : null;
   function fase(ahora) {
-    if (!FECHA_FIJA) return { fase: 'semanal', destino: proximaSesion(ahora) };
-    var t = ahora.getTime(), ini = FECHA_FIJA.getTime();
-    var fin = CIERRE ? CIERRE.getTime() : ini + GRACIA_MS;
-    if (t < ini) return { fase: 'antes', destino: FECHA_FIJA };
-    if (t < fin) return { fase: 'envivo', destino: new Date(fin) };
-    return { fase: 'terminado', destino: null };
+    var t = ahora.getTime();
+    if (FECHA_FIJA) {
+      var ini = FECHA_FIJA.getTime();
+      var fin = CIERRE ? CIERRE.getTime() : ini + GRACIA_MS;
+      var fija = { inicio: FECHA_FIJA, cierre: new Date(fin) };
+      if (t < ini) return { fase: 'antes', destino: FECHA_FIJA, sesion: fija };
+      if (t < fin) return { fase: 'envivo', destino: new Date(fin), sesion: fija };
+      return { fase: 'terminado', destino: null, sesion: fija };
+    }
+    var s = sesionSemanal(ahora);
+    if (t < s.inicio.getTime()) return { fase: 'antes', destino: s.inicio, sesion: s };
+    return { fase: 'envivo', destino: s.cierre, sesion: s };
+  }
+  function sesionSiguiente(s) { return sesionSemanal(new Date(s.cierre.getTime() + 1000)); }
+
+  /* "miércoles 30 de septiembre", armado a mano en hora de Lima: igual en
+     todos los navegadores y sin depender de Intl */
+  var DIAS = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
+  var MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+  function textoFecha(d, conAnio) {
+    var l = relojLima(d);
+    return DIAS[l.getUTCDay()] + ' ' + l.getUTCDate() + ' de ' + MESES[l.getUTCMonth()] + (conAnio ? ' de ' + l.getUTCFullYear() : '');
+  }
+  function mayuscula(t) { return t.charAt(0).toUpperCase() + t.slice(1); }
+
+  /* {fecha} {hora} {fechaSiguiente} en los textos de config.js */
+  function rellenar(t, f) {
+    if (!t) return t;
+    f = f || fase(new Date());
+    return String(t)
+      .replace(/\{fecha\}/g, textoFecha(f.sesion.inicio))
+      .replace(/\{fechaSiguiente\}/g, FECHA_FIJA ? '' : textoFecha(sesionSiguiente(f.sesion).inicio))
+      .replace(/\{hora\}/g, HORA_TXT);
   }
 
-  var fmtFecha;
-  try {
-    fmtFecha = new Intl.DateTimeFormat('es-PE', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'America/Lima' });
-  } catch (e) { fmtFecha = null; }
+  /* <span data-fecha> en la página: "miércoles 30 de septiembre";
+     data-fecha="anio" le suma el año, "mayus" empieza con mayúscula. */
+  var fechaPintada = null;
+  function pintarFechas(d) {
+    if (fechaPintada === d.getTime()) return;
+    fechaPintada = d.getTime();
+    $$('[data-fecha]').forEach(function (el) {
+      var modo = el.getAttribute('data-fecha') || '';
+      var t = textoFecha(d, /anio/.test(modo));
+      el.textContent = /mayus/.test(modo) ? mayuscula(t) : t;
+    });
+  }
+
+  /* =====================================================================
+     2b · El cupo del descuento: 10 puestos y 2 tiendas EN TOTAL, hasta
+     agotarlos (config.js → evento.cupo). Sin números, la página dice solo el
+     total; con números agrega "Quedan…"; en 0 y 0 deja de ofrecerlo.
+     ===================================================================== */
+  function numeroCupo(v) {
+    if (v === null || v === undefined || v === '') return null;
+    var n = Number(v);
+    return isFinite(n) && n >= 0 ? Math.floor(n) : null;
+  }
+  function estadoCupo() {
+    var cfg = EV.cupo;
+    if (!cfg || !cfg.total) return { promo: false, conocido: false, agotada: false };
+    var q = cfg.quedan || {};
+    var p = numeroCupo(q.puestos), ti = numeroCupo(q.tiendas);
+    if (p === null || ti === null) return { promo: true, conocido: false, agotada: false, total: cfg.total };
+    p = Math.min(p, cfg.total.puestos); ti = Math.min(ti, cfg.total.tiendas);
+    var agotada = p === 0 && ti === 0;
+    /* "quedan" solo con fecha de corte; el agotado total vale sin ella */
+    if (!agotada && !fechaDeIso(q.al)) return { promo: true, conocido: false, agotada: false, total: cfg.total };
+    return { promo: true, conocido: true, puestos: p, tiendas: ti, al: q.al || '', agotada: agotada, total: cfg.total };
+  }
+  function cuantos(n, uno, varios) { return n + ' ' + (n === 1 ? uno : varios); }
+  function quedan(n) { return n === 1 ? 'queda' : 'quedan'; }
+  function fechaDeIso(iso) {
+    var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(iso || ''));
+    return m ? Number(m[3]) + ' de ' + MESES[Number(m[2]) - 1] + ' de ' + m[1] : '';
+  }
+  function textoCupo(e) {
+    var al = fechaDeIso(e.al);
+    var cola = al ? ' (al ' + al + ').' : '.';
+    if (e.puestos === 0) return 'Los puestos de la promoción se agotaron. Con el descuento ' + quedan(e.tiendas) + ' ' + cuantos(e.tiendas, 'tienda', 'tiendas') + cola;
+    if (e.tiendas === 0) return 'Las tiendas de la promoción se agotaron. Con el descuento ' + quedan(e.puestos) + ' ' + cuantos(e.puestos, 'puesto', 'puestos') + cola;
+    return 'Con el descuento ' + quedan(e.puestos + e.tiendas) + ' ' + cuantos(e.puestos, 'puesto', 'puestos') + ' y ' + cuantos(e.tiendas, 'tienda', 'tiendas') + cola;
+  }
+  var CUPO = estadoCupo();
+  (function pintarCupo() {
+    if (!CUPO.promo) return;
+    document.body.setAttribute('data-promo', CUPO.agotada ? 'agotada' : 'activa');
+    if (CUPO.agotada && $('#oferta') && $('#oferta-fin')) $('#oferta').setAttribute('aria-labelledby', 'oferta-fin');
+    if (!CUPO.conocido || CUPO.agotada) return;
+    $$('[data-cupo]').forEach(function (el) { el.textContent = textoCupo(CUPO); el.hidden = false; });
+    if (CUPO.puestos === 0) document.body.setAttribute('data-promo-puestos', 'agotado');
+    [['puestos', CUPO.puestos], ['tiendas', CUPO.tiendas]].forEach(function (par) {
+      var tarjeta = $('[data-cupo-tipo="' + par[0] + '"]');
+      if (!tarjeta || par[1] !== 0) return;
+      tarjeta.classList.add('agotado');
+      var aviso = document.createElement('p');
+      aviso.className = 'sab-prod-agotado';
+      aviso.textContent = 'Agotado en esta promoción';
+      tarjeta.insertBefore(aviso, tarjeta.querySelector('dl'));
+    });
+  })();
+
+  /* la sesión para la que uno se registra: la de la fase, salvo con la
+     promoción agotada y la transmisión de hoy ya empezada, que es la siguiente */
+  function sesionDeRegistro(f) {
+    return (CUPO.agotada && !FECHA_FIJA && f.fase === 'envivo') ? sesionSiguiente(f.sesion) : f.sesion;
+  }
+  pintarFechas(sesionDeRegistro(fase(new Date())).inicio);
 
   var cuenta = $('#cuenta');
   if (cuenta) {
@@ -89,20 +199,37 @@
     var elVoz = $('#cuenta-voz', cuenta);
     var elRotulo = $('#cuenta-rotulo', cuenta);
     var rotuloOriginal = elRotulo ? elRotulo.innerHTML : '';
-    var sesion = proximaSesion(new Date());
     var timer = null;
-    var faseActual = null;
+    var faseActual = null, claveActual = null;
 
-    /* fecha fija: rótulo y estado de la página según la fase */
-    function pintarFija(f, ahora) {
-      if (f.fase !== faseActual) {
+    function pintar() {
+      var ahora = new Date();
+      var f = fase(ahora);
+      /* con la promoción agotada, en vivo ya no hay cierre que contar: se
+         cuenta hasta la transmisión siguiente */
+      var sinPromo = CUPO.agotada && f.fase === 'envivo';
+      var destino = !sinPromo ? f.destino : FECHA_FIJA ? ahora : sesionSiguiente(f.sesion).inicio;
+      var clave = f.fase + '|' + f.sesion.inicio.getTime();
+      if (clave !== claveActual) {
+        claveActual = clave;
         faseActual = f.fase;
         document.body.setAttribute('data-fase', f.fase);
+        pintarFechas(sesionDeRegistro(f).inicio);
         if (elRotulo) {
-          if (f.fase === 'antes') elRotulo.innerHTML = rotuloOriginal;
-          else elRotulo.textContent = f.fase === 'envivo' ? (EV.rotuloEnVivo || 'En vivo ahora.') : (EV.rotuloTerminado || 'Este evento ya terminó.');
+          if (f.fase === 'antes') {
+            /* innerHTML crea nodos nuevos: hay que volver a buscar la fecha */
+            elRotulo.innerHTML = rotuloOriginal;
+            elFecha = $('#cuenta-fecha', cuenta);
+          } else if (f.fase === 'envivo') {
+            elRotulo.textContent = rellenar(!sinPromo ? (EV.rotuloEnVivo || 'En vivo ahora.')
+              : FECHA_FIJA ? (EV.rotuloEnVivoSinPromoFija || 'La transmisión ya empezó.')
+              : (EV.rotuloEnVivoSinPromo || 'La transmisión de hoy ya empezó.'), f);
+          } else {
+            elRotulo.textContent = EV.rotuloTerminado || 'Este evento ya terminó.';
+          }
         }
-        cuenta.classList.toggle('cuenta-ahora', f.fase === 'envivo');
+        if (f.fase === 'antes' && elFecha) elFecha.textContent = textoFecha(f.sesion.inicio);
+        cuenta.classList.toggle('cuenta-ahora', f.fase === 'envivo' && !sinPromo);
         cuenta.classList.toggle('cuenta-fin', f.fase === 'terminado');
         if (f.fase === 'terminado' && typeof pausarVideoIntro === 'function') pausarVideoIntro();
       }
@@ -112,7 +239,7 @@
         if (timer) { clearInterval(timer); timer = null; }
         return;
       }
-      var falta = Math.max(0, f.destino.getTime() - ahora.getTime());
+      var falta = Math.max(0, destino.getTime() - ahora.getTime());
       var seg = Math.floor(falta / 1000);
       var d = Math.floor(seg / 86400), h = Math.floor(seg % 86400 / 3600);
       var m = Math.floor(seg % 3600 / 60), s = seg % 60;
@@ -120,38 +247,14 @@
       if (campos.h) campos.h.textContent = h;
       if (campos.m) campos.m.textContent = m;
       if (campos.s) campos.s.textContent = s;
+      /* el resumen hablado no es una región viva: se deja escrito y se
+         refresca en silencio, para no interrumpir cada segundo */
       if (elVoz) {
         elVoz.textContent = f.fase === 'antes'
-          ? 'Faltan ' + d + ' días, ' + h + ' horas y ' + m + ' minutos para el evento.'
-          : 'El evento empezó. La oferta vence en ' + h + ' horas y ' + m + ' minutos.';
-      }
-    }
-
-    function textoFecha(d) {
-      if (!fmtFecha) return 'miércoles';
-      return fmtFecha.format(d);
-    }
-
-    function pintar() {
-      var ahora = new Date();
-      if (FECHA_FIJA) { pintarFija(fase(ahora), ahora); return; }
-      if (ahora.getTime() > sesion.getTime() + GRACIA_MS) sesion = proximaSesion(ahora);
-      var falta = Math.max(0, sesion.getTime() - ahora.getTime());
-      var seg = Math.floor(falta / 1000);
-      var d = Math.floor(seg / 86400), h = Math.floor(seg % 86400 / 3600);
-      var m = Math.floor(seg % 3600 / 60), s = seg % 60;
-      if (campos.d) campos.d.textContent = d;
-      if (campos.h) campos.h.textContent = h;
-      if (campos.m) campos.m.textContent = m;
-      if (campos.s) campos.s.textContent = s;
-      cuenta.classList.toggle('cuenta-ahora', falta === 0);
-      if (elFecha) elFecha.textContent = falta === 0 ? 'hoy' : textoFecha(sesion);
-      /* el resumen hablado no es una región viva: se deja escrito una vez y
-         se refresca en silencio, para no interrumpir cada segundo */
-      if (elVoz) {
-        elVoz.textContent = falta === 0
-          ? 'La sesión de hoy empieza a las ' + HORA_TXT + ', hora de Perú.'
-          : 'Faltan ' + d + ' días, ' + h + ' horas y ' + m + ' minutos para la sesión del ' + textoFecha(sesion) + '.';
+          ? 'Faltan ' + cuantos(d, 'día', 'días') + ', ' + cuantos(h, 'hora', 'horas') + ' y ' + cuantos(m, 'minuto', 'minutos') + ' para el evento del ' + textoFecha(f.sesion.inicio) + ', ' + HORA_TXT + ', hora de Perú.'
+          : sinPromo
+            ? (FECHA_FIJA ? 'La transmisión ya empezó.' : 'La transmisión de hoy ya empezó. La siguiente es en ' + cuantos(d, 'día', 'días') + ', ' + cuantos(h, 'hora', 'horas') + ' y ' + cuantos(m, 'minuto', 'minutos') + '.')
+            : 'El evento empezó. La oferta vence en ' + cuantos(h, 'hora', 'horas') + ' y ' + cuantos(m, 'minuto', 'minutos') + '.';
       }
     }
 
@@ -198,7 +301,7 @@
   }
 
   /* =====================================================================
-     3b · Video de introducción que arranca solo (página del sábado)
+     3b · Video de introducción que arranca solo
      Se configura con un enlace de YouTube en config.js → <evento>.videoIntro.
      Intenta arrancar con sonido; donde el navegador no lo deja, arranca sin
      sonido y el primer toque en la página lo activa (ver montarVideoIntro).
@@ -428,6 +531,12 @@
   var atras = $('.chat-atras', raiz);
   zona.tabIndex = -1;
 
+  /* una sola sesión para todo el registro: la pregunta, el resumen y el
+     mensaje de WhatsApp dicen el mismo miércoles aunque la página quede abierta
+     al pasar la medianoche */
+  var fChat = fase(new Date());
+  var F_CHAT = { fase: fChat.fase, sesion: sesionDeRegistro(fChat) };
+
   var PIDE_DOC = EV.pedirDocumento === 'obligatorio' ? 'obligatorio'
     : EV.pedirDocumento === 'no' ? 'no' : 'opcional';
 
@@ -464,7 +573,7 @@
         extranjero: 'Sin problema. Toma en cuenta que la sesión es a las ' + HORA_TXT + ' hora de Perú.'
       }
     },
-    EV.preguntaAsistencia || {
+    asistencia(EV.preguntaAsistencia) || {
       id: 'miercoles', texto: '¿Puedes este miércoles a las 7:30 p.m.?', rotulo: 'Este miércoles',
       opciones: [
         { v: 'si', t: 'Sí, cuenta conmigo' },
@@ -478,10 +587,18 @@
     }
   ];
 
+  /* la pregunta de asistencia de config.js, con {fecha} y {hora} ya puestos */
+  function asistencia(p) {
+    if (!p) return null;
+    var eco = {}, origen = (CUPO.agotada && p.ecoSinPromo) ? Object.assign({}, p.eco, p.ecoSinPromo) : (p.eco || {});
+    Object.keys(origen).forEach(function (k) { eco[k] = rellenar(origen[k], F_CHAT); });
+    return { id: p.id, texto: rellenar(p.texto, F_CHAT), rotulo: rellenar(p.rotulo, F_CHAT), opciones: p.opciones, eco: eco };
+  }
+
   var ROTULOS = { uso: 'El puesto', alquiler: 'Hoy', zona: 'Me conecto desde' };
   ROTULOS[PREGUNTAS[3].id] = PREGUNTAS[3].rotulo || 'Asistencia';
 
-  var SALUDO = EV.saludo || [
+  var SALUDO = EV.saludo ? EV.saludo.map(function (t) { return rellenar(t, F_CHAT); }) : [
     'Hola. Este es el registro automático del evento de los miércoles.',
     'Son cuatro preguntas rápidas y tu nombre. Menos de un minuto.'
   ];
@@ -734,7 +851,7 @@
 
   function mensajeWhatsApp() {
     return 'Hola, soy ' + contacto.nombre + ' ' + contacto.apellidos + '. ' +
-      (EV.mensajeRegistro || 'Quiero registrarme al evento informativo de los miércoles, 7:30 p.m.') + ' (' + etiquetaOrigen() + ').\n' +
+      (rellenar(EV.mensajeRegistro, F_CHAT) || 'Quiero registrarme al evento informativo de los miércoles, 7:30 p.m.') + ' (' + etiquetaOrigen() + ').\n' +
       lineasResumen().map(function (l) { return '• ' + l; }).join('\n') +
       (contacto.documento ? '\n• ' + (esDeFuera() ? 'Documento' : 'DNI') + ': ' + contacto.documento : '');
   }
@@ -775,7 +892,7 @@
         if (window.MMLmedir) window.MMLmedir.lead('evento_whatsapp');
         var miTurno = ++turno;
         setTimeout(function () {
-          decir([{ texto: EV.confirmacion || 'Listo. Si se abrió tu WhatsApp, dale enviar y te confirmamos el lugar.', paso: 'envio' }], miTurno);
+          decir([{ texto: rellenar(EV.confirmacion, F_CHAT) || 'Listo. Si se abrió tu WhatsApp, dale enviar y te confirmamos el lugar.', paso: 'envio' }], miTurno);
         }, 400);
       });
       acciones.appendChild(a);
@@ -827,5 +944,5 @@
   actualizarCabecera();
 
   /* para las pruebas automáticas: solo funciones, ningún dato del visitante */
-  window.__evento = { proximaSesion: proximaSesion, fase: fase, mensaje: mensajeWhatsApp, idDeYoutube: idDeYoutube, montarVideoIntro: montarVideoIntro, estadoVideoIntro: estadoVideoIntro };
+  window.__evento = { proximaSesion: proximaSesion, sesionSemanal: sesionSemanal, fase: fase, textoFecha: textoFecha, rellenar: rellenar, estadoCupo: estadoCupo, textoCupo: textoCupo, mensaje: mensajeWhatsApp, idDeYoutube: idDeYoutube, montarVideoIntro: montarVideoIntro, estadoVideoIntro: estadoVideoIntro };
 })();

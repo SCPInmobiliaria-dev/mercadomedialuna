@@ -457,7 +457,7 @@
   }
 
   /* 6 · Los testimonios los arma assets/testimonios.js, compartido con
-     /evento y /sabado-26. */
+     /evento. */
 
   /* ---------------------------------------------------------------------
      7 · Walter en video: su foto hace de portada y YouTube se pide recién

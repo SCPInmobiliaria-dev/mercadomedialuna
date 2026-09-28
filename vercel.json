@@ -41,10 +41,6 @@
     {
       "source": "/evento",
       "destination": "/evento.html"
-    },
-    {
-      "source": "/sabado-26",
-      "destination": "/sabado-26.html"
     }
   ],
   "redirects": [
@@ -60,28 +56,58 @@
       "permanent": true
     },
     {
+      "source": "/sabado-26",
+      "destination": "/evento",
+      "permanent": false
+    },
+    {
       "source": "/sabado-26/",
-      "destination": "/sabado-26",
+      "destination": "/evento",
+      "permanent": false
+    },
+    {
+      "source": "/sabado-26.html",
+      "destination": "/evento",
       "permanent": false
     },
     {
       "source": "/sabado26",
-      "destination": "/sabado-26",
+      "destination": "/evento",
+      "permanent": false
+    },
+    {
+      "source": "/sabado26/",
+      "destination": "/evento",
       "permanent": false
     },
     {
       "source": "/sabado",
-      "destination": "/sabado-26",
+      "destination": "/evento",
+      "permanent": false
+    },
+    {
+      "source": "/sabado/",
+      "destination": "/evento",
       "permanent": false
     },
     {
       "source": "/Sabado-26",
-      "destination": "/sabado-26",
+      "destination": "/evento",
       "permanent": false
     },
     {
       "source": "/SABADO-26",
-      "destination": "/sabado-26",
+      "destination": "/evento",
+      "permanent": false
+    },
+    {
+      "source": "/Sabado",
+      "destination": "/evento",
+      "permanent": false
+    },
+    {
+      "source": "/SABADO",
+      "destination": "/evento",
       "permanent": false
     }
   ]

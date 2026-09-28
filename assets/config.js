@@ -54,7 +54,7 @@ window.MML = {
   },
 
   /* ---- 4 · Testimonios ----------------------------------------------------
-     Una tarjeta por comprador en la portada, /evento y /sabado-26: foto,
+     Una tarjeta por comprador en la portada y en /evento: foto,
      estrellas, sus palabras, nombre y rubro. Al tocar la foto se reproduce
      el video (assets/testimonios.js).
      REGLAS DEL PROYECTO:
@@ -114,67 +114,87 @@ window.MML = {
     youtubeId: 'ZJXQzHrq6fE',
   },
 
-  /* ---- 4b · La página del evento (evento.html) ----------------------------
-     El evento se repite todos los miércoles, así que aquí no va ninguna
-     fecha: la página calcula sola cuál es el próximo miércoles en hora de
-     Lima. Para cambiar el día o la hora se cambian estas dos líneas. */
+  /* ---- 4b · El evento en vivo de los miércoles (evento.html → /evento) ----
+     Desde el 28/09/2026 es la página del sábado 26 con la fecha de los
+     miércoles, por decisión de Patriccio ("manteniendo todo como está, solo
+     cambiando la fecha"). La fecha no se escribe en ningún lado: la página
+     calcula sola el próximo miércoles en hora de Lima. De 7:30 p.m. a las
+     11:59 p.m. de ese miércoles cuenta hasta el cierre del descuento; pasada la
+     medianoche pasa sola al miércoles siguiente. No hay que tocar nada cada
+     semana.
+     En los textos, {fecha} se reemplaza por "miércoles 30 de septiembre" y
+     {hora} por la hora de abajo.
+     El descuento de US$2,000 es un dato de precio: está registrado en
+     00-fuente-de-verdad/precios-vigentes.md §2b (sábado) y §2c (miércoles). */
   evento: {
     diaSemana: 3,              // 0 domingo, 3 miércoles
-    hora: 19, minuto: 30,      // 7:30 p.m., hora de Lima
-    /* El video que estructura la información. Vacío = la página muestra el
-       espacio marcado como pendiente y sigue funcionando y convirtiendo. */
-    youtubeId: '',             // [PENDIENTE: id del video del evento en YouTube]
-    /* 'opcional' → se puede saltar (recomendado arriba del embudo: pedir el
-       documento antes de la primera conversación cuesta registros).
-       'obligatorio' → no se puede saltar.  'no' → ni se pregunta. */
-    pedirDocumento: 'opcional',
-    /* (Los testimonios escritos pasaron a ser parte de las tarjetas de
-       testimonios, arriba en §4, el 25/09/2026.) */
-  },
-
-  /* ---- 4c · El evento en vivo del sábado 26 (sabado-26.html) ---------------
-     Fecha, hora (9:00 p.m.), modalidad (en vivo por YouTube, Instagram y
-     TikTok) y condiciones del descuento (solo para quienes asistan y se
-     unan a la comunidad, hasta la medianoche del sábado): dados por
-     Patriccio el 25/09/2026. El descuento de US$2,000 es un dato de
-     precio y está registrado en 00-fuente-de-verdad/precios-vigentes.md §2b.
-     Pasada la medianoche la página cambia sola: dice que el evento terminó
-     y manda al de los miércoles. No hay que tocar nada. */
-  sabado: {
-    fecha: '2026-09-26T21:00:00-05:00',          // inicio, hora de Perú
-    cierreOferta: '2026-09-26T23:59:59-05:00',   // vence el descuento
-    horaTexto: '9:00 p.m.',
+    hora: 19, minuto: 30,      // 7:30 p.m., hora de Lima (Patriccio, 28/09/2026)
+    horaTexto: '7:30 p.m.',
+    /* CUPO DEL DESCUENTO: 10 puestos y 2 tiendas EN TOTAL entre todos los
+       miércoles, hasta agotarlos (Patriccio, 28/09/2026: no se renueva cada
+       semana). Después de cada evento, anotar aquí cuántos quedan y la fecha:
+         quedan: { puestos: 7, tiendas: 2, al: '2026-10-01' }
+       · null (como está) = no se sabe cuántos quedan: la página dice solo el
+         total, "10 puestos y 2 tiendas en total, hasta agotarlos", y nunca
+         "quedan". [PENDIENTE: ¿el sábado 26 se separó alguna unidad con el
+         descuento? Ver precios-vigentes.md §2c]
+       · con números Y fecha (al: 'AAAA-MM-DD') = la página agrega "Con el
+         descuento quedan N puestos y M tiendas (al <fecha>)". Sin fecha no
+         lo publica: un "quedan" sin fecha envejece sin que se note. Si un
+         tipo llega a 0, su tarjeta dice "Agotado".
+       · 0 puestos y 0 tiendas = la promoción terminó: la página deja de
+         ofrecer el descuento y sigue invitando a la transmisión. OJO: la
+         vista previa (evento.html, <meta name="description"> y
+         <meta property="og:title">) no cambia sola: ese día hay que
+         quitarle a mano el descuento. */
+    cupo: {
+      total: { puestos: 10, tiendas: 2 },
+      quedan: null
+    },
     /* VIDEO DE INTRODUCCIÓN: pegar aquí el enlace de YouTube tal cual (sirve
        el normal, el corto youtu.be o el de Shorts). Aparece arriba en la
        página y arranca solo, con sonido donde el navegador lo deja (si no,
        sin sonido hasta el primer toque). Vacío = el espacio no se muestra.
        formato: 'horizontal' (16:9) o 'vertical' (Shorts, 9:16). */
-    videoIntro: { enlace: 'https://youtu.be/CIRhBK0UnQI', formato: 'horizontal' },   // "Evento 26 de Septiembre", entregado por Patriccio el 26/09/2026
-    videoIntroTitulo: 'Video de introducción del evento del sábado 26',
+    videoIntro: { enlace: 'https://youtu.be/CIRhBK0UnQI', formato: 'horizontal' },   // "Evento 26 de Septiembre", entregado por Patriccio el 26/09/2026. [PENDIENTE: su título en YouTube dice "26 de Septiembre" y se ve arriba del video]
+    videoIntroTitulo: 'Video de introducción del evento de los miércoles',
+    /* 'opcional' → se puede saltar (recomendado arriba del embudo: pedir el
+       documento antes de la primera conversación cuesta registros).
+       'obligatorio' → no se puede saltar.  'no' → ni se pregunta. */
     pedirDocumento: 'opcional',
     /* no dice "estamos en vivo": nadie fijó cuánto dura la transmisión, y entre
        el final y la medianoche sería falso */
-    rotuloEnVivo: 'El evento empezó a las 9:00 p.m. El descuento de US$2,000 (S/6,740) en 10 puestos y 2 tiendas vence a la medianoche, hora de Perú. Quedan:',
-    rotuloTerminado: 'El evento del sábado 26 ya terminó y el descuento venció. Los miércoles a las 7:30 p.m. seguimos explicando el mercado en vivo.',
+    rotuloEnVivo: 'El evento de hoy empezó a las {hora} El descuento de US$2,000 (S/6,740) vence a la medianoche, hora de Perú. Para el cierre faltan:',
+    /* cuando la promoción se agota (cupo.quedan en 0 y 0) y la transmisión
+       de hoy ya empezó */
+    rotuloEnVivoSinPromo: 'La transmisión de hoy empezó a las {hora}, hora de Perú. La siguiente es el {fechaSiguiente}.',
+    rotuloEnVivoSinPromoFija: 'La transmisión empezó a las {hora}, hora de Perú.',   // evento de una sola fecha
     saludo: [
-      'Hola. Este es el registro automático del evento en vivo del sábado 26.',
+      'Hola. Este es el registro automático del evento en vivo del {fecha}.',
       'Son cuatro preguntas rápidas y tu nombre. Menos de un minuto.'
     ],
     preguntaAsistencia: {
-      id: 'sabado', texto: '¿Te conectas este sábado 26 a las 9:00 p.m.?', rotulo: 'El sábado 26',
+      id: 'miercoles', texto: '¿Te conectas este {fecha} a las {hora}?', rotulo: 'El {fecha}',
       opciones: [
         { v: 'si', t: 'Sí, me conecto' },
         { v: 'quizas', t: 'Voy a intentarlo' },
         { v: 'info', t: 'Mándame la información primero' }
       ],
       eco: {
-        quizas: 'Te mandamos los enlaces igual. El descuento es solo para quienes se conecten esa noche y se unan a la comunidad.',
+        quizas: 'Te mandamos los enlaces igual. El descuento es solo para quienes se conecten esa noche y se unan a la comunidad, mientras queden unidades de la promoción.',
         info: 'Listo. Te mandamos la información y los enlaces de la transmisión y de la comunidad.'
+      },
+      /* si la promoción se agotó (cupo.quedan en 0 y 0) */
+      ecoSinPromo: {
+        quizas: 'Te mandamos los enlaces igual, para que te conectes cuando puedas.'
       }
     },
-    mensajeRegistro: 'Quiero registrarme al evento en vivo del sábado 26 de septiembre, 9:00 p.m.',
-    mensajeWa: 'Hola, vi la página del evento en vivo del sábado 26 de Mercado Media Luna y quiero información.',
+    mensajeRegistro: 'Quiero registrarme al evento en vivo del {fecha}, {hora}',
+    mensajeWa: 'Hola, vi la página del evento en vivo de los miércoles de Mercado Media Luna y quiero información.',
     confirmacion: 'Listo. Si se abrió tu WhatsApp, dale enviar y te mandamos los enlaces de la transmisión y de la comunidad.',
+    /* Un evento de UNA sola fecha (como fue el sábado 26) se arma agregando
+       aquí fecha: '2026-10-10T21:00:00-05:00' y cierreOferta: '...T23:59:59-05:00':
+       la página cuenta hasta esa fecha y, pasado el cierre, dice que terminó. */
   },
 
   /* ---- 5 · Video del hero -------------------------------------------------

@@ -4,16 +4,21 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Evento de los miércoles · Mercado Media Luna</title>
-<meta name="description" content="Todos los miércoles, 7:30 p.m.: te explicamos el Mercado Media Luna de Jicamarca completo. Qué se vende, qué se compra exactamente y cómo se compra. Regístrate y te confirmamos por WhatsApp.">
+<meta name="description" content="Todos los miércoles, 7:30 p.m., en vivo por YouTube, Instagram y TikTok: te mostramos el Mercado Media Luna completo. Para quienes se conecten y se unan a la comunidad, US$2,000 (S/6,740) de descuento separando esa misma noche: 10 puestos y 2 tiendas en total, hasta agotarlos.">
 <meta name="author" content="SCP Inmobiliaria">
 <meta name="theme-color" content="#0F2A44">
+<!-- Desde el 28/09/2026 esta es la página del sábado 26 con la fecha de los
+     miércoles (decisión de Patriccio). La fecha la calcula sola
+     assets/evento.js: el próximo miércoles a las 7:30 p.m., hora de Lima.
+     El cupo del descuento es un total que se agota: se actualiza a mano en
+     assets/config.js → evento.cupo. Se indexa, como la página anterior. -->
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://mercadomedialuna.com/evento">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="es_PE">
 <meta property="og:site_name" content="Mercado Media Luna">
-<meta property="og:title" content="Todos los miércoles te explicamos el mercado completo">
-<meta property="og:description" content="Evento informativo de Mercado Media Luna, Jicamarca. Miércoles 7:30 p.m. Regístrate en un minuto.">
+<meta property="og:title" content="Todos los miércoles, 7:30 p.m.: el mercado completo en vivo, y US$2,000 (S/6,740) menos para quien separe esa noche. 10 puestos y 2 tiendas en total">
+<meta property="og:description" content="En vivo por YouTube, Instagram y TikTok. Regístrate en un minuto.">
 <meta property="og:url" content="https://mercadomedialuna.com/evento">
 <meta property="og:image" content="https://mercadomedialuna.com/assets/hero-ending-v2.jpg">
 <meta property="og:image:width" content="1920">
@@ -24,10 +29,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400;75..125,500;75..125,700;75..125,900&display=swap">
-<link rel="stylesheet" href="assets/styles.css?v=7212f274">
+<link rel="stylesheet" href="assets/styles.css?v=fa860eb2">
 <noscript><style>.reveal{opacity:1!important;transform:none!important}</style></noscript>
 </head>
-<body class="pagina-evento">
+<body class="pagina-evento pagina-promo" data-evento="evento">
 <a class="skip" href="#main">Ir al contenido</a>
 
 <nav class="nav" aria-label="Principal">
@@ -46,39 +51,63 @@
 
 <main id="main" tabindex="-1">
 
-  <!-- ============ HERO DEL EVENTO ============
-       Una sola pantalla: qué es, cuándo es, el video y el botón. -->
-  <header class="ev-hero" aria-labelledby="h-ev">
+  <!-- ============ 1 · PROMESA, FECHA Y OFERTA ============
+       A quién va dirigido, fecha exacta, formato y la oferta, todo en la
+       primera pantalla. -->
+  <header class="ev-hero sab-hero" aria-labelledby="h-ev">
     <div class="ev-hero-inner">
 
+      <!-- El video de introducción va PRIMERO, antes del titular, en todas las
+           pantallas, y arranca solo al abrir la página. Intenta sonar; si el
+           navegador no lo deja, va sin sonido hasta el primer toque en la
+           página (ver evento.js · montarVideoIntro). Se llena desde assets/config.js →
+           evento.videoIntro. Vacío = no aparece. -->
+      <div class="sab-video" id="sab-video" hidden></div>
+
       <div class="ev-hero-copy">
-        <p class="kicker">Evento informativo · Entrada libre</p>
-        <h1 id="h-ev">Todos los miércoles, 7:30 de la noche, te explicamos el mercado completo.</h1>
-        <p class="ev-lead">Te mostramos la obra como está, te explicamos qué se compra exactamente y respondemos lo que preguntes. No tienes que comprar nada para entrar.</p>
+        <p class="kicker">En vivo · <span data-fecha="mayus">Todos los miércoles</span> · 7:30 p.m. (hora de Perú)</p>
+        <h1 id="h-ev">Deja de pagar alquiler. Este miércoles te mostramos, en vivo, cómo tener tu puesto propio.</h1>
+        <p class="ev-lead">Para comerciantes que hoy alquilan y quieren un puesto propio en Jicamarca, en un mercado que hoy está en construcción.<span class="promo"> Y solo esa noche, quien se conecte y se una a la comunidad puede separar uno de los <strong>10 puestos o 2 tiendas</strong> de la promoción con <strong>US$2,000 (S/6,740) de descuento</strong>. Son 10 y 2 en total, entre todos los miércoles, hasta agotarlos.</span></p>
+        <ul class="sab-plataformas" aria-label="Dónde se transmite">
+          <li><a href="https://www.youtube.com/@MercadoMediaLuna" rel="noopener" target="_blank"><svg class="red-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" fill-rule="evenodd" d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8ZM9.6 15.6V8.4l6.2 3.6Z"/></svg>YouTube</a></li>
+          <li><a href="https://www.instagram.com/mercadomedialuna/" rel="noopener" target="_blank"><svg class="red-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="2.5" y="2.5" width="19" height="19" rx="5.5" fill="none" stroke="currentColor" stroke-width="2.2"/><circle cx="12" cy="12" r="4.4" fill="none" stroke="currentColor" stroke-width="2.2"/><circle cx="17.7" cy="6.3" r="1.35" fill="currentColor"/></svg>Instagram</a></li>
+          <li><a href="https://www.tiktok.com/@mercadomedialuna" rel="noopener" target="_blank"><svg class="red-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12.53.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07Z"/></svg>TikTok</a></li>
+        </ul>
       </div>
 
       <div class="ev-hero-video">
-        <div class="ev-player" id="ev-player"></div>
-        <p class="ev-player-pie">Aquí está la información base: dónde queda, qué se vende, cómo se compra y qué papel recibes. El miércoles resolvemos lo que te quede.</p>
+        <!-- La oferta. El precio de lista se muestra con su fecha y SIN tachar:
+             se fijó el 23/09/2026 y un tachado se lee como "precio anterior",
+             el patrón que INDECOPI sancionó en la Res. 186-2021/CCD. -->
+        <div class="sab-precio promo">
+          <p class="sab-precio-rotulo">Tu puesto, la noche del evento</p>
+          <p class="sab-precio-lista">Precio de lista, vigente desde el 23/09/2026: US$ 24,000 · S/ 80,880</p>
+          <p class="sab-precio-rotulo-evento">Precio del evento</p>
+          <!-- Ley 29571 art. 6: el precio en soles va en caracteres iguales al de dólares -->
+          <p class="sab-precio-evento"><span class="sab-precio-num">US$ 22,000</span> <span class="sab-precio-num">S/ 74,140</span></p>
+          <p class="sab-precio-ahorro">Descuento del evento: US$ 2,000 · S/ 6,740</p>
+          <p class="sab-precio-nota">IGV incluido. No incluye el trámite notarial de S/2,500. Solo 10 puestos y 2 tiendas en total en esta promoción, hasta agotarlos, para quienes se conecten y se unan a la comunidad, separando hasta las 11:59 p.m. de ese miércoles. <a href="#oferta">Todas las condiciones</a>.</p>
+        </div>
+        <!-- Cuántos quedan: solo aparece cuando assets/config.js → evento.cupo.quedan
+             tiene números y fecha. Va fuera de la tarjeta: si se agotan los
+             puestos la tarjeta se oculta, y este aviso tiene que seguir a la vista. -->
+        <p class="sab-cupo" data-cupo hidden></p>
       </div>
 
       <div class="ev-hero-accion">
         <div class="cuenta" id="cuenta" role="group" aria-labelledby="cuenta-rotulo">
-          <p class="cuenta-rotulo" id="cuenta-rotulo">El próximo es el <strong id="cuenta-fecha">miércoles</strong>, 7:30 p.m. (hora de Perú)</p>
+          <p class="cuenta-rotulo" id="cuenta-rotulo">Empieza el <strong id="cuenta-fecha">miércoles</strong>, 7:30 p.m. (hora de Perú)</p>
           <div class="cuenta-bloques" id="cuenta-bloques" aria-hidden="true">
             <div class="cuenta-b"><span class="cuenta-n" data-cuenta="d">0</span><span class="cuenta-t">días</span></div>
             <div class="cuenta-b"><span class="cuenta-n" data-cuenta="h">0</span><span class="cuenta-t">horas</span></div>
             <div class="cuenta-b"><span class="cuenta-n" data-cuenta="m">0</span><span class="cuenta-t">min</span></div>
             <div class="cuenta-b"><span class="cuenta-n" data-cuenta="s">0</span><span class="cuenta-t">seg</span></div>
           </div>
-          <!-- el resumen para lector de pantalla se escribe en silencio: una
-               región viva que cambia cada segundo sería insoportable -->
           <p class="sr" id="cuenta-voz"></p>
         </div>
-
         <div class="ev-cta">
-          <a class="btn btn-accent btn-grande" href="#registro">Quiero mi lugar</a>
-          <p class="ev-cta-nota">Cuatro preguntas rápidas. Se abre tu WhatsApp con el registro ya escrito.</p>
+          <a class="btn btn-accent btn-grande" href="#registro">Quiero mi lugar el miércoles</a>
+          <p class="ev-cta-nota">Cuatro preguntas rápidas. Te mandamos por WhatsApp los enlaces de la transmisión y de la comunidad.</p>
         </div>
       </div>
 
@@ -86,16 +115,74 @@
     <p class="proyeccion ev-hero-barra" role="note">Proyección arquitectónica — obra en construcción</p>
   </header>
 
-  <!-- ============ QUÉ PASA EL MIÉRCOLES ============ -->
+  <!-- ============ 2 · EL PROBLEMA ============ -->
+  <section class="sab-dolor" id="alquiler" aria-labelledby="h-dolor">
+    <div class="sab-dolor-inner">
+      <div class="sab-dolor-copy reveal">
+        <p class="kicker">El alquiler que nunca termina</p>
+        <h2 id="h-dolor">Cada mes pagas por trabajar en un sitio que no es tuyo.</h2>
+        <p>Ese dinero ya salió y no vuelve. Y si mañana te aumentan el alquiler o te piden el local, empiezas de cero con tu clientela.</p>
+        <p class="small">Haz la cuenta con tu propio alquiler. Los números son tuyos: nosotros no ponemos ninguno.</p>
+      </div>
+      <form class="calc sab-calc reveal" id="sab-calc" aria-labelledby="h-sab-calc">
+        <h3 id="h-sab-calc" class="calc-title">Haz la cuenta</h3>
+        <div class="field">
+          <label for="sab-monto">¿Cuánto pagas de alquiler al mes?</label>
+          <div class="money"><span aria-hidden="true">S/</span>
+            <input id="sab-monto" name="monto" type="number" inputmode="numeric" min="0" step="10" placeholder="0" autocomplete="off">
+          </div>
+        </div>
+        <div class="field">
+          <label for="sab-anios">¿Cuántos años más piensas seguir pagándolo?</label>
+          <select id="sab-anios" name="anios">
+            <option value="5">5 años</option>
+            <option value="10" selected>10 años</option>
+            <option value="15">15 años</option>
+            <option value="20">20 años</option>
+          </select>
+        </div>
+        <p class="sab-calc-res" id="sab-calc-res" aria-live="polite">Escribe tu alquiler y aquí sale la cuenta.</p>
+      </form>
+    </div>
+  </section>
+
+  <!-- ============ 3 · LA COMPARACIÓN ============ -->
+  <section class="sab-compara" id="comparacion" aria-labelledby="h-compara">
+    <div class="sab-compara-head reveal">
+      <p class="kicker">Dos formas de trabajar</p>
+      <h2 id="h-compara">Alquilar o tener tu puesto.</h2>
+    </div>
+    <div class="sab-compara-grid">
+      <article class="sab-col sab-col-antes reveal">
+        <h3>Si sigues alquilando</h3>
+        <ul>
+          <li>Pagas cada mes y ese dinero no vuelve.</li>
+          <li>Si te aumentan el alquiler o te piden el local, empiezas de cero.</li>
+          <li>Tu clientela aprende a llegar a un sitio que no es tuyo.</li>
+        </ul>
+      </article>
+      <article class="sab-col sab-col-despues reveal">
+        <h3>Con tu puesto en Media Luna</h3>
+        <ul>
+          <li>Compras acciones y derechos sobre el inmueble, y se inscriben en Registros Públicos.</li>
+          <li>Cuando el mercado abra, trabajas en tu puesto y no en uno que alquilas.</li>
+          <li>Antes de separar te mandamos el modelo de contrato, para que lo revises con quien quieras.</li>
+        </ul>
+      </article>
+    </div>
+    <p class="nota reveal">Qué se compra exactamente, y qué falta para que cada unidad tenga partida propia, está explicado en la portada: <a href="index.html#que-compras">Qué estás comprando</a>.</p>
+  </section>
+
+  <!-- ============ 4 · QUÉ PASA EL MIÉRCOLES ============ -->
   <section class="ev-agenda" id="agenda" aria-labelledby="h-agenda">
     <div class="ev-agenda-head reveal">
       <p class="kicker">Qué pasa el miércoles</p>
-      <h2 id="h-agenda">Esto es lo que vas a ver.</h2>
+      <h2 id="h-agenda">En vivo, sin rodeos.</h2>
     </div>
     <ol class="agenda-list">
       <li class="agenda-item reveal">
         <h3>La obra como está hoy</h3>
-        <p>Sin maquillar. Y si quieres verla con tus propios ojos, coordinamos la visita en persona o por videollamada.</p>
+        <p>Con fotos fechadas y sin maquillar. Y si después quieres verla con tus propios ojos, coordinamos la visita en persona o por videollamada.</p>
       </li>
       <li class="agenda-item reveal">
         <h3>Qué se compra exactamente</h3>
@@ -109,32 +196,21 @@
         <h3>Cómo se compra, paso a paso</h3>
         <p>Desde la primera conversación hasta la firma ante notario. La separación es de S/500, o su equivalente de US$150, reembolsable dentro de los 7 días calendario siguientes al depósito. El trámite notarial cuesta S/2,500 aparte del precio.</p>
       </li>
+      <li class="agenda-item reveal promo">
+        <h3>Cómo separar con los US$2,000 (S/6,740) de descuento</h3>
+        <p>Son 10 puestos y 2 tiendas en total, hasta agotarlos. Te explicamos en la transmisión cómo unirte a la comunidad y separar esa misma noche, hasta las 11:59 p.m., para quedarte con el precio del evento.</p>
+      </li>
       <li class="agenda-item reveal">
         <h3>Tus preguntas, en vivo</h3>
-        <p>Las incómodas también. Si hay algo que todavía no sabemos, te decimos que no lo sabemos.</p>
+        <p>Escríbelas en los comentarios. Las incómodas también. Si hay algo que todavía no sabemos, te decimos que no lo sabemos.</p>
       </li>
     </ol>
-    <div class="ev-galeria">
-      <figure class="ev-img reveal">
-        <img src="assets/render-aerea.jpg" alt="Proyección arquitectónica del Mercado Media Luna completo, con las naves techadas y las tiendas sobre las dos avenidas" width="1440" height="810" loading="lazy" decoding="async">
-        <figcaption class="proyeccion">Proyección arquitectónica — obra en construcción</figcaption>
-      </figure>
-      <figure class="ev-img reveal">
-        <img src="assets/render-avenida.jpg" alt="Proyección arquitectónica de las tiendas del Mercado Media Luna con frente a la avenida" width="1280" height="720" loading="lazy" decoding="async">
-        <figcaption class="proyeccion">Proyección arquitectónica — obra en construcción</figcaption>
-      </figure>
-      <figure class="ev-img reveal">
-        <img src="assets/render-vereda.jpg" alt="Proyección arquitectónica de la vereda con árboles y bancas frente a las tiendas del Mercado Media Luna" width="1280" height="720" loading="lazy" decoding="async">
-        <figcaption class="proyeccion">Proyección arquitectónica — obra en construcción</figcaption>
-      </figure>
-    </div>
-    <p class="nota reveal">Estas tres son del modelo del proyecto, no fotografías. En el evento las ponemos al lado de las fotos de la obra de hoy, para que veas la diferencia sin que nadie te la maquille.</p>
   </section>
 
-  <!-- ============ POR QUÉ VALE LA HORA ============ -->
+  <!-- ============ 5 · QUIÉN LO CONSTRUYE ============ -->
   <section class="ev-valor" id="valor" aria-labelledby="h-valor">
     <div class="ev-valor-head reveal">
-      <p class="kicker">Por qué vale tu tiempo</p>
+      <p class="kicker">Quién te lo explica</p>
       <h2 id="h-valor">Hablas con quien construye, no con un vendedor de paso.</h2>
     </div>
     <div class="valor-grid">
@@ -151,7 +227,6 @@
         <h3>La obra se visita</h3>
         <p>No te pedimos que creas. Te pedimos que vengas a verla. Si estás lejos, la recorremos por videollamada, completa y sin cortes.</p>
         <img class="valor-foto" src="assets/obra-03-columnas.jpg" alt="Uno de los pasajes del Mercado Media Luna con las columnas de concreto ya levantadas" width="608" height="608" loading="lazy" decoding="async">
-        <!-- misma foto y misma fecha que en la portada: 10/09/2026, dada por Patriccio el 23/09/2026 -->
         <p class="valor-foto-pie">Foto real de la obra, del <time class="obra-fecha" datetime="2026-09-10">10 de septiembre de 2026</time>.</p>
       </article>
       <article class="valor-card reveal">
@@ -166,29 +241,95 @@
     <p class="nota reveal">Lo que no vas a escuchar el miércoles: un porcentaje de rentabilidad. El mercado todavía no abre y cualquier número de renta sería inventado.</p>
   </section>
 
-  <!-- ============ TESTIMONIOS ============ -->
+  <!-- ============ 6 · LOS QUE YA COMPRARON ============ -->
   <section class="testimonios" id="testimonios" aria-labelledby="h-testi">
     <div class="testi-head reveal">
       <p class="kicker">Los que ya compraron</p>
       <h2 id="h-testi">Pregúntales a ellos, no a nosotros.</h2>
     </div>
     <div class="tgrid" id="testi-rail" role="list"></div>
-    <p class="testi-vacio pend reveal">[PENDIENTE: videos de compradores con autorización de imagen para la web]</p>
     <p class="testi-aviso pend reveal" hidden>[PENDIENTE: autorización de imagen del comprador que aparece en el video]</p>
   </section>
 
-  <!-- ============ REGISTRO (embudo corto) ============ -->
+  <!-- ============ 7 · LO QUE TE LLEVAS ============ -->
+  <section class="sab-llevas" id="llevas" aria-labelledby="h-llevas">
+    <div class="sab-llevas-inner reveal">
+      <p class="kicker">Lo que te llevas del miércoles</p>
+      <h2 id="h-llevas">Sales sabiendo, no convencido.</h2>
+      <ul class="sab-check">
+        <li>Sabes exactamente qué compras y qué papel recibes.</li>
+        <li>Sabes dónde ver el plano y qué puestos figuran libres.</li>
+        <li class="promo">Tienes el precio por escrito, con el descuento de US$2,000 (S/6,740) si separas esa noche uno de los 10 puestos o 2 tiendas de la promoción, mientras queden.</li>
+        <li>Resolviste tus dudas en vivo, las tuyas y las de los demás.</li>
+        <li>Si decides, separas con S/500 o US$150, reembolsables dentro de 7 días calendario.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ 8 · LA OFERTA, CON TODAS SUS CONDICIONES ============
+       Ley 29571: la promoción dice cuánto, sobre qué precio, hasta cuándo y
+       con qué restricciones, en soles y en dólares. Fuente:
+       00-fuente-de-verdad/precios-vigentes.md (§ precios, §2b descuento y §2c
+       miércoles). Todo lo que lleva class="promo" se oculta solo cuando
+       config.js → evento.cupo.quedan llega a 0 puestos y 0 tiendas. -->
+  <section class="sab-oferta" id="oferta" aria-labelledby="h-oferta">
+    <div class="sab-oferta-head reveal promo">
+      <p class="kicker">10 puestos y 2 tiendas en total, hasta agotarlos · Solo para quienes se conecten un miércoles y se unan a la comunidad</p>
+      <h2 id="h-oferta">US$2,000 (S/6,740) menos en tu puesto o tienda, la noche del evento.</h2>
+    </div>
+    <div class="sab-oferta-grid promo">
+      <article class="sab-prod reveal" data-cupo-tipo="puestos">
+        <h3>Puesto interior</h3>
+        <p class="sab-prod-area">Aproximadamente 9 m², dentro de la nave · <strong>10 en total en esta promoción</strong></p>
+        <dl>
+          <div><dt>Precio de lista (desde el 23/09/2026)</dt><dd>US$ 24,000 · S/ 80,880</dd></div>
+          <div class="sab-prod-evento"><dt>Precio del evento</dt><dd>US$ 22,000 · S/ 74,140</dd></div>
+        </dl>
+        <p class="sab-prod-nota">IGV incluido. No incluye el trámite notarial de S/2,500.</p>
+      </article>
+      <article class="sab-prod reveal" data-cupo-tipo="tiendas">
+        <h3>Tienda sobre avenida</h3>
+        <p class="sab-prod-area">Aproximadamente 22 m², con frente a la calle · <strong>2 en total en esta promoción</strong></p>
+        <dl>
+          <div><dt>Precio de lista (desde el 23/09/2026)</dt><dd>US$ 75,000 · S/ 252,750</dd></div>
+          <div class="sab-prod-evento"><dt>Precio del evento</dt><dd>US$ 73,000 · S/ 246,010</dd></div>
+        </dl>
+        <p class="sab-prod-nota">IGV incluido. No incluye el trámite notarial de S/2,500. Las tiendas de otro metraje no entran en esta promoción.</p>
+      </article>
+    </div>
+    <div class="sab-condiciones reveal promo">
+      <h3>Condiciones</h3>
+      <ul>
+        <li>Vale solo para quienes asistan a la transmisión en vivo de un miércoles, a las 7:30 p.m., se unan a la comunidad de Mercado Media Luna y separen hasta las 11:59 p.m. de ese mismo miércoles, hora de Perú. Fecha de la transmisión: <span data-fecha="anio">todos los miércoles</span>. El enlace de la comunidad te lo mandamos por WhatsApp al registrarte.</li>
+        <li>Unidades en esta promoción: 10 puestos y 2 tiendas de aproximadamente 22 m² en total, entre todos los miércoles, hasta agotarlas. El cupo no se renueva cada semana.</li>
+        <li data-cupo hidden></li>
+        <li>Cuenta como separado si nos mandas por WhatsApp, antes de las 11:59 p.m. del miércoles de la transmisión, la constancia del depósito de la separación.</li>
+        <li>El precio del evento se mantiene por 7 días calendario desde la separación: la firma tiene que hacerse dentro de ese plazo.</li>
+        <li>Uno por persona. No se suma a otros descuentos.</li>
+        <li>Precios con IGV incluido. No incluyen el trámite notarial de S/2,500.</li>
+        <li>La separación es de S/500 o US$150, reembolsable dentro de los 7 días calendario siguientes al depósito.</li>
+        <li>Fuera de esa ventana, el puesto se vende a su precio de lista, hoy US$24,000 (S/80,880), que rige hasta completar la venta de 10 puestos más.</li>
+        <li>Tipo de cambio referencial S/3.37 al 23/09/2026 (BCRP).</li>
+      </ul>
+    </div>
+    <div class="ev-cta ev-cta-centro reveal promo">
+      <a class="btn btn-accent btn-grande" href="#registro">Quiero mi lugar el miércoles</a>
+    </div>
+    <p class="sab-vencido promo-fin" id="oferta-fin">Se agotaron los 10 puestos y las 2 tiendas de la promoción de US$2,000 (S/6,740). La transmisión de los miércoles sigue, sin descuento.</p>
+  </section>
+
+  <!-- ============ 9 · REGISTRO ============ -->
   <section class="hablemos" id="registro" aria-labelledby="h-registro">
-    <p class="hablemos-cinta"><span>Reserva tu lugar del miércoles</span><span>Menos de un minuto</span><span>Por WhatsApp</span></p>
+    <p class="hablemos-cinta"><span>Reserva tu lugar del <span data-fecha>miércoles</span></span><span>Menos de un minuto</span><span>Por WhatsApp</span></p>
     <div class="hablemos-inner">
       <div class="hablemos-copy reveal">
         <p class="kicker">Tu lugar del miércoles</p>
         <h2 id="h-registro">Cuatro toques y tu nombre.</h2>
-        <p>Así sabemos a quién le estamos hablando y la sesión va directo a lo que te importa.</p>
+        <p>Así sabemos a quién le estamos hablando y la transmisión va directo a lo que te importa.</p>
         <ol class="hablemos-pasos">
           <li>Respondes aquí, en menos de un minuto.</li>
           <li>Se abre tu WhatsApp con el registro ya escrito.</li>
-          <li>Te confirmamos el lugar y cómo entrar.</li>
+          <li>Te mandamos los enlaces de la transmisión y de la comunidad.</li>
         </ol>
         <p class="small">Esta web no guarda tus datos. El mensaje lo mandas tú desde tu propio WhatsApp. <a href="privacidad.html">Aviso de privacidad</a>.</p>
       </div>
@@ -197,7 +338,7 @@
         <div class="chat-head">
           <span class="chat-avatar" aria-hidden="true"><svg viewBox="-118 -118 236 236"><g transform="rotate(-45)"><path d="M 50.176 -86.5 A 100 100 0 1 0 50.176 86.5 A 88 88 0 1 1 50.176 -86.5 Z" fill="currentColor"></path></g></svg></span>
           <div class="chat-id">
-            <p class="chat-titulo" id="chat-titulo">Registro del miércoles</p>
+            <p class="chat-titulo" id="chat-titulo">Registro del <span data-fecha>miércoles</span></p>
             <p class="chat-paso">Preguntas rápidas</p>
           </div>
           <button type="button" class="chat-atras" hidden>Atrás</button>
@@ -210,28 +351,30 @@
     </div>
   </section>
 
-  <!-- ============ PREGUNTAS DEL EVENTO ============ -->
+  <!-- ============ 10 · PREGUNTAS ============ -->
   <section class="faq" id="preguntas" aria-labelledby="h-faq">
     <p class="kicker reveal">Antes de registrarte</p>
     <h2 id="h-faq" class="reveal">Lo que todos preguntan.</h2>
     <div class="faq-list">
-      <details class="reveal"><summary>¿Tengo que pagar o comprar algo para entrar?</summary>
-        <div class="faq-body"><p>No. Entras, escuchas y preguntas. Si al final decides que esto no es para ti, nos lo dices y ahí queda.</p></div></details>
-      <details class="reveal"><summary>¿Es presencial o por internet?</summary>
-        <div class="faq-body"><p>Te lo confirmamos por WhatsApp apenas te registres, junto con el punto de encuentro o el enlace.</p><p class="pend">[PENDIENTE: modalidad del evento y enlace o dirección, para poder decirlo aquí antes de que se registren]</p></div></details>
-      <details class="reveal"><summary>¿Cuánto cuesta un puesto?</summary>
-        <div class="faq-body"><p>Un puesto cuesta <strong>US$ 24,000 · S/ 80,880</strong>, con IGV incluido. Ese precio rige hasta completar la venta de 10 puestos más. Una tienda de aproximadamente 22 m² con frente a avenida cuesta <strong>US$ 75,000 · S/ 252,750</strong>; las más grandes se cotizan según su área.</p><p>Aparte hay un único pago de <strong>S/2,500</strong> por el trámite notarial, y para separar son <strong>S/500 o US$150</strong>, reembolsables dentro de los 7 días calendario siguientes al depósito. Tipo de cambio referencial S/3.37 al 23/09/2026 (BCRP).</p></div></details>
+      <details class="reveal"><summary>¿Tengo que pagar para ver la transmisión?</summary>
+        <div class="faq-body"><p>No. Es en vivo y abierta en YouTube, Instagram y TikTok. Solo necesitas conexión a internet.</p></div></details>
+      <details class="reveal"><summary>¿Dónde la veo?</summary>
+        <div class="faq-body"><p>En los perfiles de Mercado Media Luna: <a href="https://www.youtube.com/@MercadoMediaLuna" rel="noopener" target="_blank">YouTube</a>, <a href="https://www.instagram.com/mercadomedialuna/" rel="noopener" target="_blank">Instagram</a> y <a href="https://www.tiktok.com/@mercadomedialuna" rel="noopener" target="_blank">TikTok</a>. Al registrarte te mandamos los enlaces directos por WhatsApp.</p></div></details>
+      <details class="reveal promo"><summary>¿Cómo funciona el descuento?</summary>
+        <div class="faq-body"><p>Son US$2,000 (S/6,740) menos sobre el precio de lista de tu puesto o tienda: son 10 puestos a <strong>US$ 22,000 · S/ 74,140</strong> y 2 tiendas de aproximadamente 22 m² a <strong>US$ 73,000 · S/ 246,010</strong>, con IGV incluido y sin el trámite notarial de S/2,500, que se paga aparte. Vale solo para quienes se conecten a la transmisión de un miércoles, se unan a la comunidad de Mercado Media Luna y separen hasta las 11:59 p.m. de ese día, mandando por WhatsApp la constancia del depósito. Los 10 puestos y las 2 tiendas son en total, hasta agotarlos: el cupo no se renueva cada semana. El precio se mantiene 7 días calendario para firmar. Uno por persona y no se suma a otros descuentos. El enlace de la comunidad te lo mandamos por WhatsApp al registrarte, y en la transmisión te explicamos cómo separar.</p></div></details>
       <details class="reveal"><summary>No puedo este miércoles.</summary>
-        <div class="faq-body"><p>Ponlo en el registro. Hay sesión todos los miércoles, así que coordinamos la que te quede.</p></div></details>
+        <div class="faq-body"><p>Hay transmisión todos los miércoles a las 7:30 p.m. Ponlo en el registro y te mandamos los enlaces del que te quede.<span class="promo"> El descuento es para quienes se conecten un miércoles y se unan a la comunidad, mientras queden unidades de la promoción.</span></p></div></details>
+      <details class="reveal"><summary>¿Qué estoy comprando exactamente?</summary>
+        <div class="faq-body"><p>Acciones y derechos sobre el inmueble matriz: una cuota de copropiedad sobre el terreno, junto con el derecho a usar el puesto o la tienda que elijas, en los términos del contrato. Todavía no es una propiedad independizada con su propia partida. <a href="index.html#que-compras">Lo explicamos completo aquí</a>.</p></div></details>
       <details class="reveal"><summary>¿Me van a presionar para comprar?</summary>
         <div class="faq-body"><p>No. Antes de que pagues algo te explicamos por escrito qué estás comprando, y la separación tiene 7 días calendario para arrepentirte.</p></div></details>
       <details class="reveal"><summary>¿Qué hacen con mis datos?</summary>
         <div class="faq-body"><p>Esta web no los guarda. El registro arma un mensaje y lo mandas tú desde tu WhatsApp. A partir de ahí conversamos por ahí, como con cualquier contacto. Está todo en el <a href="privacidad.html">aviso de privacidad</a>.</p></div></details>
       <details class="reveal"><summary>¿Dónde queda el mercado?</summary>
-        <div class="faq-body"><p>En Jicamarca, Sector Media Luna.</p><p class="pend">[PENDIENTE: referencia vial validada y pin de Google Maps]</p></div></details>
+        <div class="faq-body"><p>En Jicamarca, Sector Media Luna.</p></div></details>
     </div>
     <div class="ev-cta ev-cta-centro reveal">
-      <a class="btn btn-accent btn-grande" href="#registro">Quiero mi lugar del miércoles</a>
+      <a class="btn btn-accent btn-grande" href="#registro">Quiero mi lugar el miércoles</a>
     </div>
   </section>
 </main>
@@ -253,6 +396,7 @@
   </ul>
   <ul class="pie-links">
     <li><a href="index.html">Inicio</a></li>
+    <li><a href="evento.html">Evento de los miércoles</a></li>
     <li><a href="planos.html">Plano y disponibilidad</a></li>
     <li><a href="privacidad.html">Aviso de privacidad</a></li>
     <li><a href="terminos.html">Términos de uso</a></li>
@@ -266,10 +410,10 @@
   <svg viewBox="0 0 24 24" aria-hidden="true" width="32" height="32"><path fill="currentColor" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413"/></svg>
 </a>
 
-<script src="assets/config.js?v=7212f274"></script>
-<script src="assets/testimonios.js?v=7212f274"></script>
-<script src="assets/medicion.js?v=7212f274"></script>
-<script src="assets/evento.js?v=7212f274"></script>
+<script src="assets/config.js?v=fa860eb2"></script>
+<script src="assets/testimonios.js?v=fa860eb2"></script>
+<script src="assets/medicion.js?v=fa860eb2"></script>
+<script src="assets/evento.js?v=fa860eb2"></script>
 
 <script type="application/ld+json">
 {
@@ -294,14 +438,28 @@
       "url": "https://mercadomedialuna.com/evento",
       "name": "Evento de los miércoles · Mercado Media Luna",
       "inLanguage": "es-PE",
-      "isPartOf": { "@id": "https://mercadomedialuna.com/#web" },
-      "publisher": { "@id": "https://mercadomedialuna.com/#scp" }
+      "isPartOf": {
+        "@id": "https://mercadomedialuna.com/#web"
+      },
+      "publisher": {
+        "@id": "https://mercadomedialuna.com/#scp"
+      }
     },
     {
       "@type": "BreadcrumbList",
       "itemListElement": [
-        { "@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://mercadomedialuna.com/" },
-        { "@type": "ListItem", "position": 2, "name": "Evento de los miércoles", "item": "https://mercadomedialuna.com/evento" }
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Inicio",
+          "item": "https://mercadomedialuna.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Evento de los miércoles",
+          "item": "https://mercadomedialuna.com/evento"
+        }
       ]
     },
     {
@@ -310,18 +468,59 @@
       "mainEntity": [
         {
           "@type": "Question",
-          "name": "¿Tengo que pagar o comprar algo para entrar al evento?",
-          "acceptedAnswer": { "@type": "Answer", "text": "No. Entras, escuchas y preguntas. Si al final decides que esto no es para ti, nos lo dices y ahí queda." }
+          "name": "¿Tengo que pagar para ver la transmisión?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Es en vivo y abierta en YouTube, Instagram y TikTok. Solo necesitas conexión a internet."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Dónde la veo?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "En los perfiles de Mercado Media Luna: YouTube, Instagram y TikTok. Al registrarte te mandamos los enlaces directos por WhatsApp."
+          }
         },
         {
           "@type": "Question",
           "name": "No puedo este miércoles.",
-          "acceptedAnswer": { "@type": "Answer", "text": "Ponlo en el registro. Hay sesión todos los miércoles, así que coordinamos la que te quede." }
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Hay transmisión todos los miércoles a las 7:30 p.m. Ponlo en el registro y te mandamos los enlaces del que te quede."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Qué estoy comprando exactamente?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Acciones y derechos sobre el inmueble matriz: una cuota de copropiedad sobre el terreno, junto con el derecho a usar el puesto o la tienda que elijas, en los términos del contrato. Todavía no es una propiedad independizada con su propia partida."
+          }
         },
         {
           "@type": "Question",
           "name": "¿Me van a presionar para comprar?",
-          "acceptedAnswer": { "@type": "Answer", "text": "No. Antes de que pagues algo te explicamos por escrito qué estás comprando, y la separación tiene 7 días calendario para arrepentirte." }
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Antes de que pagues algo te explicamos por escrito qué estás comprando, y la separación tiene 7 días calendario para arrepentirte."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Qué hacen con mis datos?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Esta web no los guarda. El registro arma un mensaje y lo mandas tú desde tu WhatsApp. A partir de ahí conversamos por ahí, como con cualquier contacto. Está todo en el aviso de privacidad."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Dónde queda el mercado?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "En Jicamarca, Sector Media Luna."
+          }
         }
       ]
     }
