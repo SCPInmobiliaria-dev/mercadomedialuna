@@ -1360,3 +1360,38 @@ p.sab-cupo{ margin:14px 0 0; padding:10px 12px; border-radius:8px; background:va
 .sab-condiciones li[data-cupo]{ font-weight:700; color:var(--text-primary) }
 .sab-prod.agotado .sab-prod-evento{ display:none }
 .sab-prod-agotado{ margin:0 0 10px; display:inline-block; padding:4px 10px; border-radius:999px; background:var(--canvas-deep); border:1px solid var(--rule-strong); color:var(--text-primary); font-weight:800; font-size:13px; letter-spacing:.02em }
+
+/* =========================================================================
+   Dónde queda — portada y /evento (28/09/2026)
+   ========================================================================= */
+.ubicacion{
+  display:grid; gap:clamp(24px,4vw,48px); align-items:center;
+  padding:clamp(64px,10vh,120px) var(--gutter); margin:0 auto; max-width:var(--maxw);
+}
+@media (min-width:900px){ .ubicacion{ grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr) } }
+.ubicacion-copy h2{ margin-top:0 }
+.ubicacion-acciones{ display:flex; flex-wrap:wrap; gap:12px; margin-top:22px }
+.ubicacion-mapa{ margin:0 }
+.ubicacion-marco{
+  position:relative; overflow:hidden; border-radius:16px; aspect-ratio:4/3;
+  background:var(--panel); border:1px solid var(--rule-strong);
+  box-shadow:0 24px 60px rgba(4,12,22,.45), 0 0 0 6px rgba(242,169,59,.12);
+}
+@media (max-width:560px){ .ubicacion-marco{ aspect-ratio:1/1 } }
+.ubicacion-marco iframe{ position:absolute; inset:0; width:100%; height:100%; border:0 }
+/* mientras carga: la etiqueta del lugar, para que el hueco no se vea vacío */
+.ubicacion-marco::before{
+  content:"Mercado Media Luna · Jicamarca"; position:absolute; inset:0; display:grid; place-items:center;
+  color:var(--text-secondary); font-weight:700; letter-spacing:.04em;
+}
+.ubicacion-mapa figcaption{ margin-top:10px; font-size:13px; color:var(--text-secondary) }
+
+/* cuatro testimonios desde el 28/09/2026 (Víctor Arbieto): en fila de cuatro
+   en pantalla ancha y dos por dos en tablet, para que ninguno quede solo */
+@media (min-width:621px) and (max-width:1099px){
+  .tgrid{ grid-template-columns:repeat(2, minmax(0, 330px)) }
+}
+@media (min-width:1100px){
+  .tgrid{ grid-template-columns:repeat(4, minmax(0, 1fr)); gap:18px }
+  .tgrid .tcard-cita{ font-size:16px }
+}

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Plano y disponibilidad · Mercado Media Luna</title>
-<meta name="description" content="Mira el plano del Mercado Media Luna: 423 puestos y 62 tiendas, con las áreas de cada unidad y los puestos que figuran libres. Plano referencial, disponibilidad sujeta a confirmación.">
+<meta name="description" content="Mira el plano del Mercado Media Luna: 423 puestos y 62 tiendas, con las áreas de cada unidad, las que figuran libres y el rubro de cada zona. Plano referencial, disponibilidad sujeta a confirmación.">
 <meta name="theme-color" content="#0F2A44">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://mercadomedialuna.com/planos.html">
@@ -12,7 +12,7 @@
 <meta property="og:locale" content="es_PE">
 <meta property="og:site_name" content="Mercado Media Luna">
 <meta property="og:title" content="El plano del mercado, con los puestos que siguen libres">
-<meta property="og:description" content="423 puestos y 62 tiendas. Mira el plano completo y las áreas reales de cada unidad.">
+<meta property="og:description" content="423 puestos y 62 tiendas. Mira el plano completo, las áreas reales de cada unidad y qué rubro va en cada zona.">
 <meta property="og:url" content="https://mercadomedialuna.com/planos.html">
 <meta property="og:image" content="https://mercadomedialuna.com/assets/plano-og.jpg">
 <meta property="og:image:width" content="1200">
@@ -22,7 +22,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400;75..125,500;75..125,700;75..125,900&display=swap">
-<link rel="stylesheet" href="assets/styles.css?v=fa860eb2">
+<link rel="stylesheet" href="assets/styles.css?v=ca853953">
 <style>
 .doc{ max-width:980px; margin:0 auto; padding:120px var(--gutter) 80px }
 .doc h1{ font-size:clamp(30px,5vw,46px); margin-bottom:.35em }
@@ -60,9 +60,54 @@
 .visor-ayuda{
   position:absolute; left:12px; top:12px; z-index:2; background:rgba(15,42,68,.92); color:#fff;
   font-size:12px; padding:6px 10px; border-radius:4px; pointer-events:none;
+  margin:0 12px 0 0; transition:opacity .3s var(--ease);
+}
+
+/* ---- dos láminas en paralelo: disponibilidad y rubros ----
+   Comparten un solo zoom. En la computadora van lado a lado; en el celular se
+   ve una y el selector cambia de lámina sin perder el zoom. */
+.visores{ margin:28px 0 12px; scroll-margin-top:72px }
+.visores .visor{ margin:0 }
+.visor-tabs{
+  display:flex; gap:4px; width:100%; max-width:420px; margin:0 0 12px; padding:4px;
+  border:1px solid var(--rule-strong); border-radius:999px; background:var(--canvas-deep);
+}
+.visor-tab{
+  flex:1 1 0; min-height:44px; padding:8px 14px; border:0; border-radius:999px;
+  background:transparent; color:var(--text-secondary); font:inherit; font-size:15px; font-weight:700;
+  font-variation-settings:"wdth" 96; cursor:pointer;
+  transition:background .25s var(--ease), color .25s var(--ease);
+}
+.visor-tab:hover{ color:var(--text-primary) }
+.visor-tab[aria-pressed="true"]{ background:var(--accent); color:var(--ink) }
+.visor-tab:focus-visible{ outline:2px solid var(--accent); outline-offset:2px }
+.visor-paneles{ display:grid; gap:16px }
+.visor-panel{ margin:0; min-width:0 }
+.visor-titulo{ margin:0 0 8px; font-size:15px; font-weight:700; color:var(--text-primary) }
+.mini-leyenda{
+  display:flex; flex-wrap:wrap; gap:6px 16px; margin:10px 0 0; padding:0; list-style:none;
+  font-size:13px; color:var(--text-secondary);
+}
+.mini-leyenda li{ display:flex; align-items:center; gap:7px }
+.mini-leyenda .swatch{ width:16px; height:16px }
+@media (max-width:899.98px){
+  /* el selector ya dice qué lámina es: el título queda para lectores de pantalla */
+  .visor-titulo{ position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap }
+  .visores[data-vista="disponibles"] [data-panel="rubros"],
+  .visores[data-vista="rubros"] [data-panel="disponibles"]{ display:none }
+}
+@media (min-width:900px){
+  /* las dos láminas salen un poco de la columna de texto para no quedar angostas */
+  .visores{ --ancho:min(var(--maxw), calc(100vw - 2 * var(--gutter))); width:var(--ancho); margin-left:calc((100% - var(--ancho)) / 2) }
+  .visor-tabs{ display:none }
+  .visor-paneles{ grid-template-columns:1fr 1fr }
+  .visor-panel + .visor-panel .visor-ayuda{ display:none }
+}
+@media (prefers-reduced-motion:reduce){
+  .visor-ayuda,.visor-tab{ transition:none }
 }
 .plano-acciones{ display:flex; flex-wrap:wrap; gap:10px; margin:16px 0 8px }
-.visor-nota{ font-size:14px; color:var(--text-secondary); max-width:74ch; margin:12px 0 0 }
+.visor-nota{ font-size:14px; color:var(--text-secondary); max-width:74ch; margin:12px 0 1em }
 .visor-nota strong{ color:var(--text-primary) }
 
 /* ---- leyenda ---- */
@@ -74,10 +119,28 @@
 .swatch{ width:20px; height:20px; border-radius:3px; border:1px solid rgba(0,0,0,.35); flex:none }
 .swatch-libre{ background:#FFE108 }
 .swatch-otro{ background:#FFF583 }
+.leyenda .ancho{ grid-column:1 / -1 }
+.leyenda h3 .swatch + .swatch{ margin-left:-5px }
+/* colores muestreados del plano por rubro: relleno y borde, como en la lámina */
+.swatch-abarrotes{ background:#D9FBFC; border:2px solid #00FFFF }
+.swatch-frutas{ background:#E1FFDC; border:2px solid #00FF00 }
+.swatch-menu{ background:#FEFFDC; border:2px solid #FFFF00 }
+.swatch-carnes{ background:#FFDCFF; border:2px solid #FF00FF }
+.swatch-tienda{ background:#FFFFFF }
+.rubros-lista{
+  display:grid; gap:10px; margin:18px 0 8px; padding:0; list-style:none;
+}
+@media (min-width:680px){ .rubros-lista{ grid-template-columns:1fr 1fr } }
+.rubros-lista li{
+  display:flex; align-items:center; gap:10px; background:var(--panel); border-radius:4px;
+  padding:12px 16px; color:var(--text-primary); font-weight:700; font-size:15px;
+}
+.rubros-lista li.ancho{ grid-column:1 / -1; font-weight:400; color:var(--text-secondary) }
+.rubros-lista li.ancho strong{ color:var(--text-primary) }
 
 /* ---- tabla de composición ---- */
 .tabla-wrap{ overflow-x:auto; margin:8px 0 }
-table.comp{ width:100%; border-collapse:collapse; font-size:15px; min-width:520px }
+table.comp{ width:100%; border-collapse:collapse; font-size:15px; min-width:600px }
 table.comp th,table.comp td{ text-align:left; padding:11px 12px; border-bottom:1px solid var(--rule) }
 table.comp th{ color:var(--accent); font-size:12px; text-transform:uppercase; letter-spacing:.08em; font-variation-settings:"wdth" 88 }
 table.comp td{ color:var(--text-secondary) }
@@ -119,37 +182,74 @@ table.comp td:first-child{ color:var(--text-primary); font-weight:700 }
   <h1>Mira dónde quedaría tu puesto.</h1>
   <p class="plano-intro">Este es el plano de distribución del mercado. Puedes acercarte, moverte por los pasajes
   y ver cada puesto con su número. Los que están pintados de amarillo son los que figuraban libres
-  en la lista de secretaría del <strong>18 de agosto de 2026</strong>.</p>
+  en la lista de secretaría del <strong>18 de agosto de 2026</strong>. Junto a él va el mismo plano
+  pintado por rubro (en el celular, con el botón «Por rubro»): los dos se mueven juntos, así ves a
+  qué rubro va cada puesto libre.</p>
 
-  <div class="visor" id="visor">
-    <div class="visor-cargando" id="visor-cargando">Cargando el plano…</div>
-    <img id="plano" src="assets/plano-disponibilidad-zoom.webp" alt="Plano de distribución del Mercado Media Luna con los puestos libres marcados en amarillo" width="3000" height="5875" decoding="async">
-    <p class="visor-ayuda" id="visor-ayuda">Arrastra para moverte · pellizca o usa la rueda para acercar</p>
-    <div class="visor-ctrl">
-      <button type="button" id="mas" aria-label="Acercar">+</button>
-      <button type="button" id="menos" aria-label="Alejar">−</button>
-      <button type="button" id="reset" aria-label="Ver todo el plano" title="Ver todo">⤢</button>
+  <div class="visores" id="rubros" data-vista="disponibles">
+    <div class="visor-tabs" role="group" aria-label="Qué plano ver">
+      <button type="button" class="visor-tab" data-vista="disponibles" aria-pressed="true" aria-controls="panel-disponibles">Disponibles</button>
+      <button type="button" class="visor-tab" data-vista="rubros" aria-pressed="false" aria-controls="panel-rubros">Por rubro</button>
     </div>
+    <div class="visor-paneles">
+      <figure class="visor-panel" id="panel-disponibles" data-panel="disponibles">
+        <figcaption class="visor-titulo">Puestos disponibles</figcaption>
+        <div class="visor" id="visor" tabindex="0" role="group" aria-label="Plano de puestos disponibles" aria-describedby="visor-teclado">
+          <div class="visor-cargando" id="visor-cargando">Cargando el plano…</div>
+          <img id="plano" src="assets/plano-disponibilidad-zoom.webp" alt="Plano de distribución del Mercado Media Luna, lámina A-1, con los puestos y tiendas disponibles marcados en amarillo, fuerte o claro" width="3000" height="5875" decoding="async">
+          <p class="visor-ayuda" id="visor-ayuda">Arrastra para moverte · pellizca o usa la rueda para acercar</p>
+          <div class="visor-ctrl">
+            <button type="button" data-zoom="mas" aria-label="Acercar">+</button>
+            <button type="button" data-zoom="menos" aria-label="Alejar">−</button>
+            <button type="button" data-zoom="reset" aria-label="Ver todo el plano" title="Ver todo">⤢</button>
+          </div>
+        </div>
+        <ul class="mini-leyenda">
+          <li><span class="swatch swatch-libre" aria-hidden="true"></span><span class="swatch swatch-otro" aria-hidden="true"></span> Disponible: amarillo fuerte o claro, es lo mismo</li>
+        </ul>
+      </figure>
+      <figure class="visor-panel" id="panel-rubros" data-panel="rubros">
+        <figcaption class="visor-titulo">Por rubro</figcaption>
+        <div class="visor" id="visor-rubros" tabindex="0" role="group" aria-label="Plano por rubro" aria-describedby="visor-teclado">
+          <div class="visor-cargando">Cargando el plano por rubro…</div>
+          <img id="plano-rubros" src="assets/plano-rubros-zoom.webp" loading="lazy" alt="El mismo plano del Mercado Media Luna pintado por rubro: celeste para abarrotes y bazar, verde para frutas y verduras, amarillo pálido para menú y jugos, y fucsia para pollo, carne y pescado. Las tiendas van sin color porque son de rubro libre." width="3000" height="5875" decoding="async">
+          <p class="visor-ayuda">Arrastra para moverte · pellizca o usa la rueda para acercar</p>
+          <div class="visor-ctrl">
+            <button type="button" data-zoom="mas" aria-label="Acercar">+</button>
+            <button type="button" data-zoom="menos" aria-label="Alejar">−</button>
+            <button type="button" data-zoom="reset" aria-label="Ver todo el plano" title="Ver todo">⤢</button>
+          </div>
+        </div>
+        <ul class="mini-leyenda">
+          <li><span class="swatch swatch-abarrotes" aria-hidden="true"></span> Abarrotes / bazar</li>
+          <li><span class="swatch swatch-frutas" aria-hidden="true"></span> Frutas / verduras</li>
+          <li><span class="swatch swatch-menu" aria-hidden="true"></span> Menú / jugos</li>
+          <li><span class="swatch swatch-carnes" aria-hidden="true"></span> Pollo / carne / pescado</li>
+          <li><span class="swatch swatch-tienda" aria-hidden="true"></span> Tiendas: rubro libre</li>
+        </ul>
+      </figure>
+    </div>
+    <p class="sr" id="visor-teclado">Con el teclado: flechas para moverte por el plano, más y menos para acercar o alejar, cero para verlo entero.</p>
   </div>
 
-  <p class="visor-nota">Los dos tonos de amarillo del plano no significan lo mismo. El fuerte son los 128 puestos que la lista de secretaría daba por libres el 18 de agosto de 2026. El claro es una segunda marca que todavía estamos aclarando con la administración: <strong>pregúntanos antes de contar con cualquiera de esas unidades.</strong></p>
+  <p class="visor-nota"><strong>Los dos amarillos, el fuerte y el claro, significan lo mismo: disponible.</strong>
+  Marcados así hay 139 puestos y 9 tiendas (la leyenda del plano dice 128 puestos; abajo te explicamos la diferencia). La marca viene de la lista de secretaría del 18 de agosto de
+  2026, así que antes de que separes te confirmamos por escrito que la unidad que elegiste sigue libre.</p>
 
   <div class="plano-acciones">
     <a class="btn btn-accent" href="assets/plano-disponibilidad.pdf" download>Descargar el plano en PDF</a>
     <a class="btn btn-quiet" href="assets/plano-disponibilidad-zoom.webp" target="_blank" rel="noopener">Abrir la imagen en grande</a>
+    <a class="btn btn-quiet" href="assets/plano-rubros-zoom.webp" target="_blank" rel="noopener">Abrir el plano por rubro</a>
   </div>
 
   <h2>Cómo leer el plano</h2>
   <div class="leyenda">
-    <div>
-      <h3><span class="swatch swatch-libre" aria-hidden="true"></span> Amarillo fuerte</h3>
-      <p>Puestos que figuran como libres en la lista de secretaría del 18 de agosto de 2026. El plano
-      declara <strong>128 puestos libres</strong> a esa fecha.</p>
-    </div>
-    <div>
-      <h3><span class="swatch swatch-otro" aria-hidden="true"></span> Amarillo claro</h3>
-      <p>Una segunda marca de la lista original. Todavía la estamos reconciliando con el registro,
-      así que <strong>consúltanos por cualquiera de esas unidades</strong> antes de contar con ella.</p>
+    <div class="ancho">
+      <h3><span class="swatch swatch-libre" aria-hidden="true"></span><span class="swatch swatch-otro" aria-hidden="true"></span> Amarillo, fuerte o claro</h3>
+      <p>Unidad disponible. Los dos tonos significan lo mismo: lo confirmó el equipo el 28 de septiembre
+      de 2026. La leyenda del plano dice 128 puestos libres; contadas una por una, las marcas amarillas
+      (los dos tonos) son <strong>139 puestos y 9 tiendas</strong>. Todo corresponde a la lista de
+      secretaría del 18 de agosto de 2026.</p>
     </div>
     <div>
       <h3>P-1, P-2, P-3…</h3>
@@ -158,24 +258,41 @@ table.comp td:first-child{ color:var(--text-primary); font-weight:700 }
     </div>
     <div>
       <h3>T-1, T-2, T-3…</h3>
-      <p>Las tiendas, alineadas sobre Av. Perú y Av. 14 de Agosto. Son las que tienen frente a la calle.</p>
+      <p>Las tiendas, alineadas sobre Av. Perú y Av. 14 de Agosto. Son las que tienen frente a la calle.
+      En el plano figuran como disponibles la T-7, T-8A, T-26, T-27, T-28, T-32, T-34, T-35 y T-37.</p>
     </div>
   </div>
+
+  <h2>Por rubro: qué va en cada zona</h2>
+  <p>El plano por rubro es la misma lámina A-1 con los puestos interiores pintados según su rubro.
+  Estos son sus colores:</p>
+  <ul class="rubros-lista">
+    <li><span class="swatch swatch-abarrotes" aria-hidden="true"></span> Abarrotes / bazar</li>
+    <li><span class="swatch swatch-frutas" aria-hidden="true"></span> Frutas / verduras</li>
+    <li><span class="swatch swatch-menu" aria-hidden="true"></span> Menú / jugos</li>
+    <li><span class="swatch swatch-carnes" aria-hidden="true"></span> Pollo / carne / pescado</li>
+    <li class="ancho"><span class="swatch swatch-tienda" aria-hidden="true"></span> <span><strong>Las tiendas son de rubro libre:</strong> no están asignadas a ningún sector. Por eso van sin color.</span></li>
+  </ul>
+  <p>En la zona celeste, los rótulos del plano nombran también ropa, librería, accesorios y piñatería.</p>
+  <p class="visor-nota"><strong>El plano por rubro es referencial.</strong> El rubro de cada puesto se
+  confirma antes de separar.</p>
 
   <h2>Lo que hay en el mercado</h2>
   <div class="tabla-wrap">
     <table class="comp">
       <caption class="sr">Composición del Mercado Media Luna según el plano vigente</caption>
       <thead>
-        <tr><th scope="col">Tipo</th><th scope="col">Cuántos</th><th scope="col">Área típica</th><th scope="col">Rango real</th></tr>
+        <tr><th scope="col">Tipo</th><th scope="col">Cuántos</th><th scope="col">Disponibles según el plano</th><th scope="col">Área típica</th><th scope="col">Rango real</th></tr>
       </thead>
       <tbody>
-        <tr><td>Puestos interiores</td><td>423</td><td>9.45 m²</td><td>de 6.77 a 19.70 m²</td></tr>
-        <tr><td>Tiendas sobre avenida</td><td>62</td><td>25.06 m²</td><td>de 9.86 a 120.50 m²</td></tr>
-        <tr><td>Total de unidades</td><td>485</td><td>No aplica</td><td>5,580.71 m² de área vendible</td></tr>
+        <tr><td>Puestos interiores</td><td>423</td><td>139</td><td>9.45 m²</td><td>de 6.77 a 19.70 m²</td></tr>
+        <tr><td>Tiendas sobre avenida</td><td>62</td><td>9</td><td>25.06 m²</td><td>de 9.86 a 120.50 m²</td></tr>
+        <tr><td>Total de unidades</td><td>485</td><td>148</td><td>No aplica</td><td>5,580.71 m² de área vendible</td></tr>
       </tbody>
     </table>
   </div>
+  <p class="visor-nota">«Disponibles según el plano» son las marcas amarillas de la lista de secretaría del
+  18 de agosto de 2026. Se confirman por escrito antes de separar.</p>
   <p>Cada unidad tiene su propia área exacta en el plano, y esa es la que va al contrato. De los
   puestos, <strong>356 miden entre 9 y 10 m²</strong>: ese es el puesto estándar del mercado.</p>
 
@@ -186,10 +303,12 @@ table.comp td:first-child{ color:var(--text-primary); font-weight:700 }
     <p><strong>La disponibilidad cambia.</strong> La marca del plano es del 18 de agosto de 2026 y
     desde entonces puede haberse vendido o separado alguna unidad. Antes de que separes, te
     confirmamos por escrito que el puesto que elegiste sigue disponible.</p>
+    <p><strong>Los rubros también son referenciales.</strong> El plano por rubro muestra cómo está
+    zonificado el mercado; el rubro de cada puesto se confirma antes de separar.</p>
   </div>
 
   <h2>¿Viste uno que te gusta?</h2>
-  <p>Dinos el número del puesto y te confirmamos si sigue libre, cuánto mide exactamente y cuánto cuesta.</p>
+  <p>Dinos el número del puesto y te confirmamos si sigue libre, qué rubro le toca, cuánto mide exactamente y cuánto cuesta.</p>
   <div class="cta-plano">
     <a class="btn btn-accent" href="index.html#hablemos">Preguntar por un puesto</a>
     <a class="btn btn-quiet" data-wa href="index.html#hablemos">Escríbeme por WhatsApp</a>
@@ -222,114 +341,213 @@ table.comp td:first-child{ color:var(--text-primary); font-weight:700 }
   <p class="pie-legal">SCP Inmobiliaria es el nombre comercial de SOCIEDAD INMOBILIARIA CONSTRUYO PERU S.A.C. · RUC 20552782292 · Av. Próceres de la Independencia Mza. S17 Lote 47, Urb. Mariscal Cáceres, Lima.</p>
 </footer>
 
-<script src="assets/config.js?v=fa860eb2"></script>
-<script src="assets/medicion.js?v=fa860eb2"></script>
+<script src="assets/config.js?v=ca853953"></script>
+<script src="assets/medicion.js?v=ca853953"></script>
 <script>
 /* Visor de plano: arrastrar, rueda, pellizco y doble toque.
    Sin librerías: la imagen se mueve con transform, que es lo único que el
-   navegador puede animar sin repintar todo. */
-(function(){
-  var caja = document.getElementById('visor');
-  var img  = document.getElementById('plano');
-  var carg = document.getElementById('visor-cargando');
-  var ayuda= document.getElementById('visor-ayuda');
-  if(!caja || !img) return;
+   navegador puede animar sin repintar todo.
 
-  var esc = 1, min = 1, max = 6, x = 0, y = 0, iw = 0, ih = 0;
+   Desde el 28/09/2026 son dos láminas: disponibilidad y rubros. La de rubros
+   (assets/plano-rubros-zoom.webp) se registró al sistema de coordenadas de la
+   de disponibilidad: las dos miden 3000 × 5875 y un mismo píxel es el mismo
+   lugar del mercado. Por eso comparten UN solo estado de zoom y posición: en
+   la computadora se ven lado a lado y se mueven juntas; en el celular se ve
+   una y el selector cambia de lámina sin perder el zoom. */
+(function(){
+  var grupo = document.getElementById('rubros');
+  var cajas = Array.prototype.slice.call(document.querySelectorAll('.visores .visor'));
+  var imgs  = cajas.map(function(c){ return c.querySelector('img'); });
+  var ayudas= Array.prototype.slice.call(document.querySelectorAll('.visores .visor-ayuda'));
+  var tabs  = Array.prototype.slice.call(document.querySelectorAll('.visor-tab'));
+  if(!grupo || !cajas.length || imgs.indexOf(null) !== -1) return;
+
+  var esc = 1, min = 1, max = 6, x = 0, y = 0, iw = 3000, ih = 5875, cw0 = 0, ch0 = 0;
+
+  /* todas las cajas visibles miden lo mismo: se mide la primera que se vea */
+  function caja(){
+    for(var i = 0; i < cajas.length; i++) if(cajas[i].clientWidth) return cajas[i];
+    return cajas[0];
+  }
 
   function aplicar(){
-    var cw = caja.clientWidth, ch = caja.clientHeight;
+    var c = caja(), cw = c.clientWidth, ch = c.clientHeight;
     var w = iw * esc, h = ih * esc;
     /* si la imagen cabe, se centra; si no, no se deja despegar de los bordes */
     x = w <= cw ? (cw - w) / 2 : Math.min(0, Math.max(cw - w, x));
     y = h <= ch ? (ch - h) / 2 : Math.min(0, Math.max(ch - h, y));
-    img.style.transform = 'translate(' + x + 'px,' + y + 'px) scale(' + esc + ')';
+    var t = 'translate(' + x + 'px,' + y + 'px) scale(' + esc + ')';
+    imgs.forEach(function(i){ i.style.transform = t; });
+  }
+
+  function limites(cw, ch){
+    /* se puede alejar hasta ver la lámina entera */
+    min = Math.min(cw / iw, ch / ih);
+    max = Math.max(min * 12, 2);
   }
 
   function encajar(){
-    iw = img.naturalWidth || 3000; ih = img.naturalHeight || 5875;
-    var cw = caja.clientWidth, ch = caja.clientHeight;
-    /* se puede alejar hasta ver la lámina entera, pero arranca ajustado al
-       ancho: así el plano se ve grande y el visitante solo baja. */
-    min = Math.min(cw / iw, ch / ih);
-    esc = cw / iw; x = 0; y = 0;
-    max = Math.max(min * 12, 2);
+    var c = caja(), cw = c.clientWidth, ch = c.clientHeight;
+    limites(cw, ch);
+    /* arranca ajustado al ancho: así el plano se ve grande y el visitante solo baja */
+    esc = cw / iw; x = 0; y = 0; cw0 = cw; ch0 = ch;
     aplicar();
   }
 
-  function zoom(f, cx, cy){
+  /* Al cambiar el tamaño (girar el celular, cruzar el corte de 900 px) se
+     conserva lo que se estaba mirando: el mismo punto al centro y el mismo
+     zoom relativo al ancho. Si solo cambió el alto, como cuando el celular
+     esconde la barra del navegador, no se mueve nada. */
+  function reajustar(){
+    var c = caja(), cw = c.clientWidth, ch = c.clientHeight;
+    if(!cw || (cw === cw0 && ch === ch0)) return;
+    if(!cw0){ encajar(); return; }
+    var px = (cw0 / 2 - x) / esc, py = (ch0 / 2 - y) / esc;
+    limites(cw, ch);
+    esc = Math.min(max, Math.max(min, esc * cw / cw0));
+    x = cw / 2 - px * esc; y = ch / 2 - py * esc;
+    cw0 = cw; ch0 = ch;
+    aplicar();
+  }
+
+  function ocultarAyuda(){ ayudas.forEach(function(a){ a.style.opacity = '0'; }); }
+
+  function zoom(f, cx, cy, c){
     var n = Math.min(max, Math.max(min, esc * f));
     if(n === esc) return;
-    var r = caja.getBoundingClientRect();
+    var r = (c || caja()).getBoundingClientRect();
     var px = (cx - r.left - x) / esc, py = (cy - r.top - y) / esc;
     esc = n;
     x = cx - r.left - px * esc;
     y = cy - r.top - py * esc;
     aplicar();
-    if(ayuda) ayuda.style.opacity = '0';
+    ocultarAyuda();
   }
 
-  if(img.complete && img.naturalWidth){ carg.remove(); encajar(); }
-  else {
-    img.addEventListener('load', function(){ carg.remove(); encajar(); });
-    img.addEventListener('error', function(){ carg.textContent = 'No se pudo cargar el plano. Descárgalo en PDF más abajo.'; });
-  }
-  addEventListener('resize', encajar);
-
-  caja.addEventListener('wheel', function(e){
-    e.preventDefault();
-    zoom(e.deltaY < 0 ? 1.18 : 1/1.18, e.clientX, e.clientY);
-  }, {passive:false});
-
-  var puntos = new Map(), sep0 = 0, esc0 = 1, ax = 0, ay = 0, mueve = false;
-
-  caja.addEventListener('pointerdown', function(e){
-    /* los botones del visor viven dentro de la caja: si capturamos el puntero
-       aquí, el click nunca les llega. */
-    if(e.target.closest('.visor-ctrl')) return;
-    caja.setPointerCapture(e.pointerId);
-    puntos.set(e.pointerId, {x:e.clientX, y:e.clientY});
-    if(puntos.size === 1){ mueve = true; ax = e.clientX - x; ay = e.clientY - y; caja.classList.add('arrastrando'); }
-    if(puntos.size === 2){ mueve = false; var p = [...puntos.values()]; sep0 = Math.hypot(p[0].x-p[1].x, p[0].y-p[1].y); esc0 = esc; }
-  });
-
-  caja.addEventListener('pointermove', function(e){
-    if(!puntos.has(e.pointerId)) return;
-    puntos.set(e.pointerId, {x:e.clientX, y:e.clientY});
-    if(puntos.size === 2){
-      var p = [...puntos.values()];
-      var sep = Math.hypot(p[0].x-p[1].x, p[0].y-p[1].y);
-      if(sep0 > 0){
-        var obj = Math.min(max, Math.max(min, esc0 * (sep / sep0)));
-        zoom(obj / esc, (p[0].x+p[1].x)/2, (p[0].y+p[1].y)/2);
+  /* cada lámina quita su propio aviso de carga; la de rubros llega con
+     loading="lazy": en el celular no se baja hasta que alguien la pide */
+  imgs.forEach(function(img, k){
+    var carg = cajas[k].querySelector('.visor-cargando');
+    function lista(){
+      if(carg && carg.parentNode) carg.remove();
+      if(k === 0 && img.naturalWidth && (img.naturalWidth !== iw || img.naturalHeight !== ih)){
+        iw = img.naturalWidth; ih = img.naturalHeight; encajar();
       }
-    } else if(mueve){
-      x = e.clientX - ax; y = e.clientY - ay; aplicar();
-      if(ayuda) ayuda.style.opacity = '0';
+    }
+    function fallo(){
+      if(carg) carg.textContent = k === 0 ? 'No se pudo cargar el plano. Descárgalo en PDF más abajo.'
+                                          : 'No se pudo cargar el plano por rubro. Vuelve a intentarlo en un momento.';
+    }
+    if(img.complete && img.naturalWidth) lista();
+    /* la primera lámina no es diferida: si ya terminó sin imagen, el error
+       ocurrió antes de este script y su evento ya pasó */
+    else if(k === 0 && img.complete) fallo();
+    else {
+      img.addEventListener('load', lista);
+      img.addEventListener('error', fallo);
     }
   });
+  encajar();
+  addEventListener('resize', reajustar);
+  /* la caja también cambia de ancho sin que cambie la ventana (al aparecer la
+     barra de desplazamiento, por ejemplo): se vigila la caja misma */
+  if(window.ResizeObserver) new ResizeObserver(reajustar).observe(grupo);
+
+  var puntos = new Map(), sep0 = 0, esc0 = 1, ax = 0, ay = 0, mueve = false, cajaGesto = null;
 
   function soltar(e){
     puntos.delete(e.pointerId);
     if(puntos.size < 2) sep0 = 0;
-    if(puntos.size === 0){ mueve = false; caja.classList.remove('arrastrando'); }
+    if(puntos.size === 0){ mueve = false; cajas.forEach(function(c){ c.classList.remove('arrastrando'); }); }
   }
-  caja.addEventListener('pointerup', soltar);
-  caja.addEventListener('pointercancel', soltar);
 
-  caja.addEventListener('dblclick', function(e){
-    zoom(esc > min * 2.5 ? min / esc : 2.5, e.clientX, e.clientY);
+  cajas.forEach(function(c){
+    c.addEventListener('wheel', function(e){
+      e.preventDefault();
+      zoom(e.deltaY < 0 ? 1.18 : 1/1.18, e.clientX, e.clientY, c);
+    }, {passive:false});
+
+    c.addEventListener('pointerdown', function(e){
+      /* los botones del visor viven dentro de la caja: si capturamos el puntero
+         aquí, el click nunca les llega. */
+      if(e.target.closest('.visor-ctrl')) return;
+      c.setPointerCapture(e.pointerId);
+      puntos.set(e.pointerId, {x:e.clientX, y:e.clientY});
+      if(puntos.size === 1){ cajaGesto = c; mueve = true; ax = e.clientX - x; ay = e.clientY - y; c.classList.add('arrastrando'); }
+      if(puntos.size === 2){ mueve = false; var p = Array.from(puntos.values()); sep0 = Math.hypot(p[0].x-p[1].x, p[0].y-p[1].y); esc0 = esc; }
+    });
+
+    c.addEventListener('pointermove', function(e){
+      if(!puntos.has(e.pointerId)) return;
+      puntos.set(e.pointerId, {x:e.clientX, y:e.clientY});
+      if(puntos.size === 2){
+        var p = Array.from(puntos.values());
+        var sep = Math.hypot(p[0].x-p[1].x, p[0].y-p[1].y);
+        if(sep0 > 0){
+          var obj = Math.min(max, Math.max(min, esc0 * (sep / sep0)));
+          zoom(obj / esc, (p[0].x+p[1].x)/2, (p[0].y+p[1].y)/2, cajaGesto || c);
+        }
+      } else if(mueve){
+        x = e.clientX - ax; y = e.clientY - ay; aplicar();
+        ocultarAyuda();
+      }
+    });
+
+    c.addEventListener('pointerup', soltar);
+    c.addEventListener('pointercancel', soltar);
+
+    c.addEventListener('dblclick', function(e){
+      /* tocar + dos veces seguidas no es un doble toque sobre el plano: sin
+         esto, el segundo toque devolvía el plano al zoom mínimo */
+      if(e.target.closest('.visor-ctrl')) return;
+      zoom(esc > min * 2.5 ? min / esc : 2.5, e.clientX, e.clientY, c);
+    });
+
+    /* teclado: sin esto, quien no usa mouse podía acercar con los botones
+       pero no moverse, y se quedaba viendo solo el centro del plano */
+    c.addEventListener('keydown', function(e){
+      if(e.altKey || e.ctrlKey || e.metaKey) return;
+      var paso = Math.round(Math.min(c.clientWidth, c.clientHeight) * 0.2), r;
+      switch(e.key){
+        case 'ArrowLeft':  x += paso; break;
+        case 'ArrowRight': x -= paso; break;
+        case 'ArrowUp':    y += paso; break;
+        case 'ArrowDown':  y -= paso; break;
+        case '+': case '=': case '-': case '_':
+          r = c.getBoundingClientRect();
+          zoom(e.key === '+' || e.key === '=' ? 1.5 : 1/1.5, r.left + r.width/2, r.top + r.height/2, c);
+          e.preventDefault(); return;
+        case '0':
+          encajar(); ayudas.forEach(function(a){ a.style.opacity = ''; });
+          e.preventDefault(); return;
+        default: return;
+      }
+      e.preventDefault();
+      aplicar(); ocultarAyuda();
+    });
+
+    c.querySelectorAll('[data-zoom]').forEach(function(b){
+      b.addEventListener('click', function(){
+        var accion = b.getAttribute('data-zoom');
+        if(accion === 'reset'){ encajar(); ayudas.forEach(function(a){ a.style.opacity = ''; }); return; }
+        var r = c.getBoundingClientRect();
+        zoom(accion === 'mas' ? 1.5 : 1/1.5, r.left + r.width/2, r.top + r.height/2, c);
+      });
+    });
   });
 
-  document.getElementById('mas').addEventListener('click', function(){
-    var r = caja.getBoundingClientRect(); zoom(1.5, r.left + r.width/2, r.top + r.height/2);
+  /* selector del celular: cambia la lámina visible, el zoom sigue siendo el mismo */
+  function vista(v){
+    grupo.setAttribute('data-vista', v);
+    tabs.forEach(function(t){ t.setAttribute('aria-pressed', String(t.getAttribute('data-vista') === v)); });
+    aplicar();
+  }
+  tabs.forEach(function(t){
+    t.addEventListener('click', function(){ vista(t.getAttribute('data-vista')); });
   });
-  document.getElementById('menos').addEventListener('click', function(){
-    var r = caja.getBoundingClientRect(); zoom(1/1.5, r.left + r.width/2, r.top + r.height/2);
-  });
-  document.getElementById('reset').addEventListener('click', function(){
-    encajar(); if(ayuda) ayuda.style.opacity = '';
-  });
+  /* index.html enlaza a planos.html#rubros: en el celular llega con la lámina de rubros */
+  if(location.hash === '#rubros') vista('rubros');
+  addEventListener('hashchange', function(){ if(location.hash === '#rubros') vista('rubros'); });
 })();
 
 /* enlaces de WhatsApp, igual que en el resto del sitio */

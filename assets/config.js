@@ -79,10 +79,12 @@ window.MML = {
       id: '1cvIRgGigTg',
       nombre: 'Vilma Ferrer',
       descripcion: 'Compradora del mercado',
-      /* sin cita todavía: los subtítulos de su video no se pudieron leer
-         (YouTube bloqueó la consulta el 25/09). Va textual cuando se tenga;
-         mientras tanto la tarjeta sale sin frase, no con una inventada. */
-      cita: '',
+      /* textual, de 0:04 a 0:13 de su video, según la transcripción de
+         YouTube (leída el 28/09/2026; se quitaron las muletillas). Patriccio
+         pidió una frase positiva que invite a ver su testimonio. Se eligió una
+         que no promete ganancia ni revalorización. 🟡 Confirmar escuchando el
+         video: la transcripción es automática. */
+      cita: 'Cuando hubo el proyecto del mercado me emocioné, invertí porque me encanta el negocio.',
       foto: 'assets/testimonio-vilma-ferrer.jpg',
       duracion: '2:42',
       /* entregado por Patriccio para publicar el 25/09/2026 */
@@ -101,6 +103,25 @@ window.MML = {
       duracion: '2:59',
       /* Autorizó de viva voz a Patriccio el 23/09/2026. Falta archivar la firma. */
       autorizacion: 'Verbal, 23/09/2026. Falta archivar la firma.',
+    },
+    {
+      id: 'll-ct7oEnPo',
+      nombre: 'Víctor Arbieto',
+      /* así lo presenta el canal: "nuestro socio Víctor Arbieto" */
+      descripcion: 'Socio del mercado',
+      /* textual, de 0:16 a 0:37 de su video, según la transcripción de YouTube
+         (leída el 28/09/2026; sin muletillas). 🟡 Confirmar escuchando.
+         OJO: el video completo dice "el único mercado que tiene su título de
+         propiedad" (1:49, 2:51) y "lo dupliqué" / "van a ganar su dinero"
+         (2:51-3:10). Patriccio decidió publicarlo completo el 28/09/2026: ver
+         PENDIENTES-WEB.md E28. */
+      cita: 'Siempre quise tener un puesto en un mercado y opté en invertir en el mercado Media Luna […] para poder dejar buena herencia también a mis hijos.',
+      /* video vertical subido como video normal, no como Short: la tarjeta lo
+         muestra vertical igual que los demás. Foto: cuadro del video entregado
+         por Patriccio el 28/09/2026, recortado a 4:5. */
+      foto: 'assets/testimonio-victor-arbieto.jpg',
+      duracion: '3:40',
+      autorizacion: 'Entregado por Patriccio para publicar (28/09/2026). Falta archivar la firma.',
     },
   ],
 
