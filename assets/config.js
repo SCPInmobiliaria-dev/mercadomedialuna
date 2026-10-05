@@ -172,6 +172,62 @@ window.MML = {
       duracion: '3:40',
       autorizacion: 'Entregado por Patriccio para publicar (28/09/2026). Falta archivar la firma.',
     },
+    {
+      id: 'dX_l9PNLOC0',
+      nombre: 'María Alejandrina',
+      /* así la presenta el canal: "una de nuestras socias fundadoras" */
+      descripcion: 'Socia fundadora del mercado',
+      /* textual, de 0:11 a 0:19 de su video, según la transcripción de YouTube
+         (leída el 05/10/2026; se quitó la muletilla "yo"). 🟡 Confirmar
+         escuchando: la transcripción es automática.
+         OJO: el video completo dice "con título, con bas, con todo" (0:30),
+         "más adelante él va a ganar más" (1:47), "su título de ahí testimonio"
+         (2:04): ver PENDIENTES-WEB.md E29. */
+      cita: 'Yo también voy a comprar mi puesto para motivarme, trabajar también y seguir adelante.',
+      /* cuadro del video entregado por SCP el 05/10/2026, recortado a 4:5 sin
+         la marca "CapCut AI" de la esquina */
+      foto: 'assets/testimonio-maria-alejandrina.jpg',
+      duracion: '2:51',
+      autorizacion: 'Entregado por SCP para publicar (05/10/2026). Falta archivar la firma.',
+    },
+    {
+      id: '9kLxIYqXZSY',
+      nombre: 'Waldo Arias',
+      descripcion: 'Socio del mercado',
+      /* textual, de 0:04 a 0:11 de su video, según la transcripción de YouTube
+         (leída el 05/10/2026). 🟡 Confirmar escuchando: la transcripción
+         automática lo escribe "el punto eséntrico" y repite palabras.
+         OJO: el video completo dice "va a pasar un boom" (0:29), "es una
+         inversión para el futuro, para que tenga un ingreso" (1:18),
+         "tiene su propiedad" (1:59) y "tiene título de propiedad" (2:31):
+         ver PENDIENTES-WEB.md E29. */
+      cita: 'A mí me motivó el mercado para invertir por la zona, que es el punto céntrico.',
+      /* cuadro del video entregado por SCP el 05/10/2026, recortado a 4:5 sin
+         la marca "CapCut AI". Se difuminó un letrero del fondo ("atención 24
+         horas"): podía leerse como un servicio nuestro. */
+      foto: 'assets/testimonio-waldo-arias.jpg',
+      duracion: '2:50',
+      autorizacion: 'Entregado por SCP para publicar (05/10/2026). Falta archivar la firma.',
+    },
+    {
+      id: 'DjQuVSABEuo',
+      nombre: 'Neil Salvatierra',
+      descripcion: 'Socio del mercado',
+      /* textual, de 0:22 a 0:31 de su video, según la transcripción de YouTube
+         (leída el 05/10/2026). 🟡 Confirmar escuchando. Se omitió con […] "de
+         la mano de seis zonas poblacionales", una cifra sin fuente.
+         OJO: el video completo dice "una gran inversión que va a respaldar el
+         futuro de ustedes y de su familia" (0:00), "desde la primera cuota
+         contarán ustedes con su minuta" (1:20) y, al final, una frase de
+         entre cámaras ("La última respuesta no me gustó, Waltercito", 2:02):
+         ver PENDIENTES-WEB.md E29. */
+      cita: 'Ya que Lima está creciendo, me pareció una muy buena oportunidad poder invertir esta vez en una zona que […] está creciendo.',
+      /* cuadro del video entregado por SCP el 05/10/2026, recortado a 4:5 sin
+         la marca "CapCut AI" */
+      foto: 'assets/testimonio-neil-salvatierra.jpg',
+      duracion: '2:11',
+      autorizacion: 'Entregado por SCP para publicar (05/10/2026). Falta archivar la firma.',
+    },
   ],
 
   /* ---- 4a · Walter, en sus palabras (sección "Quiénes lo construyen") -----
