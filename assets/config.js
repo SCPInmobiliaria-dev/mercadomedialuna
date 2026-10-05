@@ -47,7 +47,8 @@ window.MML = {
     sondeoConRealtimeSeg: 60,
     sondeoSinRealtimeSeg: 15,
     /* Precios: los MISMOS textos que ya publica la portada (index.html, "Qué se
-       vende"), sacados de 00-fuente-de-verdad/precios-vigentes.md (23/09/2026).
+       vende"), sacados de 00-fuente-de-verdad/precios-vigentes.md (05/10/2026: puesto US$25,000, tienda US$82,000,
+       aprobados por Walter y comunicados por SCP; respaldo escrito pendiente).
        El precio de tienda se muestra SOLO para las tiendas de 22 a 23 m²
        (precios-vigentes.md §0.2 y su fila "22-23 m²"): las demás, y cualquier
        unidad sin área, se cotizan según su área. El tipo de cambio es el de
@@ -57,17 +58,20 @@ window.MML = {
        (356 de los 423 puestos, inventario-maestro.md; el parámetro del CRM es
        precio_puesto_9m2 y el Acta 03-O02 vende puestos de 9 m²). Los puestos de
        otra área se cotizan según su área. 🟡 Por validar con Walter (02/10/2026):
-       precios-vigentes.md no dice si los US$24,000 valen para un puesto de 19.70 m². */
+       precios-vigentes.md no dice si los US$25,000 valen para un puesto de 19.70 m².
+       Cuentas: US$ × 3.37 → 25,000 = 84,250 · 82,000 = 276,340. */
     precios: {
-      puesto: 'US$ 24,000 · S/ 80,880',
+      puesto: 'US$ 25,000 · S/ 84,250',
       puestoAreaMin: 9,
       puestoAreaMax: 10,
-      tienda: 'US$ 75,000 · S/ 252,750',
+      tienda: 'US$ 82,000 · S/ 276,340',
       tiendaAreaMin: 22,
       tiendaAreaMax: 23,
       sinPrecio: 'Precio según su área: te lo cotizamos',
       igv: 'IGV incluido.',
-      condicionPuesto: 'Rige hasta completar la venta de 10 puestos más; si cambia, lo actualizamos aquí.',
+      /* sin plazo: "hasta completar la venta de 10 puestos más" era del precio de US$24,000 y
+         Walter no dijo si sigue (precios-vigentes.md, bloque del 05/10/2026) */
+      condicionPuesto: 'Si el precio cambia, lo actualizamos aquí.',
       notarial: 'No incluye el trámite notarial de S/2,500.',
       tipoCambio: 'Tipo de cambio referencial S/3.37 al 23/09/2026 (BCRP).',
     },
