@@ -109,6 +109,8 @@
     tc: numero(PRE.tipoCambioValor, NaN, 1, 20)
   };
   var PRECIOS_OK = !!(P.igv && P.notarial && P.tipoCambio);
+  /* la regla de precio único de config.js (desde el 06/10/2026 apagada: precios por ubicación en el CRM) */
+  var REGLA_GENERAL = INV.reglaGeneral === true;
   /* El número con que se pasan a soles los precios en dólares del CRM tiene
      que ser el mismo que dice el texto del tipo de cambio: si alguien cambia
      uno y no el otro, no se publica ningún precio del CRM en dólares. */
@@ -380,7 +382,7 @@
     }
     /* la regla de config.js se calcula con el área: si el área todavía no está
        confirmada contra el plano, tampoco el precio */
-    if (u.porConfirmar) return null;
+    if (!REGLA_GENERAL || u.porConfirmar) return null;
     if (u.tipo === 'puesto' && P.puesto && u.area != null && u.area >= P.pMin && u.area <= P.pMax) {
       return { texto: P.puesto, notas: [P.igv, P.condicionPuesto, P.notarial, P.tipoCambio].filter(Boolean), notasMensaje: base };
     }
@@ -658,6 +660,13 @@
       el.precioPuestoNota.textContent = 'Cada unidad muestra su precio en su ficha. ' + P.condicionPuesto;
       el.precioTienda.textContent = precioComun('tienda');
       if (rot.tiendaNota) rot.tiendaNota.textContent = 'Las que no tienen precio publicado se cotizan según su área.';
+    } else if (!REGLA_GENERAL) {
+      if (rot.puesto) rot.puesto.textContent = 'Puestos';
+      if (rot.tienda) rot.tienda.textContent = 'Tiendas';
+      el.precioPuesto.textContent = P.sinPrecio;
+      el.precioPuestoNota.textContent = 'El precio de cada unidad depende de su ubicación.';
+      el.precioTienda.textContent = P.sinPrecio;
+      if (rot.tiendaNota) rot.tiendaNota.textContent = 'El precio de cada unidad depende de su ubicación.';
     } else {
       if (rot.puesto) rot.puesto.textContent = 'Puesto de 9 a 10 m²';
       if (rot.tienda) rot.tienda.textContent = 'Tienda de 22 a 23 m²';
@@ -905,7 +914,7 @@
       (u.porConfirmar ? '<p class="inv-d-aviso">Figura disponible en nuestro inventario. Su área y su ubicación se confirman contra el plano antes de separar.</p>' : '') +
       '<div class="inv-d-precio"><small>' + esc(rotuloPrecio) + '</small>' +
         (pr ? '<b>' + esc(nb(pr.texto)) + '</b><p>' + esc(pr.notas.join(' ')) + '</p>'
-            : '<b>' + esc(P.sinPrecio) + '</b><p>' + esc(st.preciosCrm
+            : '<b>' + esc(P.sinPrecio) + '</b><p>' + esc(st.preciosCrm || !REGLA_GENERAL
                 ? 'Te lo confirmamos por escrito.'
                 : u.porConfirmar
                   ? 'El precio se confirma junto con el área, por escrito, antes de separar.'
