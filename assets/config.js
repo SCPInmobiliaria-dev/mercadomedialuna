@@ -51,6 +51,11 @@ window.MML = {
        deja la web al día aunque se pierda un aviso de Realtime */
     sondeoConRealtimeSeg: 20,
     sondeoSinRealtimeSeg: 10,
+    /* false desde el 06/10/2026: cada unidad tiene su precio por ubicación en el CRM
+       (precios-vigentes.md, bloque del 06/10). La regla de precio único de abajo
+       (puesto de 9 a 10 m², tienda de 22 a 23 m²) ya no se usa en ningún caso: sin
+       precio publicado en el CRM, la unidad dice "te lo cotizamos". */
+    reglaGeneral: false,
     /* Precios: los MISMOS textos que ya publica la portada (index.html, "Qué se
        vende"), sacados de 00-fuente-de-verdad/precios-vigentes.md (05/10/2026: puesto US$25,000, tienda US$82,000,
        aprobados por Walter y comunicados por SCP; respaldo escrito pendiente).
