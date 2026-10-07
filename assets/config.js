@@ -30,22 +30,27 @@ window.MML = {
      Rosa cambia en /inventario del CRM aparece en la web en pocos
      segundos, sin tocar este archivo ni volver a publicar el sitio.
      · Lectura: la función pública fn_inventario_publico() (solo código, tipo,
-       área, rubro, polígono y estado; nada de titulares ni observaciones).
-       "Disponible" sale de v_unidades_ofrecibles, no se recalcula aquí.
+       área, rubro, polígono, estado y, desde 19-precio-por-unidad.sql, el
+       precio de la unidad disponible cuyo nivel está en verde; nada de
+       titulares ni observaciones). "Disponible" sale de v_unidades_ofrecibles,
+       no se recalcula aquí. Los polígonos salen del PDF de arquitectura
+       (18-geometria-plano.sql, 06/10/2026).
      · Aviso de cambio: el canal público de Realtime 'inventario-publico'
        (evento 'cambio', sin datos: la página vuelve a leer la función).
      · Si el canal se cae, la página vuelve a leer cada sondeoSinRealtimeSeg;
        con el canal arriba, cada sondeoConRealtimeSeg por si se perdió un aviso.
-     🔴 Hasta que alguien con acceso aplique en el SQL Editor de Supabase
-     07-crm/02-codigo/crm-mml/sql/16-inventario-publico.sql, la función no
-     existe (404) y la página muestra el plano por rubro sin disponibilidad,
-     reintentando sola. No hace falta tocar nada aquí cuando se aplique. */
+     🟢 16, 18 y 19 están aplicados en el proyecto vivo (comprobado el
+     06/10/2026: la función responde con la clave "precio" y P-264 ya tiene
+     polígono). Si la función no responde, la página muestra la lámina de
+     arquitectura sin disponibilidad y reintenta sola. */
   inventario: {
     rpc: 'fn_inventario_publico',
     canal: 'inventario-publico',
     evento: 'cambio',
-    sondeoConRealtimeSeg: 60,
-    sondeoSinRealtimeSeg: 15,
+    /* la respuesta pesa unos 10 KB comprimida: leer cada 20 s cuesta poco y
+       deja la web al día aunque se pierda un aviso de Realtime */
+    sondeoConRealtimeSeg: 20,
+    sondeoSinRealtimeSeg: 10,
     /* Precios: los MISMOS textos que ya publica la portada (index.html, "Qué se
        vende"), sacados de 00-fuente-de-verdad/precios-vigentes.md (05/10/2026: puesto US$25,000, tienda US$82,000,
        aprobados por Walter y comunicados por SCP; respaldo escrito pendiente).
@@ -59,7 +64,10 @@ window.MML = {
        precio_puesto_9m2 y el Acta 03-O02 vende puestos de 9 m²). Los puestos de
        otra área se cotizan según su área. 🟡 Por validar con Walter (02/10/2026):
        precios-vigentes.md no dice si los US$25,000 valen para un puesto de 19.70 m².
-       Cuentas: US$ × 3.37 → 25,000 = 84,250 · 82,000 = 276,340. */
+       Cuentas: US$ × 3.37 → 25,000 = 84,250 · 82,000 = 276,340.
+       Desde el 06/10/2026 ("cada unidad con su precio", SCP por chat): en cuanto
+       el CRM publica el precio de alguna unidad, el plano muestra SOLO los
+       precios del CRM y esta regla de 9-10 m² y 22-23 m² deja de usarse ahí. */
     precios: {
       puesto: 'US$ 25,000 · S/ 84,250',
       puestoAreaMin: 9,
@@ -74,6 +82,10 @@ window.MML = {
       condicionPuesto: 'Si el precio cambia, lo actualizamos aquí.',
       notarial: 'No incluye el trámite notarial de S/2,500.',
       tipoCambio: 'Tipo de cambio referencial S/3.37 al 23/09/2026 (BCRP).',
+      /* el MISMO número del texto de arriba: con él se pasan a soles los
+         precios en dólares que manda el CRM. Si cambia uno, cambia el otro; si
+         no coinciden, el plano no publica ningún precio del CRM en dólares. */
+      tipoCambioValor: 3.37,
     },
   },
 

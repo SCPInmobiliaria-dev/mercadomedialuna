@@ -7,19 +7,31 @@
    El inventario del CRM (Supabase, proyecto crm-mml) es la ÚNICA fuente.
    Esta página no guarda ni calcula disponibilidad: la lee de la función
    pública fn_inventario_publico(), que devuelve por unidad solo código,
-   tipo, área, rubro, polígono y uno de tres estados (disponible, separada,
-   no_disponible). "Disponible" lo decide el CRM con v_unidades_ofrecibles.
-   Ver 07-crm/02-codigo/crm-mml/sql/16-inventario-publico.sql.
+   tipo, área, rubro, polígono, uno de tres estados (disponible, separada,
+   no_disponible) y, desde el 06/10/2026, su precio. En el CRM
+   (07-crm/02-codigo/crm-mml/sql/):
+   · 16-inventario-publico.sql: la función y el aviso por Realtime (en vivo
+     desde el 05/10/2026). "Disponible" lo decide v_unidades_ofrecibles.
+   · 18-geometria-plano.sql: los polígonos salen de las paredes del PDF de
+     arquitectura (06/10/2026). Por eso el fondo del plano es esa misma
+     lámina (assets/plano-base-a1-v1.webp) y no un contorno trazado a mano.
+   · 19-precio-por-unidad.sql: la clave "precio" {monto, moneda}, solo de
+     una unidad disponible cuyo nivel de precio está en verde.
+   · Si el CRM agrega "verificada" (false = el dato de la unidad todavía no
+     está confirmado contra el plano), la unidad disponible se dibuja con un
+     rayado fino y "por confirmar contra el plano" (decisión de SCP por chat,
+     06/10/2026). Sin esa clave, todo lo disponible cuenta como verificado.
 
    Cómo se entera de un cambio
    ---------------------------
    1. Realtime: un WebSocket al canal público 'inventario-publico'. El CRM
       manda el evento 'cambio' (sin datos) cada vez que se toca una unidad,
-      una separación o una oportunidad; aquí se espera ~0.8 s por si llegan
-      varios juntos y se vuelve a leer la función.
-   2. Sondeo de respaldo: cada 60 s con el canal arriba (por si se perdió un
-      aviso) y cada 15 s sin él. También al volver a la pestaña, al recuperar
-      la red y al enfocar la ventana.
+      una separación, una oportunidad o un nivel de precio; aquí se espera
+      ~0.8 s por si llegan varios juntos y se vuelve a leer la función.
+   2. Sondeo de respaldo: cada 20 s con el canal arriba (por si se perdió un
+      aviso) y cada 10 s sin él (la respuesta pesa unos 10 KB comprimida).
+      También al volver a la pestaña, al recuperar la red y al enfocar la
+      ventana.
    Solo se repinta si cambió la revisión (el md5 que manda el CRM).
 
    Qué se muestra cuando algo falla
@@ -29,13 +41,22 @@
      disponibilidad sin confirmar" y no deja pedir la separación.
    · Antes de abrir WhatsApp se vuelve a leer el inventario y se comprueba
      que la unidad sigue disponible.
-   · Si la PRIMERA lectura falla (sin red, o la función aún no existe en el
-     CRM), se muestra el plano por rubro como imagen, sin disponibilidad, y
-     se sigue intentando: en cuanto hay datos, aparece el plano interactivo.
+   · Si la PRIMERA lectura falla (sin red, o la función no responde), se
+     muestra el plano de arquitectura como imagen, sin disponibilidad, y se
+     sigue intentando: en cuanto hay datos, aparece el plano interactivo.
 
-   Precios: solo los textos de window.MML.inventario.precios (config.js),
-   que son los mismos de la portada. Sin esas notas no se muestra ningún
-   precio.
+   Precios ("cada unidad con su precio", SCP por chat, 06/10/2026)
+   ---------------------------------------------------------------
+   · En cuanto el CRM publica el precio de AL MENOS UNA unidad, el CRM es la
+     única fuente: cada unidad muestra el suyo y la que no lo tiene dice
+     "te lo cotizamos". En dólares se le suman los soles con
+     precios.tipoCambioValor de config.js (Ley 29571 art. 6).
+   · Mientras el CRM no publique ninguno (todos los niveles sin verde, o una
+     función sin la clave "precio"), sigue la regla de config.js de siempre:
+     puesto de 9 a 10 m² y tienda de 22 a 23 m². Las dos fuentes nunca se
+     mezclan en la misma pantalla.
+   · En los dos casos, sin las notas de IGV, notarial y tipo de cambio de
+     config.js no se muestra ningún precio.
 
    Para las pruebas: window.MMLInventario.estado() y .recargar() (solo
    lectura). Se puede apuntar a otro servidor con
@@ -63,8 +84,8 @@
     rpc: /^[a-z_][a-z0-9_]{0,62}$/i.test(texto(INV.rpc)) ? texto(INV.rpc) : 'fn_inventario_publico',
     canal: /^[A-Za-z0-9_.:-]{1,100}$/.test(texto(INV.canal)) ? texto(INV.canal) : 'inventario-publico',
     evento: texto(INV.evento) || 'cambio',
-    conRealtime: numero(INV.sondeoConRealtimeSeg, 60, 5, 3600) * 1000,
-    sinRealtime: numero(INV.sondeoSinRealtimeSeg, 15, 3, 3600) * 1000,
+    conRealtime: numero(INV.sondeoConRealtimeSeg, 20, 5, 3600) * 1000,
+    sinRealtime: numero(INV.sondeoSinRealtimeSeg, 10, 3, 3600) * 1000,
     tiempoMaximo: numero(INV.tiempoMaximoMs, 8000, 1000, 60000),
     rebote: numero(INV.reboteMs, 800, 0, 10000),
     latido: numero(INV.latidoSeg, 25, 5, 25) * 1000,
@@ -84,9 +105,20 @@
     igv: texto(PRE.igv),
     condicionPuesto: texto(PRE.condicionPuesto),
     notarial: texto(PRE.notarial),
-    tipoCambio: texto(PRE.tipoCambio)
+    tipoCambio: texto(PRE.tipoCambio),
+    tc: numero(PRE.tipoCambioValor, NaN, 1, 20)
   };
   var PRECIOS_OK = !!(P.igv && P.notarial && P.tipoCambio);
+  /* El número con que se pasan a soles los precios en dólares del CRM tiene
+     que ser el mismo que dice el texto del tipo de cambio: si alguien cambia
+     uno y no el otro, no se publica ningún precio del CRM en dólares. */
+  var TC_TEXTO = (/S\/\s?(\d+(?:\.\d+)?)/.exec(P.tipoCambio) || [])[1];
+  var TC_OK = isFinite(P.tc) && TC_TEXTO != null && Math.abs(Number(TC_TEXTO) - P.tc) < 0.00001;
+  if (isFinite(P.tc) && !TC_OK && window.console) {
+    console.warn('[plano] precios.tipoCambioValor (' + P.tc + ') no coincide con el texto del tipo de cambio: no se publican precios del CRM en dólares.');
+  }
+  var VARIA = 'Varía según la unidad: mira su ficha';
+  var POR_CONFIRMAR = 'por confirmar contra el plano';
 
   /* el espacio de dibujo del plano (viewBox del <svg>) */
   var VB = { x: 80, y: 70, w: 930, h: 1880 };
@@ -120,6 +152,11 @@
     tooltip: $('inv-tooltip'), toast: $('inv-toast')
   };
   for (var k in el) if (!el[k]) return;   // si falta una pieza del HTML, no se arranca a medias
+  /* rótulos del resumen de precios (06/10/2026): si una copia vieja del HTML
+     no los trae, el plano arranca igual y esos rótulos quedan como estaban */
+  var rot = {
+    puesto: $('inv-precio-puesto-rotulo'), tienda: $('inv-precio-tienda-rotulo'), tiendaNota: $('inv-precio-tienda-nota')
+  };
 
   var reducir = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   function suave() { return reducir ? 'auto' : 'smooth'; }
@@ -182,6 +219,18 @@
     return 'otros';
   }
 
+  /* precio del CRM (19-precio-por-unidad.sql): { monto, moneda } o null. El
+     monto llega como número (numeric de Postgres); se acepta también
+     "25000.00" como texto, nada más. Moneda: exactamente USD o PEN. */
+  function precioCrm(v) {
+    if (!v || typeof v !== 'object' || Array.isArray(v)) return null;
+    var m = v.monto;
+    if (typeof m === 'string' && /^\d{1,9}(\.\d{1,4})?$/.test(m.trim())) m = Number(m);
+    if (typeof m !== 'number' || !isFinite(m) || m <= 0 || m >= 100000000) return null;
+    if (v.moneda !== 'USD' && v.moneda !== 'PEN') return null;
+    return { monto: Math.round(m * 100) / 100, moneda: v.moneda };
+  }
+
   function unidad(o) {
     if (!o || typeof o !== 'object') return null;
     var codigo = texto(o.codigo);
@@ -206,8 +255,13 @@
       esquina = [mx + 5, my + 5];
     }
     var m = /^([A-Z]+)-(\d+)([A-Z]?)$/.exec(codigo);
+    /* sin la clave "verificada", todo lo que el CRM da por disponible ya pasó
+       por v_unidades_ofrecibles, que exige el dato en verde contra el plano */
+    var verificada = o.verificada === false ? false : true;
     return {
       codigo: codigo, tipo: tipo, area: a, zona: zona, estado: estado, geom: geom,
+      porConfirmar: estado === 'disponible' && !verificada,
+      precio: estado === 'disponible' ? precioCrm(o.precio) : null,
       centro: centro, esquina: esquina, zonaCat: zonaCategoria(zona, tipo),
       orden: [m[1], Number(m[2]), m[3]], busqueda: normal(codigo)
     };
@@ -237,12 +291,16 @@
     var semaforo = /^[a-z_]{1,20}$/.test(texto(disp.semaforo)) ? texto(disp.semaforo) : null;
     var corte = semaforo === 'verde' ? (texto(disp.corte).slice(0, 200) || null) : null;
     var revision = /^[A-Za-z0-9_-]{1,128}$/.test(texto(d.revision)) ? texto(d.revision)
-      : huella(JSON.stringify(lista.map(function (u) { return [u.codigo, u.tipo, u.area, u.zona, u.estado, u.geom]; })));
+      : huella(JSON.stringify(lista.map(function (u) {
+          return [u.codigo, u.tipo, u.area, u.zona, u.estado, u.geom, u.porConfirmar, u.precio ? [u.precio.monto, u.precio.moneda] : null];
+        })));
     var generado = texto(d.generado_el);
     return {
       version: typeof d.version === 'number' ? d.version : null,
       generadoEl: generado && !isNaN(Date.parse(generado)) ? generado : null,
-      revision: revision, semaforo: semaforo, corte: corte, unidades: lista
+      revision: revision, semaforo: semaforo, corte: corte, unidades: lista,
+      /* el CRM ya es la fuente de los precios (ver la cabecera) */
+      preciosCrm: d.precios_publicados === true || lista.some(function (u) { return !!u.precio; })
     };
   }
 
@@ -252,7 +310,7 @@
   var st = {
     fase: 'cargando',            // cargando → vivo | respaldo (primera lectura fallida) → vivo
     rt: 'desconectado',          // desconectado | conectando | unido
-    clave: null, revision: null, version: null, generadoEl: null, semaforo: null, corte: null,
+    clave: null, revision: null, version: null, generadoEl: null, semaforo: null, corte: null, preciosCrm: false,
     ultimoOk: 0, ultimoIntentoOk: false, ultimoIntentoFin: 0, ultimoError: null, fallosSeguidos: 0,
     lecturas: 0, lecturasOk: 0, aplicadas: 0, avisos: 0,
     sinRed: navigator.onLine === false
@@ -293,11 +351,36 @@
   }
   function etiquetaAria(u) {
     return u.codigo + ', ' + rotuloTipo(u).toLowerCase() + ', ' + rotuloEstado(u).toLowerCase() +
+      (u.porConfirmar ? ', ' + POR_CONFIRMAR : '') +
       ', rubro ' + rubroTexto(u) + (u.area != null ? ', ' + area(u.area) : '') + (u.geom ? '' : ', ubicación por confirmar');
+  }
+  /* 25000 → "25,000"; 25000.5 → "25,000.50": sin decimales salvo que haya céntimos */
+  function miles(n) {
+    var s = n.toFixed(Math.round(n * 100) % 100 === 0 ? 0 : 2).split('.');
+    s[0] = s[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    return s.join('.');
+  }
+  /* el precio del CRM con sus soles: "US$ 25,000 · S/ 84,250" o "S/ 84,250" */
+  function textoPrecioCrm(pc) {
+    if (pc.moneda === 'PEN') return 'S/ ' + miles(pc.monto);
+    return 'US$ ' + miles(pc.monto) + ' · S/ ' + miles(Math.round(pc.monto * P.tc * 100) / 100);
   }
   function precio(u) {
     if (!PRECIOS_OK) return null;
     var base = [P.igv, P.notarial, P.tipoCambio];
+    /* el CRM ya publica precios: SOLO el de la unidad, y solo si está
+       disponible. La regla de config.js no se mezcla. */
+    if (st.preciosCrm) {
+      if (u.estado !== 'disponible' || !u.precio) return null;
+      if (u.precio.moneda === 'USD' && !TC_OK) return null;
+      var soloSoles = u.precio.moneda === 'PEN';
+      return { texto: textoPrecioCrm(u.precio),
+        notas: [P.igv, P.condicionPuesto, P.notarial, soloSoles ? '' : P.tipoCambio].filter(Boolean),
+        notasMensaje: soloSoles ? [P.igv, P.notarial] : base };
+    }
+    /* la regla de config.js se calcula con el área: si el área todavía no está
+       confirmada contra el plano, tampoco el precio */
+    if (u.porConfirmar) return null;
     if (u.tipo === 'puesto' && P.puesto && u.area != null && u.area >= P.pMin && u.area <= P.pMax) {
       return { texto: P.puesto, notas: [P.igv, P.condicionPuesto, P.notarial, P.tipoCambio].filter(Boolean), notasMensaje: base };
     }
@@ -359,12 +442,12 @@
     st.fallosSeguidos = 0;
     st.ultimoError = null;
     st.generadoEl = p.generadoEl;
-    var clave = p.revision + '|' + (p.semaforo || '') + '|' + (p.corte || '');
+    var clave = p.revision + '|' + (p.semaforo || '') + '|' + (p.corte || '') + '|' + (p.preciosCrm ? 1 : 0);
     var primera = st.fase !== 'vivo';
     if (clave !== st.clave || primera) {
       if (clave !== st.clave) st.aplicadas++;
       st.clave = clave; st.revision = p.revision; st.version = p.version;
-      st.semaforo = p.semaforo; st.corte = p.corte;
+      st.semaforo = p.semaforo; st.corte = p.corte; st.preciosCrm = p.preciosCrm;
       unidades = p.unidades;
       porCodigo = {};
       for (var i = 0; i < unidades.length; i++) porCodigo[unidades[i].codigo] = unidades[i];
@@ -378,7 +461,7 @@
     st.ultimoIntentoOk = false;
     st.fallosSeguidos++;
     st.ultimoError = String(e && e.message || e).slice(0, 200);
-    if (st.fase === 'cargando') { st.fase = 'respaldo'; mostrarFase(); pintarResumen(); }
+    if (st.fase === 'cargando') { st.fase = 'respaldo'; mostrarFase(); pintarResumen(); pintarPrecios(); }
     revisarConfirmacion(true);
   }
 
@@ -543,11 +626,47 @@
     el.cargando.hidden = st.fase !== 'cargando';
   }
 
+  /* con precios del CRM: el precio común de las disponibles de ese tipo, o
+     "varía" si no es el mismo para todas; nunca "desde" */
+  function precioComun(tipo) {
+    var vistos = {}, n = 0, uno = null, faltan = false;
+    for (var i = 0; i < unidades.length; i++) {
+      var u = unidades[i];
+      if (u.tipo !== tipo || u.estado !== 'disponible') continue;
+      var pr = precio(u);
+      if (!pr) { faltan = true; continue; }
+      if (!vistos[pr.texto]) { vistos[pr.texto] = 1; n++; uno = pr.texto; }
+    }
+    return n === 0 ? P.sinPrecio : n === 1 && !faltan ? nb(uno) : VARIA;
+  }
   function pintarPrecios() {
-    var hayPuesto = PRECIOS_OK && P.puesto && isFinite(P.pMin) && isFinite(P.pMax);
-    el.precioPuesto.textContent = hayPuesto ? nb(P.puesto) : P.sinPrecio;
-    el.precioPuestoNota.textContent = hayPuesto ? 'Puesto estándar de 9 a 10 m². ' + P.condicionPuesto : '';
-    el.precioTienda.textContent = PRECIOS_OK && P.tienda && isFinite(P.tMin) && isFinite(P.tMax) ? nb(P.tienda) : P.sinPrecio;
+    if (st.fase !== 'vivo') {
+      el.precioPuesto.textContent = st.fase === 'cargando' ? '…' : P.sinPrecio;
+      el.precioTienda.textContent = st.fase === 'cargando' ? '…' : P.sinPrecio;
+      if (rot.puesto) rot.puesto.textContent = 'Puestos';
+      if (rot.tienda) rot.tienda.textContent = 'Tiendas';
+      if (rot.tiendaNota) rot.tiendaNota.textContent = '';
+      el.precioPuestoNota.textContent = '';
+      el.notas.textContent = '';
+      el.notas.hidden = true;
+      return;
+    }
+    if (st.preciosCrm) {
+      if (rot.puesto) rot.puesto.textContent = 'Puestos';
+      if (rot.tienda) rot.tienda.textContent = 'Tiendas';
+      el.precioPuesto.textContent = precioComun('puesto');
+      el.precioPuestoNota.textContent = 'Cada unidad muestra su precio en su ficha. ' + P.condicionPuesto;
+      el.precioTienda.textContent = precioComun('tienda');
+      if (rot.tiendaNota) rot.tiendaNota.textContent = 'Las que no tienen precio publicado se cotizan según su área.';
+    } else {
+      if (rot.puesto) rot.puesto.textContent = 'Puesto de 9 a 10 m²';
+      if (rot.tienda) rot.tienda.textContent = 'Tienda de 22 a 23 m²';
+      var hayPuesto = PRECIOS_OK && P.puesto && isFinite(P.pMin) && isFinite(P.pMax);
+      el.precioPuesto.textContent = hayPuesto ? nb(P.puesto) : P.sinPrecio;
+      el.precioPuestoNota.textContent = hayPuesto ? 'Puesto estándar de 9 a 10 m². ' + P.condicionPuesto : '';
+      el.precioTienda.textContent = PRECIOS_OK && P.tienda && isFinite(P.tMin) && isFinite(P.tMax) ? nb(P.tienda) : P.sinPrecio;
+      if (rot.tiendaNota) rot.tiendaNota.textContent = 'Las de otro metraje se cotizan según su área.';
+    }
     el.notas.textContent = PRECIOS_OK ? [P.igv, P.notarial, P.tipoCambio].join(' ') : '';
     el.notas.hidden = !PRECIOS_OK;
   }
@@ -629,11 +748,25 @@
       ['redonda', 'Punto ámbar: disponible']
     ]
   };
+  function hayPorConfirmar() {
+    for (var i = 0; i < unidades.length; i++) if (unidades[i].porConfirmar && unidades[i].geom) return true;
+    return false;
+  }
   function pintarLeyenda() {
-    el.leyenda.innerHTML = LEYENDAS[vista].map(function (l) {
+    var items = LEYENDAS[vista].slice();
+    /* solo si hay alguna: una leyenda que no corresponde a nada confunde */
+    if (hayPorConfirmar()) {
+      if (vista === 'disponibilidad') items.splice(1, 0, ['trama', 'Disponible, ' + POR_CONFIRMAR]);
+      else items.push(['hueca', 'Punto hueco: disponible, ' + POR_CONFIRMAR]);
+    }
+    el.leyenda.innerHTML = items.map(function (l) {
       var muestra = l[0] === 'redonda'
         ? '<span class="inv-muestra redonda" style="background:var(--accent)" aria-hidden="true"></span>'
-        : '<span class="inv-muestra" style="background:' + l[0] + '" aria-hidden="true"></span>';
+        : l[0] === 'trama'
+          ? '<span class="inv-muestra trama" aria-hidden="true"></span>'
+          : l[0] === 'hueca'
+            ? '<span class="inv-muestra redonda hueca" aria-hidden="true"></span>'
+          : '<span class="inv-muestra" style="background:' + l[0] + '" aria-hidden="true"></span>';
       return '<li>' + muestra + esc(l[1]) + '</li>';
     }).join('');
     el.ayudaMapa.textContent = vista === 'zonificacion'
@@ -664,12 +797,14 @@
       var puntos = u.geom.map(function (p) { return p[0] + ',' + p[1]; }).join(' ');
       html.push('<g class="inv-u' + (visible ? '' : ' atenuada') + (u.codigo === seleccion ? ' seleccionada' : '') + '"' +
         ' data-codigo="' + esc(u.codigo) + '" data-estado="' + u.estado + '" data-tipo="' + esc(u.tipo) + '" data-zona="' + u.zonaCat + '"' +
+        (u.porConfirmar ? ' data-confirmar="1"' : '') +
         ' role="button" tabindex="' + (visible ? '0' : '-1') + '"' + (visible ? '' : ' aria-hidden="true"') +
         ' aria-label="' + esc(etiquetaAria(u)) + '">' +
         '<polygon points="' + puntos + '"/>' +
+        (u.porConfirmar && vista === 'disponibilidad' ? '<polygon class="inv-trama" points="' + puntos + '"/>' : '') +
         '<text x="' + u.centro[0] + '" y="' + u.centro[1] + '">' + esc(u.tipo === 'puesto' ? u.codigo.replace(/^P-/, '') : u.codigo) + '</text>' +
         (vista === 'zonificacion' && u.estado === 'disponible'
-          ? '<circle class="inv-marca" cx="' + u.esquina[0] + '" cy="' + u.esquina[1] + '" r="3.4"/>' : '') +
+          ? '<circle class="inv-marca' + (u.porConfirmar ? ' hueca' : '') + '" cx="' + u.esquina[0] + '" cy="' + u.esquina[1] + '" r="3.4"/>' : '') +
         '</g>');
     }
     el.unidades.innerHTML = html.join('');
@@ -718,7 +853,8 @@
       var info = rubroTexto(u) + (u.area != null ? ' · ' + area(u.area) : '');
       return '<button type="button" class="inv-tarjeta" data-codigo="' + esc(u.codigo) + '" data-estado="' + u.estado + '">' +
         '<span class="inv-t-arriba"><b>' + esc(u.codigo) + '</b><span class="inv-pill" data-estado="' + u.estado + '">' + esc(rotuloEstado(u)) + '</span></span>' +
-        '<span class="inv-t-info">' + esc(rotuloTipo(u)) + ' · ' + esc(info) + (u.geom ? '' : '<br>Ubicación por confirmar') + '</span>' +
+        '<span class="inv-t-info">' + esc(rotuloTipo(u)) + ' · ' + esc(info) + (u.geom ? '' : '<br>Ubicación por confirmar') +
+          (u.porConfirmar ? '<br>Disponible, ' + esc(POR_CONFIRMAR) : '') + '</span>' +
         '<span class="inv-t-precio' + (pr ? '' : ' sin') + '">' + esc(pr ? nb(pr.texto) : P.sinPrecio) + '</span>' +
         '</button>';
     }).join('');
@@ -766,13 +902,18 @@
         campo('Zonificación / rubro', rubroTexto(u), true) +
       '</div>' +
       (u.geom ? '' : '<p class="inv-d-aviso">La ubicación exacta de este código se confirma con el equipo comercial.</p>') +
+      (u.porConfirmar ? '<p class="inv-d-aviso">Figura disponible en nuestro inventario. Su área y su ubicación se confirman contra el plano antes de separar.</p>' : '') +
       '<div class="inv-d-precio"><small>' + esc(rotuloPrecio) + '</small>' +
         (pr ? '<b>' + esc(nb(pr.texto)) + '</b><p>' + esc(pr.notas.join(' ')) + '</p>'
-            : '<b>' + esc(P.sinPrecio) + '</b><p>' + esc(u.tipo === 'tienda'
-                ? 'El precio publicado es el de las tiendas de 22 a 23 m²; esta se cotiza según su área.'
-                : u.tipo === 'puesto'
-                  ? 'El precio publicado es el del puesto estándar de 9 a 10 m²; este se cotiza según su área.'
-                  : 'Te lo confirmamos por escrito.') + '</p>') +
+            : '<b>' + esc(P.sinPrecio) + '</b><p>' + esc(st.preciosCrm
+                ? 'Te lo confirmamos por escrito.'
+                : u.porConfirmar
+                  ? 'El precio se confirma junto con el área, por escrito, antes de separar.'
+                : u.tipo === 'tienda'
+                  ? 'El precio publicado es el de las tiendas de 22 a 23 m²; esta se cotiza según su área.'
+                  : u.tipo === 'puesto'
+                    ? 'El precio publicado es el del puesto estándar de 9 a 10 m²; este se cotiza según su área.'
+                    : 'Te lo confirmamos por escrito.') + '</p>') +
       '</div>' +
       (conf ? '' : '<p class="inv-d-aviso">Sin conexión con el inventario: la disponibilidad no está confirmada. Cuando vuelva la conexión podrás pedir la separación.</p>');
 
@@ -792,6 +933,7 @@
       'Tipo: ' + rotuloTipo(u) + '.\n' +
       'Rubro: ' + rubroTexto(u) + '.\n' +
       'Área: ' + (u.area != null ? area(u.area) : 'por confirmar') + '.\n' +
+      (u.porConfirmar ? 'Figura disponible en la web (' + POR_CONFIRMAR + ').\n' : '') +
       (pr ? 'Precio publicado: ' + pr.texto + '. ' + pr.notasMensaje.join(' ') + '\n' : 'Precio: ' + P.sinPrecio + '.\n') +
       '¿Me confirman por escrito si sigue disponible y los pasos para separar' + (femenino(u) ? 'la' : 'lo') + '?';
   }
@@ -831,6 +973,8 @@
 
   function pintarTodo() {
     pintarResumen();
+    pintarPrecios();
+    pintarLeyenda();
     pintarOpciones();
     pintarMapa();
     pintarLista();
@@ -1073,7 +1217,7 @@
     var c = codigoDe(e), u = c && porCodigo[c];
     if (!u) { ocultarTooltip(); return; }
     var pr = precio(u);
-    el.tooltip.innerHTML = '<b>' + esc(u.codigo) + '</b> · ' + esc(rotuloEstado(u)) + '<br>' +
+    el.tooltip.innerHTML = '<b>' + esc(u.codigo) + '</b> · ' + esc(rotuloEstado(u)) + (u.porConfirmar ? ', ' + esc(POR_CONFIRMAR) : '') + '<br>' +
       esc(rubroTexto(u)) + (u.area != null ? ' · ' + esc(area(u.area)) : '') + '<br>' +
       esc(pr ? nb(pr.texto) + ' (' + pr.notasMensaje.join(' ') + ')' : P.sinPrecio) + '<br><small>' +
       (confirmado() ? 'Haz clic para ver su ficha' : 'Disponibilidad sin confirmar: sin conexión') + '</small>';
@@ -1262,6 +1406,8 @@
       disponibles: { puestos: c.puestos, tiendas: c.tiendas, otros: c.otros, total: c.total },
       separadas: c.separadas,
       noDisponibles: c.noDisponibles,
+      preciosCrm: st.preciosCrm,
+      porConfirmar: unidades.filter(function (u) { return u.porConfirmar; }).length,
       enLista: el.lista.querySelectorAll('.inv-tarjeta').length,
       enPlano: el.unidades.querySelectorAll('.inv-u').length,
       ultimaLecturaOk: st.ultimoOk ? new Date(st.ultimoOk).toISOString() : null,

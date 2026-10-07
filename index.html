@@ -8,24 +8,32 @@
 <meta name="author" content="SCP Inmobiliaria">
 <meta name="theme-color" content="#0F2A44">
 <meta name="robots" content="index, follow">
-<!-- DEPLOY STEP: reemplazar https://mercadomedialuna.com/ por la URL real en canonical, og:url y og:image antes de comprimir y publicar -->
 <link rel="canonical" href="https://mercadomedialuna.com/">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="es_PE">
 <meta property="og:site_name" content="Mercado Media Luna">
 <meta property="og:title" content="Un puesto propio en un mercado que puedes ver construirse">
-<meta property="og:description" content="Mercado Media Luna, en Jicamarca, Sector Media Luna. En construcción. Ven a ver la obra como está.">
+<meta property="og:description" content="Mercado Media Luna, en Jicamarca, Sector Media Luna. En construcción. Agenda tu visita y ve la obra como está.">
 <meta property="og:url" content="https://mercadomedialuna.com/">
 <meta property="og:image" content="https://mercadomedialuna.com/assets/hero-ending-v2.jpg">
 <meta property="og:image:width" content="1920">
 <meta property="og:image:height" content="1080">
 <meta property="og:image:alt" content="Proyección arquitectónica del Mercado Media Luna en Jicamarca">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-118 -118 236 236'%3E%3Crect x='-118' y='-118' width='236' height='236' fill='%230F2A44'/%3E%3Cg transform='rotate(-45)'%3E%3Cpath d='M 50.176 -86.5 A 100 100 0 1 0 50.176 86.5 A 88 88 0 1 1 50.176 -86.5 Z' fill='%23F2A93B'/%3E%3C/g%3E%3C/svg%3E">
+<meta name="twitter:image" content="https://mercadomedialuna.com/assets/hero-ending-v2.jpg">
+<meta name="twitter:image:alt" content="Proyección arquitectónica del Mercado Media Luna en Jicamarca">
+<!-- Íconos en archivos de la raíz (06/10/2026): Google solo muestra el logo en
+     los resultados si el ícono es una URL que puede rastrear, no un data: URI.
+     Fuera de /assets/ para no caer en la caché de 7 días. -->
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/favicon-96.png" type="image/png" sizes="96x96">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400;75..125,500;75..125,700;75..125,900&display=swap">
-<link rel="stylesheet" href="assets/styles.css?v=21f96d2d">
+<link rel="stylesheet" href="assets/styles.css?v=cdef4ca2">
 <noscript><style>.reveal{opacity:1!important;transform:none!important}</style></noscript>
 </head>
 <body>
@@ -177,7 +185,16 @@
       <img src="assets/render-avenida.jpg" alt="Proyección arquitectónica de las tiendas del Mercado Media Luna con frente a la avenida" width="1280" height="720" loading="lazy" decoding="async">
       <figcaption class="proyeccion">Proyección arquitectónica — obra en construcción</figcaption>
     </figure>
-    <p class="nota reveal">El plano vigente (lámina A-1) confirma 423 puestos y 62 tiendas: 485 unidades en total. Cada unidad tiene su propia área exacta, que se confirma contra el plano antes de firmar. <a href="planos.html">Mira el plano completo, qué unidades están disponibles y a qué rubro va cada puesto →</a></p>
+    <p class="nota reveal">El plano vigente (lámina A-1) confirma 423 puestos y 62 tiendas: 485 unidades en total. Cada unidad tiene su propia área exacta, que se confirma contra el plano antes de firmar.</p>
+    <!-- botón al plano (06/10/2026) -->
+    <div class="vende-plano reveal">
+      <a class="btn btn-accent btn-grande btn-plano" href="planos.html">
+        <svg class="btn-plano-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 4 3.6 6.2a1 1 0 0 0-.6.9v11.8a.6.6 0 0 0 .8.6L9 17.4l6 2.6 5.4-2.2a1 1 0 0 0 .6-.9V5.1a.6.6 0 0 0-.8-.6L15 6.6 9 4Z" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/><path d="M9 4v13.4M15 6.6V20" fill="none" stroke="currentColor" stroke-width="1.9"/></svg>
+        <span class="btn-plano-texto">Ver el plano con las unidades disponibles</span>
+        <svg class="btn-plano-flecha" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 12h15m-6-6.5L19.5 12 13 18.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <p class="vende-plano-pie">Qué puestos y tiendas figuran disponibles en nuestro inventario y a qué rubro va cada puesto. Te confirmamos por escrito el que elijas.</p>
+    </div>
   </section>
 
   <!-- ============ QUÉ ESTÁS COMPRANDO ============ -->
@@ -188,7 +205,21 @@
       <p class="lead">Lo que se compra son <strong>acciones y derechos sobre el inmueble matriz</strong>: una cuota de copropiedad sobre el terreno donde se construye el mercado, junto con el derecho a usar el puesto o la tienda que elijas, en los términos que establece el contrato que firmas.</p>
       <p>En palabras simples: <strong>todavía no es una propiedad independizada con su propia partida registral.</strong> Es la misma figura con la que se compraron los puestos que ya están ocupados en el proyecto.</p>
       <p><strong>Qué se firma y qué se inscribe.</strong> La compra se formaliza ante notario, y lo que se inscribe en Registros Públicos son tus acciones y derechos sobre el inmueble. El trámite notarial tiene un costo único de <strong>S/2,500</strong>, que no está incluido en el precio del puesto.</p>
-      <p><strong>Qué falta para que tenga partida propia.</strong> Que la obra concluya y se inscriban la declaratoria de edificación y el reglamento interno; recién entonces cada unidad puede independizarse. SCP se encarga de ese trámite. No te damos una fecha porque depende de la municipalidad y de Registros Públicos, no de nosotros, y preferimos no prometerte algo que no controlamos.</p>
+      <!-- independización: texto de 00-fuente-de-verdad/ficha-proyecto-mml.md §4 -->
+      <aside class="independiza" aria-labelledby="h-independiza">
+        <p class="independiza-rotulo">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M14 3v5h5M9 13h7M9 17h5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          Partida propia
+        </p>
+        <h3 id="h-independiza">La independización de tu unidad</h3>
+        <p><strong>Qué falta para que tenga partida propia.</strong> Habrá una independización futura: cuando la obra concluya y se inscriban la declaratoria de edificación y el reglamento interno, cada unidad podrá tener su propia partida registral.</p>
+        <p>SCP sigue gestionando ese trámite, pero su resultado y su plazo ya no dependen de nosotros: dependen de la municipalidad y de Registros Públicos. <strong>Por eso no te damos una fecha.</strong></p>
+        <dl class="independiza-resumen">
+          <div><dt>Quién lo gestiona</dt><dd>SCP</dd></div>
+          <div><dt>De quién depende</dt><dd>La municipalidad y Registros Públicos</dd></div>
+          <div><dt>Cuándo</dt><dd>Sin fecha: no depende de nosotros</dd></div>
+        </dl>
+      </aside>
       <p>¿Quieres ver el detalle? Escríbenos y te enviamos el modelo de contrato <strong>antes</strong> de que separes, para que lo revises con quien tú quieras.</p>
     </div>
   </section>
@@ -206,7 +237,7 @@
       <li class="paso reveal">
         <span class="paso-n" aria-hidden="true">2</span>
         <h3>Ves la obra</h3>
-        <p>Presencial, o completa por videollamada si estás lejos.</p>
+        <p>Presencial, con cita previa, o completa por videollamada si estás lejos.</p>
       </li>
       <li class="paso reveal">
         <span class="paso-n" aria-hidden="true">3</span>
@@ -330,7 +361,7 @@
     <div class="ubicacion-copy reveal">
       <p class="kicker">Dónde queda</p>
       <h2 id="h-ubicacion">En el cruce de la Av. Perú con la Av. 14 de Agosto.</h2>
-      <p>Jicamarca, Sector Media Luna. La obra se visita: coordinamos el día y te acompañamos.</p>
+      <p>Jicamarca, Sector Media Luna. La obra se visita con cita previa: elige el día y la hora, y te acompañamos.</p>
       <div class="ubicacion-acciones">
         <a class="btn btn-accent" href="https://www.google.com/maps/dir/?api=1&amp;destination=-11.9015096,-76.9444329" target="_blank" rel="noopener">Cómo llegar</a>
         <a class="btn btn-quiet" href="https://maps.app.goo.gl/opXr5c24VrUb78Wv5" target="_blank" rel="noopener">Abrir en Google Maps</a>
@@ -342,6 +373,30 @@
       </div>
       <figcaption>Vista satelital de Google Maps. La imagen es de Google y puede ser anterior a la obra de hoy.</figcaption>
     </figure>
+
+    <!-- horario de visitas: ficha-proyecto-mml.md §1. Solo con cita previa: sin openingHours en el JSON-LD -->
+    <div class="visitas reveal" id="visitas" role="group" aria-labelledby="h-visitas">
+      <div class="visitas-horario">
+        <p class="visitas-rotulo" id="h-visitas">Horario de visitas</p>
+        <p class="visitas-dias"><span>Todos los días</span><span class="visitas-semana">Lunes a domingo</span></p>
+        <p class="visitas-horas">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3.5 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>6:00&nbsp;a.m. a&nbsp;6:00&nbsp;p.m.</span>
+        </p>
+      </div>
+      <div class="visitas-cita">
+        <p class="cita-sello">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3.5" y="5" width="17" height="15.5" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3.5 10h17M8 3v4M16 3v4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="m9 15 2 2 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Solo con cita previa
+        </p>
+        <p class="visitas-texto">Escríbenos por WhatsApp, elige el día y la hora, y te acompañamos en el recorrido.</p>
+        <p class="visitas-extra">¿Solo puedes más tarde? En casos excepcionales lo coordinamos contigo.</p>
+        <a class="btn btn-accent visitas-btn" data-wa data-wa-texto="Hola, quiero agendar una visita a la obra del Mercado Media Luna." href="#hablemos">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" width="22" height="22"><path fill="currentColor" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413"/></svg>
+          Agenda tu visita por WhatsApp
+        </a>
+      </div>
+    </div>
   </section>
 
   <!-- ============ FAQ ============ -->
@@ -350,11 +405,12 @@
     <h2 id="h-faq" class="reveal">Lo que todos preguntan.</h2>
     <div class="faq-list">
       <details class="reveal"><summary>¿Esto es real, o me van a ver la cara?</summary>
-        <div class="faq-body"><p>La obra existe y la puedes visitar. Ven, tráete a tu familia, y compara lo que ves con lo que te decimos.</p></div></details>
+        <div class="faq-body"><p>La obra existe y la puedes visitar con cita previa. Ven, tráete a tu familia, y compara lo que ves con lo que te decimos.</p></div></details>
+      <!-- texto de ficha-proyecto-mml.md §2 -->
       <details class="reveal"><summary>¿Y si no lo terminan?</summary>
-        <div class="faq-body"><p class="pend">[PENDIENTE: respuesta aprobada por Walter, no se inventa ninguna garantía]</p></div></details>
+        <div class="faq-body"><p>La obra se va a terminar. Estamos trabajando arduamente para que así sea, y no te pedimos que nos creas a ciegas: ven a verla con cita previa y compara lo que ves con lo que te decimos, o mírala cada miércoles en <a href="evento.html">nuestra transmisión en vivo</a>.</p><p>Después de la obra viene la independización de cada unidad, para que tenga su propia partida registral. Ese trámite lo seguimos gestionando nosotros, pero su resultado y su plazo ya no dependen de SCP: dependen de la municipalidad y de Registros Públicos.</p></div></details>
       <details class="reveal"><summary>¿Qué papel me dan?</summary>
-        <div class="faq-body"><p>Un contrato de compraventa de acciones y derechos, elevado a escritura pública ante notario, y la inscripción de esos derechos a tu nombre en Registros Públicos. Mientras terminas de pagar recibes la constancia de cada pago y el estado de cuenta de tu operación.</p><p>El trámite notarial cuesta S/2,500 aparte del precio del puesto. Y sí: <a href="#que-compras">todavía no es una partida independiente</a>, te explicamos exactamente por qué.</p></div></details>
+        <div class="faq-body"><p>Un contrato de compraventa de acciones y derechos, elevado a escritura pública ante notario, y la inscripción de esos derechos a tu nombre en Registros Públicos. Mientras terminas de pagar recibes la constancia de cada pago y el estado de cuenta de tu operación.</p><p>El trámite notarial cuesta S/2,500 aparte del precio del puesto. Y sí: <a href="#que-compras">todavía no es una partida independiente</a>, te explicamos exactamente por qué. La independización futura la sigue gestionando SCP, pero su resultado y su plazo ya no dependen de nosotros: dependen de la municipalidad y de Registros Públicos.</p></div></details>
       <details class="reveal"><summary>¿Puedo vender mi puesto después?</summary>
         <div class="faq-body"><p>Sí. La ley permite a cada copropietario disponer de lo suyo. Dos cosas que conviene que sepas desde ahora: mientras el mercado siga siendo un solo inmueble, los demás copropietarios tienen preferencia legal para igualar la oferta de un tercero, y la transferencia se formaliza ante notario igual que tu compra.</p></div></details>
       <details class="reveal"><summary>¿Cuánto cuesta?</summary>
@@ -362,7 +418,7 @@
       <details class="reveal"><summary>¿Cuánto renta un puesto?</summary>
         <div class="faq-body"><p>No te vamos a dar un número de rentabilidad. Cualquiera que te dé un porcentaje de un mercado que todavía no abre se lo está inventando.</p></div></details>
       <details class="reveal"><summary>¿Puedo visitar la obra?</summary>
-        <div class="faq-body"><p>Sí. Coordinamos el día y te acompañamos. Queda en el cruce de la Av. Perú con la Av. 14 de Agosto: <a href="#ubicacion">míralo en el mapa</a>.</p><p class="pend">[PENDIENTE: horario de visitas]</p></div></details>
+        <div class="faq-body"><p class="cita-sello cita-sello-chico" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><rect x="3.5" y="5" width="17" height="15.5" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3.5 10h17M8 3v4M16 3v4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="m9 15 2 2 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Solo con cita previa</p><p>Sí, <strong>con cita previa</strong>. Puedes venir todos los días, de lunes a domingo, de 6:00 a.m. a 6:00 p.m.: escríbenos por WhatsApp, elige el día y la hora, y te acompañamos en el recorrido. ¿Solo puedes más tarde? En casos excepcionales lo coordinamos contigo. Queda en el cruce de la Av. Perú con la Av. 14 de Agosto: <a href="#ubicacion">míralo en el mapa</a>.</p></div></details>
       <details class="reveal"><summary>Vivo fuera de Lima, ¿cómo lo veo?</summary>
         <div class="faq-body"><p>Hacemos un recorrido por videollamada, completo y sin cortes, el día que puedas.</p></div></details>
       <details class="reveal"><summary>¿Dónde queda exactamente?</summary>
@@ -433,11 +489,11 @@
   <svg viewBox="0 0 24 24" aria-hidden="true" width="32" height="32"><path fill="currentColor" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413"/></svg>
 </a>
 
-<script src="assets/config.js?v=21f96d2d"></script>
-<script src="assets/testimonios.js?v=21f96d2d"></script>
-<script src="assets/medicion.js?v=21f96d2d"></script>
-<script src="assets/app.js?v=21f96d2d"></script>
-<script src="assets/embudo.js?v=21f96d2d"></script>
+<script src="assets/config.js?v=cdef4ca2"></script>
+<script src="assets/testimonios.js?v=cdef4ca2"></script>
+<script src="assets/medicion.js?v=cdef4ca2"></script>
+<script src="assets/app.js?v=cdef4ca2"></script>
+<script src="assets/embudo.js?v=cdef4ca2"></script>
 
 <script type="application/ld+json">
 {
@@ -447,7 +503,14 @@
       "@type": "Organization",
       "@id": "https://mercadomedialuna.com/#scp",
       "name": "SCP Inmobiliaria",
+      "legalName": "SOCIEDAD INMOBILIARIA CONSTRUYO PERU S.A.C.",
       "url": "https://mercadomedialuna.com/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://mercadomedialuna.com/icono-512.png",
+        "width": 512,
+        "height": 512
+      },
       "sameAs": [
         "https://www.youtube.com/@MercadoMediaLuna",
         "https://www.instagram.com/mercadomedialuna/",
@@ -460,6 +523,7 @@
       "@id": "https://mercadomedialuna.com/#web",
       "url": "https://mercadomedialuna.com/",
       "name": "Mercado Media Luna",
+      "alternateName": ["MercadoMediaLuna", "Mercado Media Luna Jicamarca"],
       "inLanguage": "es-PE",
       "publisher": { "@id": "https://mercadomedialuna.com/#scp" }
     },
@@ -481,17 +545,27 @@
         {
           "@type": "Question",
           "name": "¿Esto es real, o me van a ver la cara?",
-          "acceptedAnswer": { "@type": "Answer", "text": "La obra existe y la puedes visitar. Ven, tráete a tu familia, y compara lo que ves con lo que te decimos." }
+          "acceptedAnswer": { "@type": "Answer", "text": "La obra existe y la puedes visitar con cita previa. Ven, tráete a tu familia, y compara lo que ves con lo que te decimos." }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Y si no lo terminan?",
+          "acceptedAnswer": { "@type": "Answer", "text": "La obra se va a terminar. Estamos trabajando arduamente para que así sea, y no te pedimos que nos creas a ciegas: ven a verla con cita previa y compara lo que ves con lo que te decimos, o mírala cada miércoles en nuestra transmisión en vivo. Después de la obra viene la independización de cada unidad, para que tenga su propia partida registral. Ese trámite lo seguimos gestionando nosotros, pero su resultado y su plazo ya no dependen de SCP: dependen de la municipalidad y de Registros Públicos." }
         },
         {
           "@type": "Question",
           "name": "¿Qué papel me dan?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Un contrato de compraventa de acciones y derechos, elevado a escritura pública ante notario, y la inscripción de esos derechos a tu nombre en Registros Públicos. Todavía no es una propiedad independizada con partida propia. El trámite notarial cuesta S/2,500 aparte del precio." }
+          "acceptedAnswer": { "@type": "Answer", "text": "Un contrato de compraventa de acciones y derechos, elevado a escritura pública ante notario, y la inscripción de esos derechos a tu nombre en Registros Públicos. Mientras terminas de pagar recibes la constancia de cada pago y el estado de cuenta de tu operación. El trámite notarial cuesta S/2,500 aparte del precio del puesto. Y sí: todavía no es una partida independiente, te explicamos exactamente por qué. La independización futura la sigue gestionando SCP, pero su resultado y su plazo ya no dependen de nosotros: dependen de la municipalidad y de Registros Públicos." }
         },
         {
           "@type": "Question",
           "name": "¿Cuánto renta un puesto?",
-          "acceptedAnswer": { "@type": "Answer", "text": "No damos números de rentabilidad. Cualquiera que dé un porcentaje de un mercado que todavía no abre se lo está inventando." }
+          "acceptedAnswer": { "@type": "Answer", "text": "No te vamos a dar un número de rentabilidad. Cualquiera que te dé un porcentaje de un mercado que todavía no abre se lo está inventando." }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Puedo visitar la obra?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Sí, con cita previa. Puedes venir todos los días, de lunes a domingo, de 6:00 a.m. a 6:00 p.m.: escríbenos por WhatsApp, elige el día y la hora, y te acompañamos en el recorrido. ¿Solo puedes más tarde? En casos excepcionales lo coordinamos contigo. Queda en el cruce de la Av. Perú con la Av. 14 de Agosto: míralo en el mapa." }
         },
         {
           "@type": "Question",
