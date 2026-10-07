@@ -802,7 +802,12 @@
     for (var i = 0; i < unidades.length; i++) {
       var u = unidades[i];
       if (!u.geom) continue;
-      var visible = coincide(u, f, true);
+      /* «Solo disponibles» deja la LISTA en lo que se puede pedir, pero en el PLANO
+         una unidad separada sigue viéndose morada (sin atenuar): que se acaba de
+         separar es justo lo que el plano en vivo tiene que enseñar. Los demás
+         filtros (búsqueda, rubro, tipo) sí la atenúan como a todas. */
+      var visible = coincide(u, f, true) ||
+        (f.solo && u.estado === 'separada' && coincide(u, { q: f.q, rubro: f.rubro, tipo: f.tipo, solo: false }, true));
       var puntos = u.geom.map(function (p) { return p[0] + ',' + p[1]; }).join(' ');
       html.push('<g class="inv-u' + (visible ? '' : ' atenuada') + (u.codigo === seleccion ? ' seleccionada' : '') + '"' +
         ' data-codigo="' + esc(u.codigo) + '" data-estado="' + u.estado + '" data-tipo="' + esc(u.tipo) + '" data-zona="' + u.zonaCat + '"' +
