@@ -111,6 +111,10 @@
 .inv-leyenda li{ display:flex; align-items:center; gap:7px }
 .inv-muestra{ flex:none; width:14px; height:14px; border-radius:3px; border:1px solid rgba(0,0,0,.4) }
 .inv-muestra.redonda{ width:10px; height:10px; border-radius:50% }
+/* la misma trama del plano: ámbar con rayas finas (disponible, por confirmar contra el plano) */
+.inv-muestra.trama{ background:repeating-linear-gradient(-45deg, var(--inv-disp) 0 3.2px, var(--inv-borde) 3.2px 4.8px) }
+/* vista por rubro: la disponible por confirmar lleva el punto hueco */
+.inv-muestra.redonda.hueca{ background:transparent !important; border:2px solid var(--accent) }
 
 .inv-saltar{ position:absolute; left:-9999px }
 .inv-saltar:focus{ position:static; display:inline-block; margin:0 14px 10px; color:var(--text-primary) }
@@ -131,7 +135,8 @@
   position:absolute; inset:0; display:grid; place-items:center; padding:20px; text-align:center;
   font-size:15px; color:var(--text-secondary); pointer-events:none;
 }
-.inv-contexto path{ fill:none; stroke:rgba(188,200,214,.38); stroke-width:3 }
+/* la lámina de arquitectura del CRM (06/10/2026), ya teñida para este fondo */
+.inv-lamina{ pointer-events:none }
 .inv-contexto text{ font-family:var(--display); font-size:11px; letter-spacing:2px; fill:rgba(188,200,214,.72) }
 
 .inv-u{ cursor:pointer; outline:none; transition:opacity .16s var(--ease) }
@@ -144,6 +149,13 @@
 .inv-u[data-estado="disponible"] text{ fill:var(--ink) }
 .inv-u[data-estado="separada"] polygon{ fill:var(--inv-sep) }
 .inv-u[data-estado="separada"] text{ fill:#fff }
+/* no disponible: deja ver apenas la lámina debajo, para que se lean pasajes y muros */
+.inv-u[data-estado="no_disponible"] polygon{ fill-opacity:.86 }
+/* disponible por confirmar contra el plano: el mismo ámbar con una trama fina encima */
+.inv-u polygon.inv-trama,
+.inv-u:hover polygon.inv-trama,
+.inv-u:focus-visible polygon.inv-trama,
+.inv-u.seleccionada polygon.inv-trama{ fill:url(#inv-trama); fill-opacity:.75; stroke:none; pointer-events:none }
 /* vista por rubro: el color sale de la zona, la disponibilidad va en el punto */
 .vista-zonas .inv-u polygon{ fill:#6F8194 }
 .vista-zonas .inv-u text{ fill:var(--ink) }
@@ -153,6 +165,7 @@
 .vista-zonas .inv-u[data-zona="carnes"] polygon{ fill:#D28FCB }
 .vista-zonas .inv-u[data-zona="tiendas"] polygon{ fill:#C9B79A }
 .inv-marca{ fill:var(--accent); stroke:var(--ink); stroke-width:1 }
+.inv-marca.hueca{ fill:var(--ink); stroke:var(--accent); stroke-width:1.6 }
 .inv-u.atenuada{ opacity:.2 }
 /* por rubro se quiere ver el color de cada zona aunque no pase el filtro */
 .vista-zonas .inv-u.atenuada{ opacity:.45 }

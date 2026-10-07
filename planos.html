@@ -14,17 +14,27 @@
 <meta property="og:title" content="El plano del Mercado Media Luna, puesto por puesto">
 <meta property="og:description" content="423 puestos y 62 tiendas. Busca por código, filtra por rubro y mira qué unidades figuran disponibles en el inventario.">
 <meta property="og:url" content="https://mercadomedialuna.com/planos.html">
-<meta property="og:image" content="https://mercadomedialuna.com/assets/plano-og-rubros.jpg">
+<!-- Vista previa al compartir (06/10/2026): el plano nuevo, pintado por rubro sobre
+     la lámina de arquitectura del CRM. Nombre nuevo: /assets/ se guarda 7 días. -->
+<meta property="og:image" content="https://mercadomedialuna.com/assets/plano-og-v3.jpg">
+<meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="El plano del Mercado Media Luna con cada puesto pintado según su rubro">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-118 -118 236 236'%3E%3Crect x='-118' y='-118' width='236' height='236' fill='%230F2A44'/%3E%3Cg transform='rotate(-45)'%3E%3Cpath d='M 50.176 -86.5 A 100 100 0 1 0 50.176 86.5 A 88 88 0 1 1 50.176 -86.5 Z' fill='%23F2A93B'/%3E%3C/g%3E%3C/svg%3E">
+<meta name="twitter:image" content="https://mercadomedialuna.com/assets/plano-og-v3.jpg">
+<meta name="twitter:image:alt" content="El plano del Mercado Media Luna con cada puesto pintado según su rubro">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/favicon-96.png" type="image/png" sizes="96x96">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://nmqwibcxqkaifszzbloo.supabase.co" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400;75..125,500;75..125,700;75..125,900&display=swap">
-<link rel="stylesheet" href="assets/styles.css?v=21f96d2d">
-<link rel="stylesheet" href="assets/inventario.css?v=21f96d2d">
+<link rel="stylesheet" href="assets/styles.css?v=cdef4ca2">
+<link rel="stylesheet" href="assets/inventario.css?v=cdef4ca2">
 <noscript><style>.inv-resumen,.inv-notas,.inv-sync,.inv-explorador{ display:none !important }</style></noscript>
 <style>
 .doc{ max-width:980px; margin:0 auto; padding:120px var(--gutter) 80px }
@@ -119,14 +129,14 @@ table.comp td:first-child{ color:var(--text-primary); font-weight:700 }
         <span class="inv-rotulo" id="inv-n-tiendas-rotulo">tiendas disponibles en el inventario</span>
       </div>
       <div id="inv-precio-puesto">
-        <span class="inv-rotulo">Puesto de 9 a 10 m²</span>
+        <span class="inv-rotulo" id="inv-precio-puesto-rotulo">Puesto de 9 a 10 m²</span>
         <b class="inv-precio" id="inv-precio-puesto-texto"></b>
         <span class="inv-rotulo" id="inv-precio-puesto-nota"></span>
       </div>
       <div id="inv-precio-tienda">
-        <span class="inv-rotulo">Tienda de 22 a 23 m²</span>
+        <span class="inv-rotulo" id="inv-precio-tienda-rotulo">Tienda de 22 a 23 m²</span>
         <b class="inv-precio" id="inv-precio-tienda-texto"></b>
-        <span class="inv-rotulo">Las de otro metraje se cotizan según su área.</span>
+        <span class="inv-rotulo" id="inv-precio-tienda-nota">Las de otro metraje se cotizan según su área.</span>
       </div>
     </div>
     <p class="inv-notas" id="inv-notas-precio"></p>
@@ -143,23 +153,23 @@ table.comp td:first-child{ color:var(--text-primary); font-weight:700 }
     <noscript>
       <div class="inv-respaldo">
         <p>Este plano necesita JavaScript para conectarse al inventario. Puedes ver el
-        <a href="assets/plano-rubros-zoom.webp" target="_blank" rel="noopener">plano por rubro en grande</a>
+        <a href="assets/plano-base-a1-v1-grande.webp" target="_blank" rel="noopener">plano de arquitectura en grande</a>
         (sin disponibilidad) y <a href="index.html#hablemos">escribirnos</a> para que te confirmemos qué unidades están disponibles.</p>
       </div>
     </noscript>
 
-    <!-- si el inventario no responde en la primera carga: el plano por rubro, sin disponibilidad -->
+    <!-- si el inventario no responde en la primera carga: la lámina de arquitectura, sin disponibilidad -->
     <div class="inv-respaldo" id="inv-respaldo" hidden>
       <p><strong>La disponibilidad en vivo no está disponible ahora.</strong> El plano interactivo
       aparece solo en cuanto el inventario responda, sin que tengas que recargar la página.</p>
-      <p>Mientras tanto, este es el plano por rubro. <strong>No muestra la disponibilidad</strong>:
+      <p>Mientras tanto, este es el plano de arquitectura. <strong>No muestra la disponibilidad</strong>:
       escríbenos y te confirmamos por escrito qué unidades están disponibles.</p>
       <div class="inv-respaldo-visor">
-        <img src="assets/plano-rubros-zoom.webp" loading="lazy" decoding="async" width="3000" height="5875"
-          alt="Plano del Mercado Media Luna pintado por rubro: abarrotes y bazar, frutas y verduras, menú y jugos, y pollo, carne y pescado. Las tiendas van sin color porque son de rubro libre.">
+        <img src="assets/plano-base-a1-v1-grande.webp" loading="lazy" decoding="async" width="2400" height="4850"
+          alt="Plano de arquitectura del Mercado Media Luna, primer piso: los pasajes, los bloques de puestos y la fila de tiendas hacia la Av. 14 de Agosto y la Av. Perú.">
       </div>
       <div class="acciones">
-        <a class="btn btn-quiet" href="assets/plano-rubros-zoom.webp" target="_blank" rel="noopener">Abrir el plano por rubro en grande</a>
+        <a class="btn btn-quiet" href="assets/plano-base-a1-v1-grande.webp" target="_blank" rel="noopener">Abrir el plano en grande</a>
         <a class="btn btn-accent" data-wa href="index.html#hablemos">Preguntar por WhatsApp</a>
       </div>
     </div>
@@ -203,11 +213,19 @@ table.comp td:first-child{ color:var(--text-primary); font-weight:700 }
             aria-label="Plano del mercado. Con el teclado: flechas para moverte, más y menos para acercar o alejar, cero para verlo entero. Tabulador para recorrer los espacios.">
             <div class="inv-lienzo" id="inv-mapa-lienzo">
               <svg id="inv-mapa" viewBox="80 70 930 1880" role="presentation" focusable="false">
+                <!-- La lámina de arquitectura sobre la que el CRM calculó los polígonos
+                     (sql/18-geometria-plano.sql, 06/10/2026), recortada a este viewBox:
+                     sin cuadro de áreas, sin rótulos de rubro, sin colores. Reemplaza al
+                     contorno trazado a mano, que no cuadraba con las paredes. -->
+                <defs>
+                  <pattern id="inv-trama" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+                    <rect width="7" height="7" fill="none"/>
+                    <rect x="0" y="0" width="2.4" height="7" fill="#0B2038"/>
+                  </pattern>
+                </defs>
+                <image class="inv-lamina" href="assets/plano-base-a1-v1.webp" x="80" y="70" width="930" height="1880" preserveAspectRatio="none"/>
                 <g class="inv-contexto" aria-hidden="true">
-                  <path d="M100 1914H947V343L985 205 758 69 662 141 599 365 478 495 100 1137Z"/>
                   <text x="550" y="1939" text-anchor="middle">AV. PERÚ</text>
-                  <text x="970" y="1130" transform="rotate(-90 970 1130)" text-anchor="middle">AV. 14 DE AGOSTO</text>
-                  <text x="474" y="381" transform="rotate(-44 474 381)" text-anchor="middle">VÍA DE ACCESO</text>
                   <text x="584" y="1170" text-anchor="middle">PASAJE 10</text>
                   <text x="620" y="652" text-anchor="middle">PASAJE 15</text>
                   <text x="510" y="1470" text-anchor="middle">PASAJE 9</text>
@@ -392,8 +410,32 @@ table.comp td:first-child{ color:var(--text-primary); font-weight:700 }
 <div class="inv-tooltip" id="inv-tooltip" role="tooltip" hidden></div>
 <div class="inv-toast" id="inv-toast" role="status" aria-live="polite" hidden></div>
 
-<script src="assets/config.js?v=21f96d2d"></script>
-<script src="assets/medicion.js?v=21f96d2d"></script>
-<script src="assets/inventario.js?v=21f96d2d"></script>
+<script src="assets/config.js?v=cdef4ca2"></script>
+<script src="assets/medicion.js?v=cdef4ca2"></script>
+<script src="assets/inventario.js?v=cdef4ca2"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "https://mercadomedialuna.com/planos.html#pagina",
+      "url": "https://mercadomedialuna.com/planos.html",
+      "name": "Plano interactivo y disponibilidad · Mercado Media Luna",
+      "inLanguage": "es-PE",
+      "primaryImageOfPage": { "@type": "ImageObject", "url": "https://mercadomedialuna.com/assets/plano-og-v3.jpg", "width": 1200, "height": 630 },
+      "isPartOf": { "@id": "https://mercadomedialuna.com/#web" },
+      "publisher": { "@id": "https://mercadomedialuna.com/#scp" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://mercadomedialuna.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Plano", "item": "https://mercadomedialuna.com/planos.html" }
+      ]
+    }
+  ]
+}
+</script>
 </body>
 </html>

@@ -440,7 +440,9 @@
       a.setAttribute('title', 'Número de WhatsApp pendiente: ver assets/config.js');
       return;
     }
-    var texto = (CFG.whatsappTexto || '') + ' (' + seccionDe(a) + ')';
+    /* un botón puede traer su propio mensaje (data-wa-texto), p. ej. "agendar una visita" */
+    var propio = a.getAttribute('data-wa-texto');
+    var texto = (propio || CFG.whatsappTexto || '') + ' (' + seccionDe(a) + ')';
     a.addEventListener('click', function () { if (window.MMLmedir) window.MMLmedir.contacto('whatsapp_' + seccionDe(a)); });
     a.setAttribute('href', 'https://wa.me/' + CFG.whatsapp + '?text=' + encodeURIComponent(texto));
     a.setAttribute('rel', 'noopener');

@@ -1406,3 +1406,133 @@ p.sab-cupo{ margin:14px 0 0; padding:10px 12px; border-radius:8px; background:va
   .tgrid{ gap:18px }
   .tgrid .tcard{ flex:0 0 calc((100% - 54px) / 4) }
 }
+
+/* =========================================================================
+   Portada (06/10/2026): botón al plano, independización y horario de visitas
+   Pedidos de SCP por chat el 06/10/2026. El ámbar va siempre de fondo, con
+   letra tinta, o sobre azul: nunca como letra sobre fondo claro.
+   ========================================================================= */
+
+/* ---------- el botón al plano (antes un enlace al final de la nota) ----------
+   Recuadro con cuadrícula de plano muy tenue y un resplandor ámbar detrás del
+   botón. El botón late tres veces al entrar en pantalla y se queda quieto:
+   llama la atención sin volverse un parpadeo permanente. */
+.vende-plano{
+  position:relative; overflow:hidden; text-align:center;
+  margin:28px auto 0; padding:clamp(28px,4.4vw,44px) clamp(16px,4vw,40px) clamp(24px,3.6vw,36px);
+  border:1px solid var(--rule); border-radius:16px;
+  background:
+    radial-gradient(52% 78% at 50% 36%, rgba(242,169,59,.17), rgba(242,169,59,0) 72%),
+    linear-gradient(rgba(246,242,234,.04) 1px, transparent 1px) center/26px 26px,
+    linear-gradient(90deg, rgba(246,242,234,.04) 1px, transparent 1px) center/26px 26px,
+    var(--panel);
+}
+.btn-plano{
+  gap:12px; max-width:100%; padding:18px 30px 18px 26px; line-height:1.25; text-align:left;
+  font-size:clamp(16px,1.6vw,19px); font-weight:800;
+  box-shadow:0 14px 34px rgba(4,12,22,.45), 0 0 0 6px rgba(242,169,59,.16), 0 0 38px rgba(242,169,59,.30);
+}
+.btn-plano:hover,.btn-plano:focus-visible{
+  box-shadow:0 18px 40px rgba(4,12,22,.5), 0 0 0 8px rgba(242,169,59,.22), 0 0 52px rgba(242,169,59,.42);
+}
+.btn-plano svg{ flex:none; width:24px; height:24px }
+.btn-plano .btn-plano-flecha{ width:22px; height:22px; transition:transform .35s var(--ease) }
+.btn-plano:hover .btn-plano-flecha,.btn-plano:focus-visible .btn-plano-flecha{ transform:translateX(4px) }
+.btn-plano:focus-visible{ outline:3px solid var(--text-primary); outline-offset:4px }
+@keyframes plano-llama{
+  0%,100%{ box-shadow:0 14px 34px rgba(4,12,22,.45), 0 0 0 6px rgba(242,169,59,.16), 0 0 38px rgba(242,169,59,.30) }
+  45%{ box-shadow:0 14px 34px rgba(4,12,22,.45), 0 0 0 13px rgba(242,169,59,.08), 0 0 60px rgba(242,169,59,.48) }
+}
+@keyframes plano-flecha{ 0%,100%{ transform:none } 45%{ transform:translateX(5px) } }
+.vende-plano.in .btn-plano{ animation:plano-llama 2.4s var(--ease) .7s 3 }
+.vende-plano.in .btn-plano-flecha{ animation:plano-flecha 2.4s var(--ease) .7s 3 }
+.vende-plano-pie{ margin:16px auto 0; max-width:46ch; font-size:15px; color:var(--text-secondary) }
+/* en celular el botón ocupa el ancho y el texto puede ir en dos líneas */
+@media (max-width:560px){
+  .btn-plano{ width:100%; justify-content:center; padding:16px 18px; gap:10px }
+  .btn-plano svg{ width:22px; height:22px }
+  .vende-plano-pie{ font-size:14px }
+}
+@media (prefers-reduced-motion:reduce){
+  .vende-plano.in .btn-plano,.vende-plano.in .btn-plano-flecha{ animation:none }
+  .btn-plano .btn-plano-flecha{ transition:none }
+}
+
+/* ---------- la independización, en recuadro ---------- */
+.independiza{
+  margin:26px 0 28px; max-width:760px; padding:clamp(20px,3vw,30px) clamp(18px,3vw,32px);
+  background:var(--canvas); border:1px solid var(--rule-strong); border-top:3px solid var(--accent);
+  border-radius:12px; box-shadow:0 20px 50px rgba(4,12,22,.32);
+}
+.independiza-rotulo{
+  display:inline-flex; align-items:center; gap:8px; margin:0 0 10px;
+  font-size:12px; font-weight:800; letter-spacing:.16em; text-transform:uppercase;
+  font-variation-settings:"wdth" 88; color:var(--accent);
+}
+.independiza-rotulo svg{ width:18px; height:18px; flex:none }
+.independiza h3{ font-size:clamp(21px,2.4vw,28px); margin-bottom:.55em }
+.independiza p{ color:var(--text-primary) }
+.independiza p:last-of-type{ margin-bottom:0 }
+.independiza-resumen{
+  display:grid; gap:10px; margin:20px 0 0; padding-top:18px; border-top:1px solid var(--rule);
+}
+@media (min-width:700px){ .independiza-resumen{ grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px } }
+.independiza-resumen > div{ background:rgba(246,242,234,.05); border:1px solid var(--rule); border-radius:10px; padding:12px 14px }
+.independiza-resumen dt{
+  font-size:11px; font-weight:700; letter-spacing:.14em; text-transform:uppercase;
+  font-variation-settings:"wdth" 88; color:var(--text-secondary); margin-bottom:4px;
+}
+.independiza-resumen dd{ margin:0; font-weight:700; font-size:16px; line-height:1.35; color:var(--text-primary) }
+
+/* ---------- el sello "Solo con cita previa": ámbar de fondo, letra tinta ---------- */
+.cita-sello{
+  display:inline-flex; align-items:center; gap:8px; margin:0; max-width:none; white-space:nowrap;
+  padding:7px 14px 7px 11px; border-radius:8px; border:2px solid var(--accent);
+  background:rgba(242,169,59,.1); color:var(--accent);
+  font-weight:800; font-size:15px; letter-spacing:.06em; text-transform:uppercase;
+  font-variation-settings:"wdth" 96; line-height:1.2;
+}
+.cita-sello svg{ width:20px; height:20px; flex:none }
+.faq-body .cita-sello-chico{ margin:0 0 12px; padding:5px 11px 5px 9px; font-size:12px; color:var(--accent) }
+.faq-body .cita-sello-chico svg{ width:16px; height:16px }
+.faq-body strong{ color:var(--text-primary) }
+
+/* ---------- horario de visitas, debajo del mapa ---------- */
+.visitas{
+  display:grid; gap:0; overflow:hidden;
+  border:1px solid var(--rule-strong); border-radius:16px; background:var(--panel);
+  box-shadow:0 24px 60px rgba(4,12,22,.4);
+}
+@media (min-width:900px){ .visitas{ grid-column:1 / -1; grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr) } }
+.visitas p{ margin:0; max-width:none }
+.visitas-horario{
+  padding:clamp(22px,3vw,34px);
+  background:
+    radial-gradient(90% 120% at 0% 0%, rgba(242,169,59,.16), rgba(242,169,59,0) 62%),
+    var(--canvas-deep);
+  border-bottom:1px solid var(--rule);
+}
+@media (min-width:900px){ .visitas-horario{ border-bottom:0; border-right:1px solid var(--rule) } }
+.visitas-rotulo{
+  font-size:13px; font-weight:700; letter-spacing:.18em; text-transform:uppercase;
+  font-variation-settings:"wdth" 88; color:var(--accent);
+}
+.visitas .visitas-dias{ display:grid; margin-top:10px }
+.visitas-dias span:first-child{
+  font-size:clamp(32px,4.4vw,48px); font-weight:900; font-variation-settings:"wdth" 118;
+  letter-spacing:-.02em; line-height:1.02;
+}
+.visitas-semana{ margin-top:6px; font-size:clamp(16px,1.6vw,19px); font-weight:700; color:var(--text-secondary) }
+.visitas .visitas-horas{
+  display:flex; align-items:center; gap:10px; margin-top:18px;
+  font-size:clamp(22px,2.6vw,30px); font-weight:800; font-variation-settings:"wdth" 108;
+  font-variant-numeric:tabular-nums; letter-spacing:-.01em;
+}
+.visitas-horas svg{ width:28px; height:28px; flex:none; color:var(--accent) }
+.visitas-cita{ padding:clamp(22px,3vw,34px); display:flex; flex-direction:column; align-items:flex-start; gap:12px }
+.visitas .visitas-texto{ font-size:clamp(17px,1.7vw,20px); font-weight:700; line-height:1.4; color:var(--text-primary); margin-top:4px }
+.visitas-extra{ font-size:15px; color:var(--text-secondary) }
+.visitas-btn{ margin-top:8px }
+.visitas-btn svg{ flex:none }
+@media (max-width:560px){ .visitas-btn{ width:100% } .cita-sello{ font-size:14px } }
+@media (max-width:340px){ .cita-sello{ font-size:12.5px; letter-spacing:.03em } }
