@@ -28,6 +28,16 @@ El proyecto de Vercel `mercado-media-luna` (equipo `mml11`) está conectado a es
 
 Las ramas que no son `main` generan una vista previa con su propia URL, sin tocar el sitio en vivo.
 
+**Antes de cada push que toque `assets/*.css` o `assets/*.js`**, sellar la versión:
+
+```
+node sellar-version.mjs
+```
+
+`/assets/` se sirve con caché de 7 días; sin el sello, quien ya visitó el sitio ve el HTML nuevo
+pintado con el CSS o JS viejo. El script deriva el `?v=` del contenido y lo escribe en todas las
+páginas (`--revisar` solo comprueba, sin tocar nada). Detalle en la cabecera de `sellar-version.mjs`.
+
 ## Lo que se cambia sin tocar código
 
 Todo está en **`assets/config.js`**:
