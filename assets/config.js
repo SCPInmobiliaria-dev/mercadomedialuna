@@ -364,4 +364,49 @@ window.MML = {
   videoMovilBytes: 3422425,
   videoMovilLigeroBytes: 1639454,
   posterMovil: 'assets/hero-poster-v2-movil.jpg',
+
+  /* ---- 6 · Capítulos del hero (13/10/2026) ---------------------------------
+     Una fila por banda de texto del hero, con el título TEXTUAL de la banda y
+     su tramo del recorrido (0 a 1). Lo usa assets/portada-v3.js para el rail
+     de capítulos (🔵 propuesta) y para el gancho de progreso: la portada emite
+     CustomEvent "mml:hero-progress" con {progress, frame} en cada cambio.
+     Cuando entre el hero v3 (10 s, 240 cuadros, del terreno vacío al mercado
+     terminado) solo cambian esta tabla y las cuatro rutas del bloque 5. */
+  heroCapitulos: {
+    cuadros: 240,
+    lista: [
+      { id: 'nada',     titulo: 'Aquí no había nada.',                desde: 0,    hasta: 0.17 },
+      { id: 'obra',     titulo: 'Hoy hay obra.',                       desde: 0.21, hasta: 0.40 },
+      { id: 'propio',   titulo: 'Un puesto propio no es un alquiler.', desde: 0.44, hasta: 0.62 },
+      { id: 'proyecto', titulo: 'Así está proyectado el mercado.',     desde: 0.66, hasta: 0.83 },
+      { id: 'mercado',  titulo: 'Mercado Media Luna',                  desde: 0.86, hasta: 1 },
+    ],
+  },
+
+  /* ---- 7 · Módulo de evidencia (Manual de Marca v2.0 §5, 13/10/2026) -------
+     Una entrada por documento del bloque fijo. Solo se muestra lo que está en
+     activo: true; lo demás no deja ni un hueco. Hoy el único con fuente es el
+     canal de reclamos (el Libro de Reclamaciones, publicado). Los otros seis
+     necesitan el documento en mano (PENDIENTES-WEB.md, 🔴 para Walter):
+     partida registral, licencia, cronograma con hitos, contrato modelo, ruta
+     a la independización en 7 pasos, fideicomiso o banco. Encenderlos sin el
+     documento sería una afirmación sin fuente (CLAUDE.md §2). Los apagados
+     llevan solo su id: este archivo es público y lo que no existe no se
+     menciona (Manual §5.1, ítem 7). Al encender uno se le pone nombre, texto
+     y enlace. Mientras el único activo sea el canal de reclamos, el rótulo es
+     el mínimo: "Para comprobar" promete más de lo que hay. */
+  evidencia: {
+    rotulo: 'Para comprobar',
+    rotuloMinimo: 'Si algo no cuadra',
+    items: [
+      { id: 'partida',     activo: false },
+      { id: 'licencia',    activo: false },
+      { id: 'cronograma',  activo: false },
+      { id: 'contrato',    activo: false },
+      { id: 'ruta',        activo: false },
+      { id: 'reclamos',    nombre: 'Canales de reclamo', activo: true,
+        texto: 'Libro de Reclamaciones', enlace: 'libro-de-reclamaciones.html' },
+      { id: 'fideicomiso', activo: false },
+    ],
+  },
 };

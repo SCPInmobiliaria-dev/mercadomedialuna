@@ -30,10 +30,15 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
+<!-- el póster del hero se pide con la hoja, no después de app.js (meta: póster ≤ 2,5 s en 4G lento) -->
+<link rel="preload" as="image" href="assets/hero-poster-v2-movil.jpg" media="(orientation:portrait)">
+<link rel="preload" as="image" href="assets/hero-poster-v2.jpg" media="(orientation:landscape)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Google Fonts se mantiene: la hoja depende del eje de anchura de Archivo
+     (wdth 75..125), que los woff2 estáticos del brandbook no traen (13/10/2026). -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400;75..125,500;75..125,700;75..125,900&display=swap">
-<link rel="stylesheet" href="assets/styles.css?v=8c58ffbb">
+<link rel="stylesheet" href="assets/styles.css?v=6f4e7ad7">
 <noscript><style>.reveal{opacity:1!important;transform:none!important}</style></noscript>
 </head>
 <body>
@@ -58,7 +63,10 @@
 
 <main id="main" tabindex="-1">
 
-  <!-- ============ HERO ============ -->
+  <!-- ============ HERO ============
+       El motor (assets/app.js §2) no se toca. La capa v3 (assets/portada-v3.js)
+       se engancha alrededor: emite "mml:hero-progress" y arma el rail de
+       capítulos desde config.js → heroCapitulos. -->
   <section class="hero" id="inicio" aria-label="Mercado Media Luna en construcción">
     <div class="hero-track">
       <div class="stage">
@@ -78,11 +86,11 @@
           <div class="band band-1" data-band="0,0.17" data-entrance="ensamble">
             <p class="line" data-text="Aquí no había nada."></p>
           </div>
-          <div class="band band-2" data-band="0.21,0.40" data-entrance="sube" data-ramp="0.03">
+          <div class="band band-2" data-band="0.21,0.40" data-entrance="mascara" data-ramp="0.03">
             <p class="line" data-text="Hoy hay obra."></p>
             <p class="line line-sub" data-text="Y por eso puedes venir a verla."></p>
           </div>
-          <div class="band band-3" data-band="0.44,0.62" data-entrance="golpe">
+          <div class="band band-3" data-band="0.44,0.62" data-entrance="mascara-x">
             <p class="line" data-text="Un puesto propio no es un alquiler."></p>
           </div>
           <div class="band band-4" data-band="0.66,0.83" data-entrance="nitido">
@@ -116,6 +124,86 @@
     </div>
   </section>
 
+  <!-- ============ HOY: LA OBRA CON FECHA ============
+       Las tres fotos son del 10/09/2026: fecha dada por Patriccio el
+       23/09/2026 (los archivos llegaron sin EXIF). Si se cambia una foto,
+       se cambia su fecha con ella. Son fotos reales: nunca llevan la barra. -->
+  <section class="obra claro" id="obra" aria-labelledby="h-obra">
+    <div class="obra-head reveal">
+      <p class="kicker">La obra, con fecha</p>
+      <h2 id="h-obra">Te la mostramos como está.</h2>
+      <p>Fotos fechadas, sin maquillar y sin porcentajes de avance. Cuando la veas en persona, va a ser igual que aquí.</p>
+    </div>
+    <p class="nota reveal">Estas fotos son de la obra real, no del proyecto.</p>
+    <div class="obra-grid">
+      <figure class="obra-slot reveal" data-vp>
+        <img class="obra-foto" src="assets/obra-01-mirador.jpg" alt="Vista de las plataformas y cimientos del Mercado Media Luna desde el cerro, con el barrio de Jicamarca detrás" width="608" height="608" loading="lazy" decoding="async">
+        <figcaption><time class="obra-fecha" datetime="2026-09-10">10 de septiembre de 2026</time> Las plataformas del mercado vistas desde arriba, con Jicamarca alrededor.</figcaption>
+      </figure>
+      <figure class="obra-slot reveal" data-vp>
+        <img class="obra-foto" src="assets/obra-02-cimientos.jpg" alt="Cimientos y acero de refuerzo del Mercado Media Luna en una mañana de neblina" width="608" height="608" loading="lazy" decoding="async">
+        <figcaption><time class="obra-fecha" datetime="2026-09-10">10 de septiembre de 2026</time> Cimientos y acero de refuerzo, en una mañana de neblina.</figcaption>
+      </figure>
+      <figure class="obra-slot reveal" data-vp>
+        <img class="obra-foto" src="assets/obra-03-columnas.jpg" alt="Uno de los pasajes del Mercado Media Luna con las columnas de concreto ya levantadas" width="608" height="608" loading="lazy" decoding="async">
+        <figcaption><time class="obra-fecha" datetime="2026-09-10">10 de septiembre de 2026</time> Uno de los pasajes, con las columnas de concreto ya levantadas.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ============ ASÍ ESTÁ PROYECTADO ============
+       Cada imagen lleva su barra obligatoria: son el proyecto, no la obra.
+       La primera fila va en las mismas tres columnas que las fotos de arriba y
+       sube encima de ellas con el scroll (la firma de la página). No afirma
+       pares foto↔render: el único puente es la frase del párrafo. -->
+  <section class="proyecto" id="proyecto" aria-labelledby="h-proyecto">
+    <div class="proyecto-head reveal">
+      <p class="kicker">Así está proyectado</p>
+      <h2 id="h-proyecto">Y esto es lo que se está construyendo.</h2>
+      <p>Son imágenes del modelo del proyecto, no fotografías. Las ponemos al lado de las fotos de arriba a propósito: así ves lo que hay hoy y lo que está proyectado, sin que se confundan.</p>
+    </div>
+    <div class="proyecto-pares">
+      <figure class="proyecto-img reveal" data-vp>
+        <img src="assets/render-aerea.jpg" alt="Proyección arquitectónica del Mercado Media Luna completo, con las naves techadas y las tiendas sobre las dos avenidas" width="1440" height="810" loading="lazy" decoding="async">
+        <figcaption class="proyeccion">Proyección arquitectónica — obra en construcción</figcaption>
+        <p class="proyecto-pie">El conjunto completo, con las naves techadas y las tiendas sobre las dos avenidas.</p>
+      </figure>
+      <figure class="proyecto-img reveal" data-vp>
+        <img src="assets/render-tiendas-calle.webp" alt="Proyección arquitectónica de la fila de tiendas del Mercado Media Luna vista desde la calle" width="947" height="532" loading="lazy" decoding="async">
+        <figcaption class="proyeccion">Proyección arquitectónica — obra en construcción</figcaption>
+        <p class="proyecto-pie">La fila de tiendas, desde la calle.</p>
+      </figure>
+      <figure class="proyecto-img reveal" data-vp>
+        <img src="assets/render-pasaje.jpg" alt="Proyección arquitectónica de uno de los pasajes interiores del Mercado Media Luna" width="1280" height="720" loading="lazy" decoding="async">
+        <figcaption class="proyeccion">Proyección arquitectónica — obra en construcción</figcaption>
+        <p class="proyecto-pie">Uno de los pasajes interiores.</p>
+      </figure>
+    </div>
+    <div class="proyecto-grid">
+      <figure class="proyecto-img proyecto-ancha reveal" data-vp>
+        <img src="assets/render-balcon.webp" alt="Proyección arquitectónica de la vista desde el corredor del nivel superior del Mercado Media Luna" width="2000" height="1125" loading="lazy" decoding="async">
+        <figcaption class="proyeccion">Proyección arquitectónica — obra en construcción</figcaption>
+        <p class="proyecto-pie">Desde el corredor del nivel superior.</p>
+      </figure>
+      <figure class="proyecto-img reveal" data-vp>
+        <img src="assets/render-letrero.jpg" alt="Proyección arquitectónica del letrero de ingreso del Mercado Media Luna" width="1280" height="720" loading="lazy" decoding="async">
+        <figcaption class="proyeccion">Proyección arquitectónica — obra en construcción</figcaption>
+        <p class="proyecto-pie">El letrero del ingreso.</p>
+      </figure>
+      <figure class="proyecto-img reveal" data-vp>
+        <img src="assets/render-escaleras.jpg" alt="Proyección arquitectónica de las escaleras exteriores del Mercado Media Luna" width="1280" height="720" loading="lazy" decoding="async">
+        <figcaption class="proyeccion">Proyección arquitectónica — obra en construcción</figcaption>
+        <p class="proyecto-pie">Las escaleras exteriores.</p>
+      </figure>
+      <figure class="proyecto-img reveal" data-vp>
+        <img src="assets/render-vereda.jpg" alt="Proyección arquitectónica de la vereda con árboles y bancas frente a las tiendas del Mercado Media Luna" width="1280" height="720" loading="lazy" decoding="async">
+        <figcaption class="proyeccion">Proyección arquitectónica — obra en construcción</figcaption>
+        <p class="proyecto-pie">La vereda frente a las tiendas.</p>
+      </figure>
+    </div>
+    <p class="nota reveal">El plano también dibuja cámaras frigoríficas separadas para pollo, carne y pescado, laboratorio bromatológico, tópico y oficina de administración. Están proyectados, todavía no construidos. <a href="planos.html">Míralos en el plano</a>.</p>
+  </section>
+
   <!-- ============ LA PROMESA ============ -->
   <section class="promesa reveal" id="promesa" aria-labelledby="h-promesa">
     <p class="kicker">La promesa</p>
@@ -125,7 +213,7 @@
   </section>
 
   <!-- ============ EL ALQUILER (momento interactivo) ============ -->
-  <section class="alquiler" id="alquiler" aria-labelledby="h-alquiler">
+  <section class="alquiler claro" id="alquiler" aria-labelledby="h-alquiler">
     <div class="alquiler-copy reveal">
       <p class="kicker">El alquiler que nunca termina</p>
       <h2 id="h-alquiler">Agarra la calculadora.</h2>
@@ -181,7 +269,7 @@
         </dl>
       </article>
     </div>
-    <figure class="vende-img reveal">
+    <figure class="vende-img reveal" data-vp>
       <img src="assets/render-avenida.jpg" alt="Proyección arquitectónica de las tiendas del Mercado Media Luna con frente a la avenida" width="1280" height="720" loading="lazy" decoding="async">
       <figcaption class="proyeccion">Proyección arquitectónica — obra en construcción</figcaption>
     </figure>
@@ -198,7 +286,7 @@
   </section>
 
   <!-- ============ QUÉ ESTÁS COMPRANDO ============ -->
-  <section class="legal-explica" id="que-compras" aria-labelledby="h-legal">
+  <section class="legal-explica claro" id="que-compras" aria-labelledby="h-legal">
     <div class="legal-inner reveal">
       <p class="kicker">Qué estás comprando exactamente</p>
       <h2 id="h-legal">Te lo explicamos antes de que pagues, no después.</h2>
@@ -221,6 +309,12 @@
         </dl>
       </aside>
       <p>¿Quieres ver el detalle? Escríbenos y te enviamos el modelo de contrato <strong>antes</strong> de que separes, para que lo revises con quien tú quieras.</p>
+      <!-- Módulo de evidencia (Manual v2 §5): se llena desde assets/config.js →
+           evidencia, solo con lo que tiene fuente hoy. Sin nada activo, se quita. -->
+      <div class="evidencia" id="evidencia" hidden>
+        <p class="evidencia-rotulo"></p>
+        <ul class="evidencia-lista"></ul>
+      </div>
     </div>
   </section>
 
@@ -228,99 +322,24 @@
   <section class="pasos" id="como-se-compra" aria-labelledby="h-pasos">
     <p class="kicker reveal">Cómo se compra</p>
     <h2 id="h-pasos" class="reveal">Tres pasos, sin vueltas.</h2>
-    <ol class="pasos-list">
-      <li class="paso reveal">
+    <ol class="pasos-list" data-vp>
+      <li class="paso reveal" data-vp>
         <span class="paso-n" aria-hidden="true">1</span>
         <h3>Me escribes</h3>
         <p>Te hago cuatro preguntas para saber si esto te sirve.</p>
       </li>
-      <li class="paso reveal">
+      <li class="paso reveal" data-vp>
         <span class="paso-n" aria-hidden="true">2</span>
         <h3>Ves la obra</h3>
         <p>Presencial, con cita previa, o completa por videollamada si estás lejos.</p>
       </li>
-      <li class="paso reveal">
+      <li class="paso reveal" data-vp>
         <span class="paso-n" aria-hidden="true">3</span>
         <h3>Reservas y firmas</h3>
         <p>Todo queda por escrito.</p>
         <p>La separación es de S/500, o su equivalente de US$150 si prefieres pagar en dólares. Es reembolsable si cambias de decisión dentro de los 7 días calendario siguientes al depósito.</p>
       </li>
     </ol>
-  </section>
-
-  <!-- ============ LA OBRA CON FECHA ============
-       Las tres fotos son del 10/09/2026: fecha dada por Patriccio el
-       23/09/2026 (los archivos llegaron sin EXIF). Si se cambia una foto,
-       se cambia su fecha con ella. -->
-  <section class="obra" id="obra" aria-labelledby="h-obra">
-    <div class="obra-head reveal">
-      <p class="kicker">La obra, con fecha</p>
-      <h2 id="h-obra">Te la mostramos como está.</h2>
-      <p>Fotos fechadas, sin maquillar y sin porcentajes de avance. Cuando la veas en persona, va a ser igual que aquí.</p>
-    </div>
-    <div class="obra-grid">
-      <figure class="obra-slot reveal">
-        <img class="obra-foto" src="assets/obra-01-mirador.jpg" alt="Vista de las plataformas y cimientos del Mercado Media Luna desde el cerro, con el barrio de Jicamarca detrás" width="608" height="608" loading="lazy" decoding="async">
-        <figcaption><time class="obra-fecha" datetime="2026-09-10">10 de septiembre de 2026</time> Las plataformas del mercado vistas desde arriba, con Jicamarca alrededor.</figcaption>
-      </figure>
-      <figure class="obra-slot reveal">
-        <img class="obra-foto" src="assets/obra-02-cimientos.jpg" alt="Cimientos y acero de refuerzo del Mercado Media Luna en una mañana de neblina" width="608" height="608" loading="lazy" decoding="async">
-        <figcaption><time class="obra-fecha" datetime="2026-09-10">10 de septiembre de 2026</time> Cimientos y acero de refuerzo, en una mañana de neblina.</figcaption>
-      </figure>
-      <figure class="obra-slot reveal">
-        <img class="obra-foto" src="assets/obra-03-columnas.jpg" alt="Uno de los pasajes del Mercado Media Luna con las columnas de concreto ya levantadas" width="608" height="608" loading="lazy" decoding="async">
-        <figcaption><time class="obra-fecha" datetime="2026-09-10">10 de septiembre de 2026</time> Uno de los pasajes, con las columnas de concreto ya levantadas.</figcaption>
-      </figure>
-    </div>
-    <p class="nota reveal">Estas fotos son de la obra real, no del proyecto.</p>
-  </section>
-
-  <!-- ============ LA PROYECCIÓN ARQUITECTÓNICA ============
-       Cada imagen lleva su barra obligatoria: son el proyecto, no la obra. -->
-  <section class="proyecto" id="proyecto" aria-labelledby="h-proyecto">
-    <div class="proyecto-head reveal">
-      <p class="kicker">Así está proyectado</p>
-      <h2 id="h-proyecto">Y esto es lo que se está construyendo.</h2>
-      <p>Son imágenes del modelo del proyecto, no fotografías. Las ponemos al lado de las fotos de arriba a propósito: así ves lo que hay hoy y lo que está proyectado, sin que se confundan.</p>
-    </div>
-    <div class="proyecto-grid">
-      <figure class="proyecto-img proyecto-ancha reveal">
-        <img src="assets/render-aerea.jpg" alt="Proyección arquitectónica del Mercado Media Luna completo, con las naves techadas y las tiendas sobre las dos avenidas" width="1440" height="810" loading="lazy" decoding="async">
-        <figcaption class="proyeccion">Proyección arquitectónica — obra en construcción</figcaption>
-        <p class="proyecto-pie">El conjunto completo, con las naves techadas y las tiendas sobre las dos avenidas.</p>
-      </figure>
-      <figure class="proyecto-img reveal">
-        <img src="assets/render-tiendas-calle.webp" alt="Proyección arquitectónica de la fila de tiendas del Mercado Media Luna vista desde la calle" width="947" height="532" loading="lazy" decoding="async">
-        <figcaption class="proyeccion">Proyección arquitectónica — obra en construcción</figcaption>
-        <p class="proyecto-pie">La fila de tiendas, desde la calle.</p>
-      </figure>
-      <figure class="proyecto-img reveal">
-        <img src="assets/render-letrero.jpg" alt="Proyección arquitectónica del letrero de ingreso del Mercado Media Luna" width="1280" height="720" loading="lazy" decoding="async">
-        <figcaption class="proyeccion">Proyección arquitectónica — obra en construcción</figcaption>
-        <p class="proyecto-pie">El letrero del ingreso.</p>
-      </figure>
-      <figure class="proyecto-img reveal">
-        <img src="assets/render-escaleras.jpg" alt="Proyección arquitectónica de las escaleras exteriores del Mercado Media Luna" width="1280" height="720" loading="lazy" decoding="async">
-        <figcaption class="proyeccion">Proyección arquitectónica — obra en construcción</figcaption>
-        <p class="proyecto-pie">Las escaleras exteriores.</p>
-      </figure>
-      <figure class="proyecto-img reveal">
-        <img src="assets/render-vereda.jpg" alt="Proyección arquitectónica de la vereda con árboles y bancas frente a las tiendas del Mercado Media Luna" width="1280" height="720" loading="lazy" decoding="async">
-        <figcaption class="proyeccion">Proyección arquitectónica — obra en construcción</figcaption>
-        <p class="proyecto-pie">La vereda frente a las tiendas.</p>
-      </figure>
-      <figure class="proyecto-img reveal">
-        <img src="assets/render-balcon.webp" alt="Proyección arquitectónica de la vista desde el corredor del nivel superior del Mercado Media Luna" width="2000" height="1125" loading="lazy" decoding="async">
-        <figcaption class="proyeccion">Proyección arquitectónica — obra en construcción</figcaption>
-        <p class="proyecto-pie">Desde el corredor del nivel superior.</p>
-      </figure>
-      <figure class="proyecto-img reveal">
-        <img src="assets/render-pasaje.jpg" alt="Proyección arquitectónica de uno de los pasajes interiores del Mercado Media Luna" width="1280" height="720" loading="lazy" decoding="async">
-        <figcaption class="proyeccion">Proyección arquitectónica — obra en construcción</figcaption>
-        <p class="proyecto-pie">Uno de los pasajes interiores.</p>
-      </figure>
-    </div>
-    <p class="nota reveal">El plano también dibuja cámaras frigoríficas separadas para pollo, carne y pescado, laboratorio bromatológico, tópico y oficina de administración. Están proyectados, todavía no construidos. <a href="planos.html">Míralos en el plano</a>.</p>
   </section>
 
   <!-- ============ QUIÉNES CONSTRUYEN ============ -->
@@ -357,22 +376,24 @@
        marca. Nunca el distrito: la jurisdicción está en disputa (Manual §8).
        El mapa de Google se pide recién cuando la sección se acerca a la
        pantalla (loading="lazy"). -->
-  <section class="ubicacion" id="ubicacion" aria-labelledby="h-ubicacion">
-    <div class="ubicacion-copy reveal">
-      <p class="kicker">Dónde queda</p>
-      <h2 id="h-ubicacion">En el cruce de la Av. Perú con la Av. 14 de Agosto.</h2>
-      <p>Jicamarca, Sector Media Luna. La obra se visita con cita previa: elige el día y la hora, y te acompañamos.</p>
-      <div class="ubicacion-acciones">
-        <a class="btn btn-accent" href="https://www.google.com/maps/dir/?api=1&amp;destination=-11.9015096,-76.9444329" target="_blank" rel="noopener">Cómo llegar</a>
-        <a class="btn btn-quiet" href="https://maps.app.goo.gl/opXr5c24VrUb78Wv5" target="_blank" rel="noopener">Abrir en Google Maps</a>
+  <section class="ubicacion claro" id="ubicacion" aria-labelledby="h-ubicacion">
+    <div class="ubicacion-dos">
+      <div class="ubicacion-copy reveal">
+        <p class="kicker">Dónde queda</p>
+        <h2 id="h-ubicacion">En el cruce de la Av. Perú con la Av. 14 de Agosto.</h2>
+        <p>Jicamarca, Sector Media Luna. La obra se visita con cita previa: elige el día y la hora, y te acompañamos.</p>
+        <div class="ubicacion-acciones">
+          <a class="btn btn-accent" href="https://www.google.com/maps/dir/?api=1&amp;destination=-11.9015096,-76.9444329" target="_blank" rel="noopener">Cómo llegar</a>
+          <a class="btn btn-quiet" href="https://maps.app.goo.gl/opXr5c24VrUb78Wv5" target="_blank" rel="noopener">Abrir en Google Maps</a>
+        </div>
       </div>
+      <figure class="ubicacion-mapa reveal" data-vivo>
+        <div class="ubicacion-marco">
+          <iframe src="https://www.google.com/maps?q=-11.9015096,-76.9444329&amp;z=17&amp;t=k&amp;hl=es&amp;output=embed" title="Mapa de Google con la ubicación del Mercado Media Luna" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+        </div>
+        <figcaption>Vista satelital de Google Maps. La imagen es de Google y puede ser anterior a la obra de hoy.</figcaption>
+      </figure>
     </div>
-    <figure class="ubicacion-mapa reveal">
-      <div class="ubicacion-marco">
-        <iframe src="https://www.google.com/maps?q=-11.9015096,-76.9444329&amp;z=17&amp;t=k&amp;hl=es&amp;output=embed" title="Mapa de Google con la ubicación del Mercado Media Luna" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
-      </div>
-      <figcaption>Vista satelital de Google Maps. La imagen es de Google y puede ser anterior a la obra de hoy.</figcaption>
-    </figure>
 
     <!-- horario de visitas: ficha-proyecto-mml.md §1. Solo con cita previa: sin openingHours en el JSON-LD -->
     <div class="visitas reveal" id="visitas" role="group" aria-labelledby="h-visitas">
@@ -400,7 +421,7 @@
   </section>
 
   <!-- ============ FAQ ============ -->
-  <section class="faq" id="preguntas" aria-labelledby="h-faq">
+  <section class="faq claro claro-cielo" id="preguntas" aria-labelledby="h-faq">
     <p class="kicker reveal">Preguntas frecuentes</p>
     <h2 id="h-faq" class="reveal">Lo que todos preguntan.</h2>
     <div class="faq-list">
@@ -428,7 +449,7 @@
 
   <!-- ============ EMBUDO DE CALIFICACIÓN ============ -->
   <section class="hablemos" id="hablemos" aria-labelledby="h-hablemos">
-    <p class="hablemos-cinta"><span>Empieza aquí</span><span>Menos de un minuto</span><span>Te responde una persona por WhatsApp</span></p>
+    <p class="hablemos-cinta"><span>Empieza aquí</span></p>
     <div class="hablemos-inner">
       <div class="hablemos-copy reveal">
         <p class="kicker">Hablemos</p>
@@ -443,7 +464,7 @@
       </div>
 
       <div class="chat reveal" id="chat" role="region" aria-labelledby="chat-titulo">
-        <div class="chat-head">
+        <div class="chat-head" data-vivo>
           <span class="chat-avatar" aria-hidden="true"><svg viewBox="-118 -118 236 236"><g transform="rotate(-45)"><path d="M 50.176 -86.5 A 100 100 0 1 0 50.176 86.5 A 88 88 0 1 1 50.176 -86.5 Z" fill="currentColor"></path></g></svg></span>
           <div class="chat-id">
             <p class="chat-titulo" id="chat-titulo">Mercado Media Luna</p>
@@ -489,11 +510,12 @@
   <svg viewBox="0 0 24 24" aria-hidden="true" width="32" height="32"><path fill="currentColor" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413"/></svg>
 </a>
 
-<script src="assets/config.js?v=8c58ffbb"></script>
-<script src="assets/testimonios.js?v=8c58ffbb"></script>
-<script src="assets/medicion.js?v=8c58ffbb"></script>
-<script src="assets/app.js?v=8c58ffbb"></script>
-<script src="assets/embudo.js?v=8c58ffbb"></script>
+<script src="assets/config.js?v=6f4e7ad7"></script>
+<script src="assets/testimonios.js?v=6f4e7ad7"></script>
+<script src="assets/medicion.js?v=6f4e7ad7"></script>
+<script src="assets/app.js?v=6f4e7ad7"></script>
+<script src="assets/portada-v3.js?v=6f4e7ad7"></script>
+<script src="assets/embudo.js?v=6f4e7ad7"></script>
 
 <script type="application/ld+json">
 {
