@@ -53,9 +53,11 @@ body{
 body::before{
   content:"";
   position:fixed; inset:-20vmax; z-index:-1; pointer-events:none;
+  /* 13/10/2026: el ambiente es el último cuadro del hero, teñido de Azul Noche: la página entera
+     comparte la textura del video y el hero no «se acaba»: sigue debajo de las hojas */
   background:
-    radial-gradient(38vmax 30vmax at 22% 18%, rgba(120,170,220,.05), transparent 70%),
-    radial-gradient(44vmax 36vmax at 78% 72%, rgba(120,170,220,.08), transparent 72%);
+    linear-gradient(rgba(15,42,68,.86), rgba(15,42,68,.93)),
+    url("hero-ending-v2.jpg") center/cover no-repeat;
   animation:ambiente 120s var(--ease-soft) -30s infinite alternate;
 }
 @keyframes ambiente{ from{ transform:translate3d(-2%,-1%,0) scale(1) } to{ transform:translate3d(2%,2%,0) scale(1.06) } }
@@ -156,7 +158,7 @@ a{ color:var(--text-primary) }
 /* =========================================================================
    HERO
    ========================================================================= */
-.hero{ position:relative }
+.hero{ position:relative; z-index:1; isolation:isolate }   /* contexto propio: la hoja de abajo (z 3) pasa por encima de todo el hero */
 .hero-track{ height:700vh }          /* 10 s de video: cada beat aguanta 6 flicks de lectura */
 .stage{
   position:sticky; top:0; height:100svh; overflow:clip;
@@ -1596,8 +1598,17 @@ body.en-hero .nav-cta:hover{ border-color:var(--text-primary) }
 @media (min-width:900px){ .ubicacion-dos{ grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr) } }
 .claro.ubicacion .visitas{ margin-top:clamp(24px,4vw,48px) }
 
+/* ---------- el hero no «se acaba y baja»: la primera hoja sube sobre el último cuadro mientras el
+   escenario sigue pegado (los últimos 5 % de la pista, cuando la banda 5 ya se asentó) ---------- */
+.obra{ position:relative; z-index:3; margin-top:-30vh }            /* ~4 % de 700vh */
+/* la banda final sube con la hoja (solo transform) para que el título y los botones no queden tapados */
+.band-5{ transform:translateY(calc(-30vh * clamp(0, (var(--k, 0) - .75) * 4, 1))) }
+/* en vertical el hero compacto no se solapa: los botones del final van abajo y portada-test exige que reciban el toque */
+@media (orientation:portrait){ .obra{ margin-top:0 } .band-5{ transform:none } }
+.hablemos{ background:linear-gradient(180deg, rgba(11,32,56,.9), rgba(15,42,68,.96)) }   /* deja ver la textura de fondo */
+
 /* ---------- la firma: HOY se queda quieto, la PROYECCIÓN sube encima ---------- */
-.proyecto{ display:grid; grid-template-columns:minmax(0,1fr); position:relative; z-index:2 }
+.proyecto{ display:grid; grid-template-columns:minmax(0,1fr); position:relative; z-index:4 }
 .proyecto > .proyecto-pares{ order:1 } .proyecto > .proyecto-head{ order:2 } .proyecto > .proyecto-grid{ order:3 } .proyecto > .nota{ order:4 }
 .proyecto-pares{ display:grid; gap:16px; width:100%; max-width:var(--maxw); margin:0 auto }
 @media (min-width:760px){ .proyecto-pares{ grid-template-columns:repeat(3,1fr) } }
