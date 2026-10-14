@@ -347,23 +347,25 @@ window.MML = {
   /* ---- 5 · Video del hero -------------------------------------------------
      El timelapse de la construcción (entregado por Patriccio el 24/09/2026)
      recodificado desde el original HEVC de 10 bits: H.264 con un cuadro clave
-     cada 8 para que el scroll vaya y vuelva sin trabarse. Escritorio a CRF 18,
-     que a tamaño real no se distingue del original.
+     cada 8 para que el scroll vaya y vuelva sin trabarse. El v3 (video IA sobre la
+     guía de Blender, 13/10/2026) va a CRF 23 en escritorio para no pasar de v2 + 20 %;
+     el metraje fotorrealista pesa más que el render limpio.
      Cuando cambie el video, cambia el nombre del archivo: /assets/ guarda
      imágenes y videos 7 días en el navegador y un nombre repetido dejaría a
      quien ya visitó el sitio viendo el video viejo. */
-  video: 'assets/hero-scrub-v2.mp4',                  // 1920×1080
-  videoLigero: 'assets/hero-scrub-v2-lite.mp4',       // 1280×720: solo con conexión lenta o ahorro de datos
-  videoBytes: 7100592,                                // respaldo cuando falta Content-Length
-  videoLigeroBytes: 2947814,
-  poster: 'assets/hero-poster-v2.jpg',                // primer cuadro del video, idéntico
+  video: 'assets/hero-scrub-v3.mp4',                  // 1920×1080 · v3 (13/10/2026): Blender V16 + Higgsfield Seedance 2.5 + revisión a ojo (informe en 08-web/review/rediseno-v3/)
+  videoLigero: 'assets/hero-scrub-v3-lite.mp4',       // 1280×720: solo con conexión lenta o ahorro de datos
+  videoBytes: 8456419,                                // respaldo cuando falta Content-Length
+  videoLigeroBytes: 3322220,
+  poster: 'assets/hero-poster-v3.jpg',                // primer cuadro del video, idéntico
   /* En celular (vertical) el hero es compacto: un recorte cuadrado centrado
      en el mercado, que así se ve completo en el ancho del teléfono. */
-  videoMovil: 'assets/hero-scrub-v2-movil.mp4',       // 1080×1080
-  videoMovilLigero: 'assets/hero-scrub-v2-movil-lite.mp4', // 720×720
-  videoMovilBytes: 3422425,
-  videoMovilLigeroBytes: 1639454,
-  posterMovil: 'assets/hero-poster-v2-movil.jpg',
+  videoMovil: 'assets/hero-scrub-v3-movil.mp4',       // 1080×1080
+  videoMovilLigero: 'assets/hero-scrub-v3-movil-lite.mp4', // 720×720
+  videoMovilBytes: 3999158,
+  videoMovilLigeroBytes: 1963398,
+  posterMovil: 'assets/hero-poster-v3-movil.jpg',
+  /* Volver a v2 = estas cuatro rutas y sus bytes (7100592 · 2947814 · 3422425 · 1639454) y los dos pósteres v2; los archivos v2 siguen en assets/. */
 
   /* ---- 6 · Capítulos del hero (13/10/2026) ---------------------------------
      Una fila por banda de texto del hero, con el título TEXTUAL de la banda y

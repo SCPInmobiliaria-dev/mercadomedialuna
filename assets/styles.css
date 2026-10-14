@@ -53,11 +53,11 @@ body{
 body::before{
   content:"";
   position:fixed; inset:-20vmax; z-index:-1; pointer-events:none;
-  /* 13/10/2026: el ambiente es el último cuadro del hero, teñido de Azul Noche: la página entera
+  /* 13/10/2026: el ambiente es el último cuadro del hero (v3 desde el 13/10, noche), teñido de Azul Noche: la página entera
      comparte la textura del video y el hero no «se acaba»: sigue debajo de las hojas */
   background:
     linear-gradient(rgba(15,42,68,.86), rgba(15,42,68,.93)),
-    url("hero-ending-v2.jpg") center/cover no-repeat;
+    url("hero-ending-v3.jpg") center/cover no-repeat;
   animation:ambiente 120s var(--ease-soft) -30s infinite alternate;
 }
 @keyframes ambiente{ from{ transform:translate3d(-2%,-1%,0) scale(1) } to{ transform:translate3d(2%,2%,0) scale(1.06) } }
@@ -388,7 +388,7 @@ a{ color:var(--text-primary) }
     display:block; position:relative; min-height:92svh;
     display:flex; flex-direction:column; justify-content:flex-end;
     padding:120px var(--gutter) 64px;
-    background:linear-gradient(to bottom, rgba(11,32,56,.35) 0%, rgba(11,32,56,.72) 55%, rgba(11,32,56,.95) 100%), url("hero-ending-v2.jpg") center/cover no-repeat;
+    background:linear-gradient(to bottom, rgba(11,32,56,.35) 0%, rgba(11,32,56,.72) 55%, rgba(11,32,56,.95) 100%), url("hero-ending-v3.jpg") center/cover no-repeat;
   }
   .static-title{ font-size:clamp(28px,7.6vw,44px); max-width:18ch; text-shadow:var(--tshadow); margin-bottom:.35em }
   .static-sub{ color:var(--text-primary); text-shadow:var(--tshadow); margin-bottom:1.4em }
@@ -935,7 +935,7 @@ body.en-embudo .wa-float{ opacity:0; visibility:hidden; pointer-events:none; tra
   max-width:none; padding-top:clamp(104px,14vh,152px); padding-bottom:clamp(48px,7vh,80px);
   background:
     linear-gradient(to bottom, rgba(11,32,56,.7) 0%, rgba(11,32,56,.88) 58%, var(--canvas) 100%),
-    url("hero-ending-v2.jpg") center/cover no-repeat;
+    url("hero-ending-v3.jpg") center/cover no-repeat;
 }
 .ev-hero-inner{ max-width:var(--maxw); margin-inline:auto; display:grid; gap:clamp(26px,4vw,40px) }
 .ev-hero h1{
