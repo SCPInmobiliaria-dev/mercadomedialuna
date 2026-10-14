@@ -53,9 +53,11 @@ body{
 body::before{
   content:"";
   position:fixed; inset:-20vmax; z-index:-1; pointer-events:none;
+  /* 13/10/2026: el ambiente es el último cuadro del hero (v4 desde el 13/10, noche), teñido de Azul Noche: la página entera
+     comparte la textura del video y el hero no «se acaba»: sigue debajo de las hojas */
   background:
-    radial-gradient(38vmax 30vmax at 22% 18%, rgba(242,169,59,.07), transparent 70%),
-    radial-gradient(44vmax 36vmax at 78% 72%, rgba(120,170,220,.07), transparent 72%);
+    linear-gradient(rgba(15,42,68,.86), rgba(15,42,68,.93)),
+    url("hero-ending-v4.jpg") center/cover no-repeat;
   animation:ambiente 120s var(--ease-soft) -30s infinite alternate;
 }
 @keyframes ambiente{ from{ transform:translate3d(-2%,-1%,0) scale(1) } to{ transform:translate3d(2%,2%,0) scale(1.06) } }
@@ -65,7 +67,7 @@ img,svg,video{ display:block; max-width:100% }
    Sin esto, .pend (display:inline-block) le ganaba a hidden y en /evento se
    veía el aviso de autorización del testimonio aunque la lógica lo ocultaba. */
 [hidden]{ display:none !important }
-h1,h2,h3{ font-weight:900; font-variation-settings:"wdth" 118; letter-spacing:-.02em; line-height:1.05; margin:0 0 .4em }
+h1,h2,h3{ font-weight:700; font-variation-settings:"wdth" 118; letter-spacing:.015em; line-height:1.05; margin:0 0 .4em }
 h2{ font-size:clamp(28px,4.6vw,52px) }
 h3{ font-size:clamp(19px,2.2vw,26px); font-variation-settings:"wdth" 110 }
 p{ margin:0 0 1em; max-width:64ch }
@@ -109,9 +111,9 @@ a{ color:var(--text-primary) }
 /* el botón del encabezado va lleno de ámbar: es el que tiene que resaltar */
 .btn-ghost{
   --btn-bg:var(--accent); color:var(--ink); border-color:var(--accent);
-  padding:11px 20px; font-size:14px; box-shadow:0 6px 20px rgba(242,169,59,.28);
+  padding:11px 20px; font-size:14px;
 }
-.btn-ghost:hover{ --btn-bg:var(--accent-hover); border-color:var(--accent-hover); transform:translateY(-2px); box-shadow:0 10px 26px rgba(242,169,59,.4) }
+.btn-ghost:hover{ --btn-bg:var(--accent-hover); border-color:var(--accent-hover); transform:translateY(-2px) }
 .btn-big{ width:100%; padding:18px 24px; font-size:17px }
 @media (pointer:coarse){
   .btn{ min-height:44px; display:inline-flex; align-items:center; justify-content:center }
@@ -126,16 +128,16 @@ a{ color:var(--text-primary) }
   backdrop-filter:blur(6px);
 }
 .brand{ display:flex; align-items:center; gap:12px; text-decoration:none }
-.brand-mark{ display:block; width:44px; height:44px; color:var(--accent) }
+.brand-mark{ display:block; width:44px; height:44px; color:var(--accent); background:var(--canvas); border-radius:50% }
 .brand-mark .moon{ width:100%; height:100% }
 .moon-arc{
-  stroke:var(--accent); opacity:.55;
+  stroke:rgba(246,242,234,.85); opacity:.6;
   stroke-dasharray:100; stroke-dashoffset:calc(100 - var(--luna, 0) * 100);
   transform:rotate(-90deg); transform-origin:50% 50%;
 }
 .brand-words{ display:grid; line-height:1 }
 .brand-kicker{ font-size:10px; font-weight:700; letter-spacing:.22em; color:var(--accent); font-variation-settings:"wdth" 88 }
-.brand-name{ font-size:19px; font-weight:900; font-variation-settings:"wdth" 118; letter-spacing:-.01em }
+.brand-name{ font-size:19px; font-weight:700; font-variation-settings:"wdth" 118; letter-spacing:.02em }
 .brand-place{ font-size:10px; letter-spacing:.16em; color:rgba(246,242,234,.65); font-variation-settings:"wdth" 88 }
 @media (max-width:420px){ .brand-place{ display:none } }
 /* El botón del encabezado se ocultaba en celular porque "el hero ya trae su
@@ -156,7 +158,7 @@ a{ color:var(--text-primary) }
 /* =========================================================================
    HERO
    ========================================================================= */
-.hero{ position:relative }
+.hero{ position:relative; z-index:1; isolation:isolate }   /* contexto propio: la hoja de abajo (z 3) pasa por encima de todo el hero */
 .hero-track{ height:700vh }          /* 10 s de video: cada beat aguanta 6 flicks de lectura */
 .stage{
   position:sticky; top:0; height:100svh; overflow:clip;
@@ -178,13 +180,19 @@ a{ color:var(--text-primary) }
    mejor: no hay un cuadro en el que el texto pierda contraste. */
 .scrim{
   position:absolute; inset:0; pointer-events:none;
-  background:
-    linear-gradient(96deg,
-      rgba(6,16,28,.90) 0%,
-      rgba(6,16,28,.72) 20%,
-      rgba(6,16,28,.34) 37%,
-      rgba(6,16,28,0) 54%),
-    radial-gradient(ellipse 120% 90% at 50% 45%, rgba(8,20,34,0) 32%, rgba(8,20,34,.66) 100%);
+  background:radial-gradient(ellipse 120% 90% at 50% 45%, rgba(8,20,34,0) 32%, rgba(8,20,34,.66) 100%);
+}
+/* 13/10/2026 (hero v4): en el cierre el mercado queda a la izquierda del cuadro y el texto
+   final a la derecha. La franja oscura de la izquierda se apaga en el último tramo y entra
+   una franja espejo a la derecha; --hp (0 a 1) lo pone assets/portada-v3.js §1 sobre .hero. */
+.scrim::before,.scrim::after{ content:""; position:absolute; inset:0 }
+.scrim::before{
+  background:linear-gradient(96deg, rgba(6,16,28,.92) 0%, rgba(6,16,28,.78) 20%, rgba(6,16,28,.42) 38%, rgba(6,16,28,0) 56%);
+  opacity:calc(1 - clamp(0, (var(--hp, 0) - .82) * 7, 1));
+}
+.scrim::after{
+  background:linear-gradient(264deg, rgba(6,16,28,.92) 0%, rgba(6,16,28,.8) 18%, rgba(6,16,28,.46) 36%, rgba(6,16,28,0) 54%);
+  opacity:clamp(0, (var(--hp, 0) - .82) * 7, 1);
 }
 
 /* polvo en suspensión, a nivel susurro */
@@ -219,29 +227,30 @@ a{ color:var(--text-primary) }
 }
 
 /* ---------- bandas de texto ---------- */
-.bands{ position:absolute; inset:0; z-index:5 }
+.bands{ position:absolute; inset:0; z-index:5; pointer-events:none }   /* 13/10/2026: deja pasar el mouse al rail; .settle-cta vuelve a auto */
 /* El texto entra un poco más adentro que el margen general (pedido de
    Patriccio, 24/09/2026): 7% del ancho, sin bajar del margen ni pasar de
    140 px. Sigue dentro de la franja oscura del scrim, que llega al 37%. */
 .band{
   position:absolute; left:clamp(var(--gutter),7vw,140px); right:var(--gutter); top:22%;
-  opacity:0; pointer-events:none; text-shadow:var(--tshadow);
+  opacity:0; pointer-events:none; text-shadow:0 1px 2px rgba(5,10,18,.6);
   max-width:min(560px,66vw);
 }
 /* 2 · un refuerzo suave detrás de cada banda. Va muy abierto a propósito:
    el rectángulo gris que se veía antes era este scrim con el borde duro. */
-.band::before{
-  content:""; position:absolute; inset:-40% -34%; pointer-events:none; z-index:-1;
-  opacity:calc(.3 + .7 * var(--k,1));
-  background:radial-gradient(ellipse 62% 54% at 38% 50%, rgba(5,12,22,.5) 0%, rgba(5,12,22,.26) 44%, rgba(5,12,22,0) 74%);
-}
+.band::before{ content:none }   /* el refuerzo radial se retiró el 13/10/2026: el scrim cubre solo */
 .band .btn{ text-shadow:none }
 .band .line{
-  font-size:clamp(30px,5.4vw,60px); font-weight:900; font-variation-settings:"wdth" 118;
-  line-height:1.02; letter-spacing:-.025em; margin:0 0 .18em; max-width:20ch;
+  font-size:clamp(30px,5.4vw,60px); font-weight:700; font-variation-settings:"wdth" 118;
+  line-height:1.02; letter-spacing:.01em; margin:0 0 .18em; max-width:20ch;
 }
 .band .line-sub{ font-size:clamp(20px,3vw,32px); font-variation-settings:"wdth" 108; color:var(--text-primary) }
 .band-5{ top:auto; bottom:16%; max-width:min(720px,84vw) }
+/* 13/10/2026 (hero v4): el cierre deja el mercado en la mitad izquierda del cuadro; el título
+   final va a la derecha, sobre el lote vecino y el cerro, y ya no tapa la obra */
+@media (orientation:landscape){
+  .band-5{ left:auto; right:clamp(var(--gutter),7vw,140px); bottom:32%; max-width:min(620px,44vw) }
+}
 
 /* En pantalla ancha el texto se queda en la franja izquierda, más angosto.
    (Hasta el 24/09/2026 aquí la portada se ensanchaba al 114-120 %, pero el
@@ -249,10 +258,10 @@ a{ color:var(--text-primary) }
    cargar, el cuadro saltaba. Portada y video van ahora con el mismo encuadre.) */
 @media (min-width:1100px){
   .band{ max-width:min(440px,34vw) }
-  .band-5{ max-width:min(620px,48vw) }
+  .band-5{ max-width:min(620px,44vw) }   /* el título final conserva su ancho: dos líneas, a la derecha */
 }
 
-.band-5 .line-title{ font-size:clamp(36px,7vw,84px); letter-spacing:-.03em }
+.band-5 .line-title{ font-size:clamp(36px,7vw,84px); letter-spacing:.005em }
 .settle-sub{ font-size:clamp(16px,2vw,21px); color:var(--text-primary); margin:.2em 0 1.1em }
 .settle-cta{ display:flex; flex-wrap:wrap; gap:12px; pointer-events:auto }
 
@@ -294,7 +303,7 @@ a{ color:var(--text-primary) }
 [data-entrance="asiento"] .settle-cta{ opacity:clamp(0,(var(--k,0) - .66) * 3.6,1) }
 
 /* anillo de carga y señal de scroll */
-.loader{ position:absolute; right:var(--gutter); bottom:56px; z-index:7; color:var(--accent); opacity:.9; pointer-events:none }
+.loader{ position:absolute; right:var(--gutter); bottom:56px; z-index:7; color:var(--text-primary); opacity:.75; pointer-events:none }
 .loader.done{ display:none }
 .ring{ width:36px; height:36px; transform:rotate(-90deg) }
 .ring circle{ transition:stroke-dashoffset .2s linear }
@@ -334,6 +343,7 @@ a{ color:var(--text-primary) }
     bottom:auto; height:var(--caja);
     background:linear-gradient(to bottom, rgba(6,16,28,.62) 0%, rgba(6,16,28,0) 24%, rgba(6,16,28,0) 76%, var(--canvas-deep) 100%);
   }
+  .scrim::before,.scrim::after{ content:none }
   .dust{ bottom:auto; height:var(--caja) }
   .stage > .proyeccion{ top:var(--caja); bottom:auto; transform:translateY(-100%) }
   /* cada banda va centrada en la zona de texto, un poco por encima de la
@@ -390,7 +400,7 @@ a{ color:var(--text-primary) }
     display:block; position:relative; min-height:92svh;
     display:flex; flex-direction:column; justify-content:flex-end;
     padding:120px var(--gutter) 64px;
-    background:linear-gradient(to bottom, rgba(11,32,56,.35) 0%, rgba(11,32,56,.72) 55%, rgba(11,32,56,.95) 100%), url("hero-ending-v2.jpg") center/cover no-repeat;
+    background:linear-gradient(to bottom, rgba(11,32,56,.35) 0%, rgba(11,32,56,.72) 55%, rgba(11,32,56,.95) 100%), url("hero-ending-v4.jpg") center/cover no-repeat;
   }
   .static-title{ font-size:clamp(28px,7.6vw,44px); max-width:18ch; text-shadow:var(--tshadow); margin-bottom:.35em }
   .static-sub{ color:var(--text-primary); text-shadow:var(--tshadow); margin-bottom:1.4em }
@@ -452,10 +462,10 @@ section{ position:relative }
 .field{ margin-bottom:20px }
 .field label{ display:block; font-size:14px; font-weight:700; margin-bottom:8px; color:var(--text-primary) }
 .money{ display:flex; align-items:baseline; gap:8px; border-bottom:2px solid var(--rule-strong); padding-bottom:6px }
-.money span{ font-weight:700; color:var(--accent); font-size:20px }
+.money span{ font-weight:700; color:var(--text-secondary); font-size:20px }
 .money input{
   flex:1; background:transparent; border:0; color:var(--text-primary);
-  font-family:var(--display); font-size:clamp(26px,4vw,38px); font-weight:900; font-variation-settings:"wdth" 112;
+  font-family:var(--display); font-size:clamp(26px,4vw,38px); font-weight:700; font-variation-settings:"wdth" 112;
   font-variant-numeric:tabular-nums; padding:0; min-width:0;
 }
 .money input:focus{ outline:none }
@@ -466,11 +476,11 @@ input[type=range]{ width:100%; accent-color:var(--accent); height:32px }
   letter-spacing:.06em; color:var(--text-secondary);
 }
 .calc-result{
-  margin:18px 0 0; font-size:clamp(19px,2.4vw,26px); font-weight:900; font-variation-settings:"wdth" 112;
+  margin:18px 0 0; font-size:clamp(19px,2.4vw,26px); font-weight:700; font-variation-settings:"wdth" 112;
   line-height:1.2; color:var(--text-primary); min-height:2.4em;
 }
 .calc-result .cifra{ color:var(--accent); font-variant-numeric:tabular-nums; display:inline-block }
-.calc-kicker{ margin:.2em 0 0; color:var(--accent); font-weight:700; font-size:15px; letter-spacing:.02em }
+.calc-kicker{ margin:.2em 0 0; color:var(--text-primary); font-weight:700; font-size:15px; letter-spacing:.02em }
 
 /* ---------- qué se vende ---------- */
 .cards{ display:grid; gap:16px; margin:32px 0 }
@@ -489,7 +499,7 @@ input[type=range]{ width:100%; accent-color:var(--accent); height:32px }
 .card > p{ color:var(--text-secondary); font-size:15px }
 .specs{ margin:18px 0 0; display:grid; gap:12px }
 .specs > div{ display:grid; gap:4px; border-top:1px solid var(--rule); padding-top:12px }
-.specs dt{ font-size:12px; letter-spacing:.16em; text-transform:uppercase; color:var(--accent); font-weight:700; font-variation-settings:"wdth" 88 }
+.specs dt{ font-size:12px; letter-spacing:.16em; text-transform:uppercase; color:var(--text-secondary); font-weight:700; font-variation-settings:"wdth" 88 }
 .specs dd{ margin:0 }
 .vende-img{ margin:0 0 20px; position:relative; border-radius:4px; overflow:hidden }
 .vende-img img{ width:100%; height:auto }
@@ -506,8 +516,8 @@ input[type=range]{ width:100%; accent-color:var(--accent); height:32px }
 .paso{ position:relative; padding-top:56px }
 .paso-n{
   position:absolute; top:0; left:0; width:44px; height:44px; border-radius:50%;
-  display:grid; place-items:center; border:2px solid var(--accent); color:var(--accent);
-  font-weight:900; font-size:19px; font-variant-numeric:tabular-nums;
+  display:grid; place-items:center; border:2px solid var(--rule-strong); color:var(--text-primary); background:var(--canvas);
+  font-weight:700; font-size:19px; font-variant-numeric:tabular-nums;
 }
 .paso h3{ margin-bottom:.3em }
 .paso p{ color:var(--text-secondary); font-size:16px }
@@ -693,7 +703,7 @@ input[type=range]{ width:100%; accent-color:var(--accent); height:32px }
 .tcard-estrellas svg{ width:18px; height:18px; fill:currentColor }
 .tcard-cita{ margin:0; font-size:17px; line-height:1.45; color:var(--text-primary) }
 .tcard-cita p{ margin:0; max-width:none }
-.tcard-nombre{ margin:auto 0 0; padding-top:6px; font-weight:800; font-size:16px; font-variation-settings:"wdth" 108 }
+.tcard-nombre{ margin:auto 0 0; padding-top:6px; font-weight:700; font-size:16px; font-variation-settings:"wdth" 108 }
 .tcard-desc{ margin:0; font-size:13px; color:var(--text-secondary) }
 @media (prefers-reduced-motion:reduce){ .tcard-foto img,.tcard-play{ transition:none } }
 
@@ -715,11 +725,7 @@ input[type=range]{ width:100%; accent-color:var(--accent); height:32px }
 .faq-body p{ color:var(--text-secondary); margin-bottom:.7em }
 
 /* ---------- formulario ---------- */
-.hablemos{
-  max-width:none;
-  background:linear-gradient(to bottom, rgba(11,32,56,.9), rgba(11,32,56,.97)), url("obra-esquina.jpg") center/cover fixed no-repeat;
-}
-@media (pointer:coarse){ .hablemos{ background-attachment:scroll } }
+.hablemos{ max-width:none; background:var(--canvas-deep) }
 .hablemos-inner{
   max-width:var(--maxw); margin-inline:auto; display:grid; gap:clamp(24px,4vw,56px); align-items:start;
 }
@@ -807,8 +813,8 @@ body.pausado *,body.pausado *::before,body.pausado *::after{ animation-play-stat
 .hablemos-pasos{ margin:22px 0 0; padding:0; list-style:none; counter-reset:hp; display:grid; gap:12px }
 .hablemos-pasos li{ counter-increment:hp; display:grid; grid-template-columns:32px 1fr; gap:12px; align-items:baseline; color:var(--text-secondary); font-size:16px }
 .hablemos-pasos li::before{
-  content:counter(hp); font-weight:900; color:var(--accent); font-variant-numeric:tabular-nums;
-  border:2px solid var(--accent); border-radius:50%; width:30px; height:30px; display:grid; place-items:center; font-size:14px;
+  content:counter(hp); font-weight:700; color:var(--text-primary); font-variant-numeric:tabular-nums;
+  border:2px solid var(--rule-strong); border-radius:50%; width:30px; height:30px; display:grid; place-items:center; font-size:14px;
 }
 
 .chat{
@@ -831,7 +837,7 @@ body.pausado *,body.pausado *::before,body.pausado *::after{ animation-play-stat
 .chat-atras:hover{ border-color:var(--text-primary) }
 .chat-atras::before{ content:"← "; content:"← " / "" }
 .chat-barra{ height:3px; background:rgba(246,242,234,.08) }
-.chat-barra i{ display:block; height:100%; background:var(--accent); transform:scaleX(0); transform-origin:left center; transition:transform .5s var(--ease) }
+.chat-barra i{ display:block; height:100%; background:var(--text-primary); transform:scaleX(0); transform-origin:left center; transition:transform .5s var(--ease) }
 
 .chat-log{ display:flex; flex-direction:column; gap:8px; padding:18px 16px 10px; min-height:180px }
 .msg{
@@ -850,12 +856,12 @@ body.pausado *,body.pausado *::before,body.pausado *::after{ animation-play-stat
 .chat-zona{ padding:4px 16px 18px }
 .chips{ display:flex; flex-wrap:wrap; gap:8px; justify-content:flex-end }
 .chip{
-  background:transparent; color:var(--text-primary); border:2px solid var(--accent); border-radius:999px;
+  background:transparent; color:var(--text-primary); border:2px solid var(--rule-strong); border-radius:999px;
   padding:10px 16px; min-height:46px; font:700 15px/1.2 var(--display); cursor:pointer; text-align:left;
   animation:msg-entra .32s var(--ease) both;
   transition:background .25s var(--ease), color .25s var(--ease), transform .25s var(--ease);
 }
-.chip:hover{ background:var(--accent); color:var(--ink); transform:translateY(-1px) }
+.chip:hover{ background:var(--text-primary); color:var(--ink); border-color:var(--text-primary); transform:translateY(-1px) }
 .chip:nth-child(2){ animation-delay:.05s } .chip:nth-child(3){ animation-delay:.1s }
 .chip:nth-child(4){ animation-delay:.15s } .chip:nth-child(5){ animation-delay:.2s }
 
@@ -877,7 +883,7 @@ body.pausado *,body.pausado *::before,body.pausado *::after{ animation-play-stat
 .chat-ayuda{ grid-column:1 / -1; margin:0; font-size:13px; color:var(--text-secondary) }
 
 .chat-resumen{
-  background:var(--canvas-deep); border-left:3px solid var(--accent); border-radius:4px;
+  background:var(--canvas-deep); border-left:3px solid var(--text-secondary); border-radius:4px;
   padding:14px 16px; margin-bottom:14px; animation:msg-entra .32s var(--ease) both;
 }
 .chat-resumen ul{ list-style:none; margin:0; padding:0; display:grid; gap:6px; font-size:14px; color:var(--text-secondary) }
@@ -941,7 +947,7 @@ body.en-embudo .wa-float{ opacity:0; visibility:hidden; pointer-events:none; tra
   max-width:none; padding-top:clamp(104px,14vh,152px); padding-bottom:clamp(48px,7vh,80px);
   background:
     linear-gradient(to bottom, rgba(11,32,56,.7) 0%, rgba(11,32,56,.88) 58%, var(--canvas) 100%),
-    url("hero-ending-v2.jpg") center/cover no-repeat;
+    url("hero-ending-v4.jpg") center/cover no-repeat;
 }
 .ev-hero-inner{ max-width:var(--maxw); margin-inline:auto; display:grid; gap:clamp(26px,4vw,40px) }
 .ev-hero h1{
@@ -1223,56 +1229,47 @@ body[data-fase="terminado"] .sab-solo-fin{ display:block }
    nunca va como letra sobre fondo claro: aquí es fondo, con texto tinta.
    ========================================================================= */
 .hablemos{
-  position:relative; border-top:3px solid var(--accent);
+  position:relative;
   padding-top:clamp(84px,11vh,132px); padding-bottom:clamp(72px,10vh,120px);
   background:
-    radial-gradient(55% 70% at 80% 48%, rgba(242,169,59,.20), rgba(242,169,59,0) 70%),
     radial-gradient(40% 50% at 12% 20%, rgba(120,170,220,.08), rgba(120,170,220,0) 70%),
     linear-gradient(180deg, #0B2038 0%, #0F2A44 100%);
 }
-/* la cinta: anuncia la sección antes de que se lea el titular */
+/* la cinta es una píldora (Manual §3.3.3): forma redondeada, un rótulo de pocas palabras.
+   portada-test mira que su fondo sea exactamente el ámbar. */
 .hablemos-cinta{
-  position:absolute; top:0; left:0; right:0; margin:0; max-width:none;
-  display:flex; justify-content:center; align-items:center; gap:10px; flex-wrap:wrap;
-  padding:10px var(--gutter); background:var(--accent); color:var(--ink);
-  font-weight:800; font-size:13px; letter-spacing:.12em; text-transform:uppercase;
-  font-variation-settings:"wdth" 92; text-align:center;
+  position:absolute; top:26px; left:50%; transform:translateX(-50%); margin:0; max-width:none; white-space:nowrap;
+  display:inline-flex; align-items:center; gap:10px; padding:9px 18px; border-radius:999px; background:var(--accent); color:var(--ink);
+  font-weight:700; font-size:13px; letter-spacing:.03em; font-variation-settings:"wdth" 96;
 }
+/* /evento trae tres segmentos: separados por un punto; en celular la píldora se parte en líneas centradas */
 .hablemos-cinta span+span::before{ content:"·"; margin-right:10px; opacity:.55 }
-@media (max-width:520px){ .hablemos-cinta{ font-size:11px; letter-spacing:.08em; gap:6px } .hablemos-cinta span+span::before{ margin-right:6px } }
+@media (max-width:640px){
+  .hablemos-cinta{ white-space:normal; text-align:center; justify-content:center; flex-wrap:wrap; row-gap:2px; max-width:calc(100% - 2 * var(--gutter)); width:max-content; border-radius:18px }
+}
 .hablemos-copy h2{ font-size:clamp(30px,4.4vw,50px) }
-.hablemos-copy .kicker{ color:var(--accent) }
-/* los pasos: círculos ámbar llenos, como una hoja de ruta */
+.hablemos-copy .kicker{ color:var(--text-secondary) }
 .hablemos-pasos{ gap:14px }
 .hablemos-pasos li{ color:var(--text-primary); font-size:17px; grid-template-columns:34px 1fr }
-.hablemos-pasos li::before{ background:var(--accent); color:var(--ink); border-color:var(--accent); width:32px; height:32px; font-size:15px }
+.hablemos-pasos li::before{ width:32px; height:32px; font-size:15px }
 
-/* el chat, como una app */
+/* el chat, como una app: la cabecera ámbar es el gancho; lo demás en azul y Blanco Cal */
 .chat{
-  border:2px solid var(--accent); border-radius:16px; background:var(--panel-2); max-width:560px;
-  box-shadow:0 34px 90px rgba(3,10,20,.6), 0 0 0 7px rgba(242,169,59,.13);
+  border:1px solid var(--rule-strong); border-radius:16px; background:var(--panel-2); max-width:560px;
+  box-shadow:0 34px 90px rgba(3,10,20,.6);
 }
 .chat-head{ background:var(--accent); color:var(--ink); border-bottom:0; padding:14px 18px }
 .chat-avatar{ background:var(--ink); color:var(--accent) }
-.chat-titulo{ color:var(--ink); font-size:16px; font-weight:800 }
+.chat-titulo{ color:var(--ink); font-size:16px; font-weight:700 }
 .chat-paso{ color:rgba(20,24,28,.72); font-weight:700 }
 .chat-atras{ border-color:rgba(20,24,28,.45); color:var(--ink) }
 .chat-atras:hover{ border-color:var(--ink); background:rgba(20,24,28,.08) }
 .chat-atras:focus-visible{ outline:3px solid var(--ink); outline-offset:2px }
 .chat-barra{ height:4px; background:rgba(3,10,20,.45) }
 .chat-log{ padding:20px 18px 12px; min-height:200px }
-.msg-yo{ background:var(--accent); color:var(--ink); font-weight:600 }
-.chip{ border-width:2px; background:rgba(242,169,59,.08); font-size:15px }
-.chip:hover,.chip:focus-visible{ background:var(--accent); color:var(--ink) }
+.chip{ border-width:2px; font-size:15px }
+.chip:hover,.chip:focus-visible{ background:var(--text-primary); color:var(--ink); border-color:var(--text-primary) }
 .chat-resumen{ border-left-width:4px }
-/* un brillo breve cuando el chat entra en pantalla: dice "aquí es" */
-@keyframes chat-llama{
-  0%{ box-shadow:0 34px 90px rgba(3,10,20,.6), 0 0 0 7px rgba(242,169,59,.13) }
-  40%{ box-shadow:0 34px 90px rgba(3,10,20,.6), 0 0 0 14px rgba(242,169,59,.34) }
-  100%{ box-shadow:0 34px 90px rgba(3,10,20,.6), 0 0 0 7px rgba(242,169,59,.13) }
-}
-.chat.reveal.in{ animation:chat-llama 1.8s var(--ease) .5s 1 }
-@media (prefers-reduced-motion:reduce){ .chat.reveal.in{ animation:none } }
 @media (max-width:899px){ .chat{ border-radius:14px } }
 
 /* =========================================================================
@@ -1293,7 +1290,6 @@ body[data-fase="terminado"] .sab-solo-fin{ display:block }
 .hablemos{ scroll-margin-top:72px }
 .hablemos-copy .small{ margin-top:20px }
 /* en celular la cinta se parte en dos líneas: sin separadores colgando */
-@media (max-width:520px){ .hablemos-cinta{ column-gap:16px; row-gap:2px } .hablemos-cinta span+span::before{ content:none } }
 /* tarjeta sin cita todavía: una invitación al video, no una frase inventada */
 .tcard-sin-cita{ margin:0; font-size:16px; line-height:1.45; color:var(--text-secondary); font-style:italic }
 /* En celular el chat va enseguida del título: quien toca "Quiero ver la obra"
@@ -1375,7 +1371,7 @@ p.sab-cupo{ margin:14px 0 0; padding:10px 12px; border-radius:8px; background:va
 .ubicacion-marco{
   position:relative; overflow:hidden; border-radius:16px; aspect-ratio:4/3;
   background:var(--panel); border:1px solid var(--rule-strong);
-  box-shadow:0 24px 60px rgba(4,12,22,.45), 0 0 0 6px rgba(242,169,59,.12);
+  box-shadow:0 24px 60px rgba(4,12,22,.45);
 }
 @media (max-width:560px){ .ubicacion-marco{ aspect-ratio:1/1 } }
 .ubicacion-marco iframe{ position:absolute; inset:0; width:100%; height:100%; border:0 }
@@ -1422,29 +1418,23 @@ p.sab-cupo{ margin:14px 0 0; padding:10px 12px; border-radius:8px; background:va
   margin:28px auto 0; padding:clamp(28px,4.4vw,44px) clamp(16px,4vw,40px) clamp(24px,3.6vw,36px);
   border:1px solid var(--rule); border-radius:16px;
   background:
-    radial-gradient(52% 78% at 50% 36%, rgba(242,169,59,.17), rgba(242,169,59,0) 72%),
     linear-gradient(rgba(246,242,234,.04) 1px, transparent 1px) center/26px 26px,
     linear-gradient(90deg, rgba(246,242,234,.04) 1px, transparent 1px) center/26px 26px,
     var(--panel);
 }
 .btn-plano{
   gap:12px; max-width:100%; padding:18px 30px 18px 26px; line-height:1.25; text-align:left;
-  font-size:clamp(16px,1.6vw,19px); font-weight:800;
-  box-shadow:0 14px 34px rgba(4,12,22,.45), 0 0 0 6px rgba(242,169,59,.16), 0 0 38px rgba(242,169,59,.30);
+  font-size:clamp(16px,1.6vw,19px); font-weight:700;
+  box-shadow:0 14px 34px rgba(4,12,22,.45), 0 0 0 6px rgba(242,169,59,.16);
 }
 .btn-plano:hover,.btn-plano:focus-visible{
-  box-shadow:0 18px 40px rgba(4,12,22,.5), 0 0 0 8px rgba(242,169,59,.22), 0 0 52px rgba(242,169,59,.42);
+  box-shadow:0 18px 40px rgba(4,12,22,.5), 0 0 0 8px rgba(242,169,59,.22);
 }
 .btn-plano svg{ flex:none; width:24px; height:24px }
 .btn-plano .btn-plano-flecha{ width:22px; height:22px; transition:transform .35s var(--ease) }
 .btn-plano:hover .btn-plano-flecha,.btn-plano:focus-visible .btn-plano-flecha{ transform:translateX(4px) }
 .btn-plano:focus-visible{ outline:3px solid var(--text-primary); outline-offset:4px }
-@keyframes plano-llama{
-  0%,100%{ box-shadow:0 14px 34px rgba(4,12,22,.45), 0 0 0 6px rgba(242,169,59,.16), 0 0 38px rgba(242,169,59,.30) }
-  45%{ box-shadow:0 14px 34px rgba(4,12,22,.45), 0 0 0 13px rgba(242,169,59,.08), 0 0 60px rgba(242,169,59,.48) }
-}
 @keyframes plano-flecha{ 0%,100%{ transform:none } 45%{ transform:translateX(5px) } }
-.vende-plano.in .btn-plano{ animation:plano-llama 2.4s var(--ease) .7s 3 }
 .vende-plano.in .btn-plano-flecha{ animation:plano-flecha 2.4s var(--ease) .7s 3 }
 .vende-plano-pie{ margin:16px auto 0; max-width:46ch; font-size:15px; color:var(--text-secondary) }
 /* en celular el botón ocupa el ancho y el texto puede ir en dos líneas */
@@ -1466,7 +1456,7 @@ p.sab-cupo{ margin:14px 0 0; padding:10px 12px; border-radius:8px; background:va
 }
 .independiza-rotulo{
   display:inline-flex; align-items:center; gap:8px; margin:0 0 10px;
-  font-size:12px; font-weight:800; letter-spacing:.16em; text-transform:uppercase;
+  font-size:12px; font-weight:700; letter-spacing:.16em; text-transform:uppercase;
   font-variation-settings:"wdth" 88; color:var(--accent);
 }
 .independiza-rotulo svg{ width:18px; height:18px; flex:none }
@@ -1489,7 +1479,7 @@ p.sab-cupo{ margin:14px 0 0; padding:10px 12px; border-radius:8px; background:va
   display:inline-flex; align-items:center; gap:8px; margin:0; max-width:none; white-space:nowrap;
   padding:7px 14px 7px 11px; border-radius:8px; border:2px solid var(--accent);
   background:rgba(242,169,59,.1); color:var(--accent);
-  font-weight:800; font-size:15px; letter-spacing:.06em; text-transform:uppercase;
+  font-weight:700; font-size:15px; letter-spacing:.06em; text-transform:uppercase;
   font-variation-settings:"wdth" 96; line-height:1.2;
 }
 .cita-sello svg{ width:20px; height:20px; flex:none }
@@ -1507,9 +1497,7 @@ p.sab-cupo{ margin:14px 0 0; padding:10px 12px; border-radius:8px; background:va
 .visitas p{ margin:0; max-width:none }
 .visitas-horario{
   padding:clamp(22px,3vw,34px);
-  background:
-    radial-gradient(90% 120% at 0% 0%, rgba(242,169,59,.16), rgba(242,169,59,0) 62%),
-    var(--canvas-deep);
+  background:var(--canvas-deep);
   border-bottom:1px solid var(--rule);
 }
 @media (min-width:900px){ .visitas-horario{ border-bottom:0; border-right:1px solid var(--rule) } }
@@ -1519,13 +1507,13 @@ p.sab-cupo{ margin:14px 0 0; padding:10px 12px; border-radius:8px; background:va
 }
 .visitas .visitas-dias{ display:grid; margin-top:10px }
 .visitas-dias span:first-child{
-  font-size:clamp(32px,4.4vw,48px); font-weight:900; font-variation-settings:"wdth" 118;
+  font-size:clamp(32px,4.4vw,48px); font-weight:700; font-variation-settings:"wdth" 118;
   letter-spacing:-.02em; line-height:1.02;
 }
 .visitas-semana{ margin-top:6px; font-size:clamp(16px,1.6vw,19px); font-weight:700; color:var(--text-secondary) }
 .visitas .visitas-horas{
   display:flex; align-items:center; gap:10px; margin-top:18px;
-  font-size:clamp(22px,2.6vw,30px); font-weight:800; font-variation-settings:"wdth" 108;
+  font-size:clamp(22px,2.6vw,30px); font-weight:700; font-variation-settings:"wdth" 108;
   font-variant-numeric:tabular-nums; letter-spacing:-.01em;
 }
 .visitas-horas svg{ width:28px; height:28px; flex:none; color:var(--accent) }
@@ -1536,3 +1524,212 @@ p.sab-cupo{ margin:14px 0 0; padding:10px 12px; border-radius:8px; background:va
 .visitas-btn svg{ flex:none }
 @media (max-width:560px){ .visitas-btn{ width:100% } .cita-sello{ font-size:14px } }
 @media (max-width:340px){ .cita-sello{ font-size:12.5px; letter-spacing:.03em } }
+
+/* =========================================================================
+   REDISEÑO V3 (13/10/2026) — Manual de Marca v2.0. Paquete, crítica y
+   decisiones: 08-web/review/rediseno-v3/DISENO-V3.md, CRITICA-DISENO-V3.txt,
+   DECISIONES.md. Lo que manda aquí:
+   · 60/30/10: el azul es el único ambiente; las hojas .claro (Blanco Cal o
+     Cielo Cal) van encima como láminas y ponen el 30 % de aire; el ámbar es
+     el 10 %, solo como forma redondeada (luna, botón, punto, píldora) o como
+     palabra sobre azul. SOBRE CLARO EL ÁMBAR NUNCA ES LETRA (1,8:1): va en
+     Azul Día (6,4:1). Tope por pieza: luna + una palabra clave + un botón.
+   · Archivo: Bold +2 % sobre azul y sobre video; Black (900) solo oscuro-
+     sobre-claro y desde 36 px (h2 = clamp(28px,4.6vw,52px) cruza 36 px a 783 px).
+   · Movimiento: solo transform y opacity; todo se apaga con movimiento reducido.
+   · La firma de la página: HOY (fotos reales) se queda quieto y la PROYECCIÓN
+     sube encima, en las mismas tres columnas; en vertical, dos rieles que se
+     mueven juntos (portada-v3.js §5).
+   ========================================================================= */
+:root{
+  --azul-noche:#0F2A44; --blanco-cal:#F6F2EA; --ambar:#F2A93B; --negro-suelo:#14181C;
+  --cielo-cal:#DCE6F0; --azul-dia:#2E5A86; --ambar-tierra:#C7801C; --tinta-2:#3F4A56;
+  --rule-claro:rgba(15,42,68,.14); --rule-claro-strong:rgba(15,42,68,.34);
+}
+
+/* ---------- tipografía ---------- */
+@media (min-width:783px){ .claro h2{ font-weight:900; letter-spacing:-.015em } }
+
+/* ---------- la luna que sube (Manual §2.2, propuesta 🔵): 0,6 s, después de la rampa de la banda 1 ---------- */
+@keyframes luna-sube{ from{ transform:translateY(45%) } to{ transform:none } }
+.brand-mark{ overflow:hidden }                                       /* la luna sube desde detrás de su disco; solo transform, nunca invisible */
+.brand-mark > svg{ animation:luna-sube .6s var(--ease) 1.2s backwards }
+
+/* ---------- el botón del menú calla mientras corre el hero (body.en-hero, portada-v3.js §1) ---------- */
+.nav-cta{ transition:background .35s var(--ease), color .35s var(--ease), border-color .35s var(--ease), transform .3s var(--ease) }
+body.en-hero .nav-cta{ --btn-bg:transparent; color:var(--text-primary); border-color:rgba(246,242,234,.6) }
+body.en-hero .nav-cta:hover{ border-color:var(--text-primary) }
+
+/* ---------- hojas claras (Blanco Cal / Cielo Cal) ---------- */
+.claro{ background:var(--blanco-cal); color:var(--negro-suelo) }
+.claro-cielo{ background:var(--cielo-cal) }
+@media (min-width:900px){ .claro{ border-radius:22px; margin-inline:var(--gutter) } }
+.claro h2,.claro h3{ color:var(--azul-noche) }
+.claro p,.claro li,.claro dd,.claro figcaption{ color:var(--tinta-2) }
+.claro .obra-slot figcaption:not(.pend){ color:var(--tinta-2) }   /* gana a la regla de .obra-slot (texto claro de la hoja oscura): 1,5:1 era ilegible */
+.claro .lead,.claro strong{ color:var(--azul-noche) }
+.claro .kicker,.claro .specs dt,.claro .obra-fecha,.claro .visitas-rotulo{ color:var(--azul-dia) }
+.claro a:not(.btn){ color:var(--azul-dia); text-decoration:underline; text-underline-offset:3px }
+.claro :focus-visible{ outline-color:var(--azul-dia) }
+.claro .btn-quiet{ color:var(--azul-noche); border-color:var(--rule-claro-strong) }
+.claro .btn-quiet:hover{ border-color:var(--azul-noche) }
+.claro .btn-accent{ --btn-bg:var(--ambar); color:var(--negro-suelo); border-color:var(--ambar) }
+/* un solo botón ámbar por hoja: en Dónde queda es el de la visita; Cómo llegar va en Azul Día */
+.claro .ubicacion-acciones .btn-accent{ --btn-bg:var(--azul-dia); color:var(--blanco-cal); border-color:var(--azul-dia) }
+.claro .ubicacion-acciones .btn-accent:hover{ --btn-bg:var(--azul-noche); border-color:var(--azul-noche) }
+.claro .card,.claro .visitas,.claro .leyenda div{ background:var(--cielo-cal); border-color:var(--rule-claro); box-shadow:0 18px 44px rgba(15,42,68,.10) }
+.claro .specs > div{ border-top-color:var(--rule-claro) }
+.claro .obra-foto{ border-color:var(--rule-claro); box-shadow:0 18px 44px rgba(15,42,68,.16) }
+.claro .legal-inner{ border-left-color:var(--ambar) }
+.claro .independiza{ background:var(--azul-noche); color:var(--text-primary); border-color:transparent; box-shadow:0 20px 50px rgba(15,42,68,.22) }
+.claro .independiza p,.claro .independiza dd,.claro .independiza strong{ color:var(--text-primary) }
+.claro .independiza-resumen > div{ background:rgba(246,242,234,.06); border-color:var(--rule) }
+.claro .independiza-resumen dt{ color:var(--text-secondary) }
+.claro .cita-sello{ color:var(--azul-dia); border-color:var(--azul-dia); background:rgba(46,90,134,.08) }
+.claro .faq-body .cita-sello-chico{ color:var(--azul-dia) }
+.claro .visitas-horario{ background:var(--blanco-cal); border-color:var(--rule-claro) }
+.claro .visitas-horas svg{ color:var(--ambar-tierra) }
+.claro .visitas-semana,.claro .visitas-extra{ color:var(--tinta-2) }
+.claro .visitas .visitas-texto,.claro .visitas-dias span:first-child{ color:var(--azul-noche) }
+.claro .ubicacion-marco{ border-color:var(--rule-claro-strong); box-shadow:0 24px 60px rgba(15,42,68,.18) }
+.claro .ubicacion-marco::before{ color:var(--tinta-2) }
+.claro .faq-list{ border-top-color:var(--rule-claro) }
+.claro .faq details{ border-bottom-color:var(--rule-claro) }
+.claro .faq summary{ color:var(--azul-noche) }
+.claro .faq summary::after{ border-color:var(--azul-noche) }
+.claro .faq-body strong{ color:var(--azul-noche) }
+/* la calculadora sigue siendo una tarjeta azul dentro de la hoja clara */
+.claro .calc{ background:var(--panel); color:var(--text-primary); border-color:var(--rule); box-shadow:0 24px 60px rgba(15,42,68,.22) }
+.claro .calc label,.claro .calc p,.claro .calc h3,.claro .calc .calc-kicker{ color:var(--text-primary) }
+.claro .calc .calc-anios-out,.claro .money span{ color:var(--text-secondary) }
+.claro .calc-result .cifra{ color:var(--ambar) }
+.claro.faq{ max-width:none }
+.claro.faq > *{ max-width:var(--maxw); margin-inline:auto }
+.claro.ubicacion{ max-width:none; display:block }
+.claro.ubicacion > *{ max-width:var(--maxw); margin-inline:auto }
+.ubicacion-dos{ display:grid; gap:clamp(24px,4vw,48px); align-items:center }
+@media (min-width:900px){ .ubicacion-dos{ grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr) } }
+.claro.ubicacion .visitas{ margin-top:clamp(24px,4vw,48px) }
+
+/* ---------- el hero no «se acaba y baja»: la primera hoja sube sobre el último cuadro mientras el
+   escenario sigue pegado (los últimos 5 % de la pista, cuando la banda 5 ya se asentó) ---------- */
+.obra{ position:relative; z-index:3; margin-top:-30vh }            /* ~4 % de 700vh */
+/* la banda final sube con la hoja (solo transform) para que el título y los botones no queden tapados */
+/* 13/10/2026 (hero v4): la banda final ya no se eleva con la hoja: vive a la derecha, con el pie a 32 % del alto,
+   por encima de los 30vh que sube la hoja «Hoy», y así el título queda sobre el lote vecino y nunca sobre la obra */
+.band-5{ transform:none }
+/* en vertical el hero compacto no se solapa: los botones del final van abajo y portada-test exige que reciban el toque */
+@media (orientation:portrait){ .obra{ margin-top:0 } .band-5{ transform:none } }
+.hablemos{ background:linear-gradient(180deg, rgba(11,32,56,.9), rgba(15,42,68,.96)) }   /* deja ver la textura de fondo */
+
+/* ---------- la firma: HOY se queda quieto, la PROYECCIÓN sube encima ---------- */
+.proyecto{ display:grid; grid-template-columns:minmax(0,1fr); position:relative; z-index:4 }
+.proyecto > .proyecto-pares{ order:1 } .proyecto > .proyecto-head{ order:2 } .proyecto > .proyecto-grid{ order:3 } .proyecto > .nota{ order:4 }
+.proyecto-pares{ display:grid; gap:16px; width:100%; max-width:var(--maxw); margin:0 auto }
+@media (min-width:760px){ .proyecto-pares{ grid-template-columns:repeat(3,1fr) } }
+.proyecto-pares .proyecto-img img{ aspect-ratio:1/1; border-radius:10px 10px 0 0 }
+.proyecto-head{ margin-top:clamp(40px,6vw,72px) }
+.obra .obra-head p{ max-width:60ch }
+.obra .nota{ margin-bottom:4px }
+@media (min-width:900px){
+  .obra::after{ content:""; display:block; height:70vh }   /* el sitio para que las fotos se queden: tiene que ser contenido, el padding no cuenta para sticky */
+  .obra-grid{ position:sticky; top:96px }
+  .proyecto{ margin-top:-70vh; border-radius:22px 22px 0 0 }
+  .proyecto-pares [data-vp]{ transform:translateY(calc((1 - var(--vp,1)) * var(--sube,36px))) }
+  .proyecto-pares [data-vp]:nth-child(2){ --sube:64px } .proyecto-pares [data-vp]:nth-child(3){ --sube:92px }
+  .proyecto-pares .reveal{ transition:opacity .8s var(--ease) }
+}
+/* en vertical: dos rieles de losetas iguales, uno debajo del otro, que se mueven juntos */
+@media (orientation:portrait) and (max-width:759px){
+  .obra{ padding-bottom:28px }
+  .proyecto{ padding-top:24px }
+  .obra-grid,.proyecto-pares{
+    display:flex; gap:12px; overflow-x:auto; overscroll-behavior-x:contain; scroll-snap-type:x mandatory;
+    margin-inline:calc(-1 * var(--gutter)); padding:0 var(--gutter) 6px; scroll-padding-inline:var(--gutter); scrollbar-width:none;
+  }
+  .obra-grid::-webkit-scrollbar,.proyecto-pares::-webkit-scrollbar{ display:none }
+  .obra-grid > *,.proyecto-pares > *{ flex:0 0 min(76vw,320px); scroll-snap-align:start }
+  .obra-grid{ margin-top:24px }
+}
+
+/* ---------- entradas con motivo (todas .reveal: opacidad + desplazamiento) ---------- */
+.obra-grid .reveal:not(.in){ transform:translateY(22px) rotate(-1.2deg) }           /* copias puestas sobre la mesa */
+.alquiler-copy.reveal:not(.in){ transform:translate(-16px,22px) }
+.calc.reveal:not(.in){ transform:translate(16px,22px) }
+.proyecto-img.reveal .proyeccion{ opacity:0; transform:translateY(10px); transition:opacity .5s var(--ease) .12s, transform .5s var(--ease) .12s }
+.proyecto-img.reveal.in .proyeccion{ opacity:1; transform:none }                     /* la barra cae como un sello */
+/* ligadas al scroll (--vp de portada-v3.js §4): solo transform y opacity. will-change: las fotos
+   van en su propia capa y el cambio de escala no las vuelve a rasterizar en cada cuadro (en Edge sin
+   GPU, eso frenaba el scroll suave hasta #hablemos: portada-test «cinta a la vista», 13/10/2026) */
+[data-vp] .obra-foto,[data-vp] > img,.proyecto-pares [data-vp],.paso[data-vp] .paso-n{ will-change:transform }
+[data-vp] .obra-foto,[data-vp] > img{ transform:scale(calc(1.045 - .045 * var(--vp,1))); transform-origin:50% 60% }
+.paso[data-vp] .paso-n{ transform:scale(calc(.6 + .4 * var(--vp,1))); opacity:calc(.2 + .8 * var(--vp,1)) }
+.pasos-list{ position:relative }
+@media (min-width:860px){
+  .pasos-list::before{ content:""; position:absolute; left:22px; right:22px; top:22px; height:2px; background:var(--rule-strong); transform-origin:left center; transform:scaleX(var(--vp,1)) }
+}
+/* un elemento vivo por sección, a susurro; solo mientras está a la vista (.vivo) */
+@keyframes respira{ 0%,100%{ opacity:.3 } 50%{ opacity:.85 } }
+.ubicacion-marco::after{ content:""; position:absolute; inset:0; pointer-events:none; border-radius:inherit; box-shadow:inset 0 0 0 2px rgba(46,90,134,.6); opacity:.3 }
+.vivo .ubicacion-marco::after{ animation:respira 6s ease-in-out -2s infinite }
+@keyframes luna-respira{ 0%,100%{ transform:scale(1) } 50%{ transform:scale(1.08) } }
+.chat-head.vivo .chat-avatar svg{ animation:luna-respira 5s ease-in-out -1s infinite }
+
+/* ---------- bandas del hero: la línea sube (o entra de lado) dentro de su recorte ---------- */
+[data-entrance^="mascara"] .line{ overflow:hidden; padding-bottom:.2em; margin-bottom:-.02em }   /* sitio para g, y, p; la caja no crece */
+[data-entrance^="mascara"] .w{
+  --kc:clamp(0,(var(--k,0) - var(--th,0)) * 2.4,1);
+  opacity:var(--kc); transform:translateY(calc((1 - var(--kc)) * 112%));
+}
+[data-entrance^="mascara"] .line-sub .w{ --kc:clamp(0,(var(--k,0) - var(--th,0) - .18) * 2.4,1) }
+[data-entrance="mascara-x"] .w{ transform:translateX(calc((1 - var(--kc)) * -70%)) }               /* el puente que se tiende */
+
+/* ---------- rail de capítulos (propuesta 🔵): cinco puntos en el margen derecho; el rótulo solo al pasar o enfocar ---------- */
+.hero-rail{ position:absolute; right:calc(var(--gutter) - 4px); top:50%; transform:translateY(-50%); z-index:4 }
+.hero-rail ol{ list-style:none; margin:0; padding:0; display:grid; gap:14px; position:relative }
+.hero-rail ol::before{ content:""; position:absolute; right:7px; top:10px; bottom:10px; width:2px; background:rgba(246,242,234,.18); border-radius:2px }
+.hero-rail-b{
+  position:relative; display:flex; align-items:center; justify-content:flex-end; gap:12px; min-height:28px;
+  background:none; border:0; padding:4px 0; margin:0; cursor:pointer; color:var(--text-primary);
+  font:700 12px/1.2 var(--display); letter-spacing:.03em;
+}
+.hero-rail-p{ width:16px; height:16px; border-radius:50%; border:2px solid rgba(246,242,234,.7); background:transparent; flex:none; transition:background .35s var(--ease), transform .35s var(--ease) }
+.hero-rail-b.activo .hero-rail-p{ background:var(--text-primary); transform:scale(1.15) }
+.hero-rail-t{ white-space:nowrap; padding:6px 12px; border-radius:999px; background:rgba(6,16,28,.74); backdrop-filter:blur(8px); opacity:0; transform:translateX(6px); transition:opacity .3s var(--ease), transform .3s var(--ease); pointer-events:none }
+.hero-rail-b:hover .hero-rail-t,.hero-rail-b:focus-visible .hero-rail-t{ opacity:1; transform:none }
+.hero-rail-b:focus-visible{ outline:3px solid var(--text-primary); outline-offset:4px; border-radius:4px }
+@media (orientation:portrait),(max-height:560px),(max-width:900px){ .hero-rail{ display:none } }
+
+/* en celular la píldora de Hablemos puede ir en dos o tres líneas (/evento): el titular espera debajo */
+@media (max-width:640px){ .hablemos,.pagina-evento .hablemos{ padding-top:124px } }
+
+/* ---------- módulo de evidencia (Manual §5): solo lo que tiene fuente ---------- */
+.evidencia{ margin:28px 0 0; padding:20px 22px; border:1px solid var(--rule-claro); border-radius:12px; background:var(--cielo-cal); max-width:760px }
+.evidencia-rotulo{ margin:0 0 12px; font-size:12px; font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:var(--azul-dia); font-variation-settings:"wdth" 88 }
+.evidencia-lista{ list-style:none; margin:0; padding:0; display:grid; gap:10px }
+.evidencia-item{ display:flex; flex-wrap:wrap; align-items:center; gap:6px 14px; padding:12px 14px; border-radius:8px; background:var(--blanco-cal); border:1px solid var(--rule-claro); margin:0; color:var(--negro-suelo) }
+.evidencia-item::before{ content:""; width:10px; height:10px; border-radius:50%; background:var(--ambar-tierra); flex:none }
+.evidencia-nombre{ font-weight:700; color:var(--azul-noche) }
+.evidencia-enlace{ color:var(--azul-dia); font-weight:700; text-decoration:underline; text-underline-offset:3px }
+
+/* ---------- movimiento reducido: nada de lo de arriba se mueve ---------- */
+@media (prefers-reduced-motion:reduce){
+  .brand-mark > svg{ animation:none }
+  .hero-rail{ display:none }
+  .obra-grid .reveal:not(.in),.alquiler-copy.reveal:not(.in),.calc.reveal:not(.in){ transform:none }
+  .proyecto-img.reveal .proyeccion{ opacity:1; transform:none }
+  [data-vp] .obra-foto,[data-vp] > img,.paso[data-vp] .paso-n,.proyecto-pares [data-vp],.pasos-list::before{ transform:none; opacity:1 }
+  [data-entrance^="mascara"] .w{ opacity:1; transform:none }
+  .ubicacion-marco::after,.chat-head.vivo .chat-avatar svg{ animation:none }
+}
+/* 13/10/2026 (revisión previa a publicar): en celular acostado (alto ≤ 560 px) no hay solape de la hoja «Hoy»
+   sobre el final del hero (tapaba «Escríbeme por WhatsApp») y la banda final cuelga del borde superior, como
+   las demás bandas en esa altura, en vez de anclarse al 32 % del alto. */
+@media (orientation:landscape) and (max-height:560px){
+  .obra{ margin-top:0 }
+  /* en esta altura la banda final vuelve a la izquierda y ancha (como en main): a la derecha y angosta
+     los botones se partían en dos filas y la banda salía de pantalla (portada-test «celular acostado») */
+  .band-5{ left:clamp(var(--gutter),7vw,140px); right:var(--gutter); max-width:min(720px,84vw); top:max(16%, 76px); bottom:auto }
+  .scrim::before{ opacity:1 }
+  .scrim::after{ content:none }
+}

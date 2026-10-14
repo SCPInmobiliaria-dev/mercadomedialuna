@@ -347,21 +347,68 @@ window.MML = {
   /* ---- 5 · Video del hero -------------------------------------------------
      El timelapse de la construcción (entregado por Patriccio el 24/09/2026)
      recodificado desde el original HEVC de 10 bits: H.264 con un cuadro clave
-     cada 8 para que el scroll vaya y vuelva sin trabarse. Escritorio a CRF 18,
-     que a tamaño real no se distingue del original.
+     cada 8 para que el scroll vaya y vuelva sin trabarse. El v4 (video IA sobre la
+     guía de Blender, 13/10/2026) va a CRF 23 en escritorio para no pasar de v2 + 20 %;
+     el metraje fotorrealista pesa más que el render limpio.
      Cuando cambie el video, cambia el nombre del archivo: /assets/ guarda
      imágenes y videos 7 días en el navegador y un nombre repetido dejaría a
      quien ya visitó el sitio viendo el video viejo. */
-  video: 'assets/hero-scrub-v2.mp4',                  // 1920×1080
-  videoLigero: 'assets/hero-scrub-v2-lite.mp4',       // 1280×720: solo con conexión lenta o ahorro de datos
-  videoBytes: 7100592,                                // respaldo cuando falta Content-Length
-  videoLigeroBytes: 2947814,
-  poster: 'assets/hero-poster-v2.jpg',                // primer cuadro del video, idéntico
+  video: 'assets/hero-scrub-v4.mp4',                  // 1920×1080 · v4 (13/10/2026): Blender V16 (cierre a la izquierda, sectores, barrio) + Seedance 2.5 + revisión a ojo (informe en 08-web/review/rediseno-v3/)
+  videoLigero: 'assets/hero-scrub-v4-lite.mp4',       // 1280×720: solo con conexión lenta o ahorro de datos
+  videoBytes: 8045549,                                // respaldo cuando falta Content-Length
+  videoLigeroBytes: 3249889,
+  poster: 'assets/hero-poster-v4.jpg',                // primer cuadro del video, idéntico
   /* En celular (vertical) el hero es compacto: un recorte cuadrado centrado
      en el mercado, que así se ve completo en el ancho del teléfono. */
-  videoMovil: 'assets/hero-scrub-v2-movil.mp4',       // 1080×1080
-  videoMovilLigero: 'assets/hero-scrub-v2-movil-lite.mp4', // 720×720
-  videoMovilBytes: 3422425,
-  videoMovilLigeroBytes: 1639454,
-  posterMovil: 'assets/hero-poster-v2-movil.jpg',
+  videoMovil: 'assets/hero-scrub-v4-movil.mp4',       // 1080×1080 (recorte centrado en el mercado, cx 0,40)
+  videoMovilLigero: 'assets/hero-scrub-v4-movil-lite.mp4', // 720×720
+  videoMovilBytes: 3800584,
+  videoMovilLigeroBytes: 1915037,
+  posterMovil: 'assets/hero-poster-v4-movil.jpg',
+  /* Volver a v3 = estas cuatro rutas con -v3 y sus bytes (8456419 · 3322220 · 3999158 · 1963398) y los pósteres v3; a v2 = -v2 (7100592 · 2947814 · 3422425 · 1639454); los archivos v2 y v3 siguen en assets/. */
+
+  /* ---- 6 · Capítulos del hero (13/10/2026) ---------------------------------
+     Una fila por banda de texto del hero, con el título TEXTUAL de la banda y
+     su tramo del recorrido (0 a 1). Lo usa assets/portada-v3.js para el rail
+     de capítulos (🔵 propuesta) y para el gancho de progreso: la portada emite
+     CustomEvent "mml:hero-progress" con {progress, frame} en cada cambio.
+     Cuando entre el hero v3 (10 s, 240 cuadros, del terreno vacío al mercado
+     terminado) solo cambian esta tabla y las cuatro rutas del bloque 5. */
+  heroCapitulos: {
+    cuadros: 240,
+    lista: [
+      { id: 'nada',     titulo: 'Aquí no había nada.',                desde: 0,    hasta: 0.17 },
+      { id: 'obra',     titulo: 'Hoy hay obra.',                       desde: 0.21, hasta: 0.40 },
+      { id: 'propio',   titulo: 'Un puesto propio no es un alquiler.', desde: 0.44, hasta: 0.62 },
+      { id: 'proyecto', titulo: 'Así está proyectado el mercado.',     desde: 0.66, hasta: 0.83 },
+      { id: 'mercado',  titulo: 'Mercado Media Luna',                  desde: 0.86, hasta: 1 },
+    ],
+  },
+
+  /* ---- 7 · Módulo de evidencia (Manual de Marca v2.0 §5, 13/10/2026) -------
+     Una entrada por documento del bloque fijo. Solo se muestra lo que está en
+     activo: true; lo demás no deja ni un hueco. Hoy el único con fuente es el
+     canal de reclamos (el Libro de Reclamaciones, publicado). Los otros seis
+     necesitan el documento en mano (PENDIENTES-WEB.md, 🔴 para Walter):
+     partida registral, licencia, cronograma con hitos, contrato modelo, ruta
+     a la independización en 7 pasos, fideicomiso o banco. Encenderlos sin el
+     documento sería una afirmación sin fuente (CLAUDE.md §2). Los apagados
+     llevan solo su id: este archivo es público y lo que no existe no se
+     menciona (Manual §5.1, ítem 7). Al encender uno se le pone nombre, texto
+     y enlace. Mientras el único activo sea el canal de reclamos, el rótulo es
+     el mínimo: "Para comprobar" promete más de lo que hay. */
+  evidencia: {
+    rotulo: 'Para comprobar',
+    rotuloMinimo: 'Si algo no cuadra',
+    items: [
+      { id: 'partida',     activo: false },
+      { id: 'licencia',    activo: false },
+      { id: 'cronograma',  activo: false },
+      { id: 'contrato',    activo: false },
+      { id: 'ruta',        activo: false },
+      { id: 'reclamos',    nombre: 'Canales de reclamo', activo: true,
+        texto: 'Libro de Reclamaciones', enlace: 'libro-de-reclamaciones.html' },
+      { id: 'fideicomiso', activo: false },
+    ],
+  },
 };
