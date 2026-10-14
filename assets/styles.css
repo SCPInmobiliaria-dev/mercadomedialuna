@@ -227,7 +227,7 @@ a{ color:var(--text-primary) }
 }
 
 /* ---------- bandas de texto ---------- */
-.bands{ position:absolute; inset:0; z-index:5 }
+.bands{ position:absolute; inset:0; z-index:5; pointer-events:none }   /* 13/10/2026: deja pasar el mouse al rail; .settle-cta vuelve a auto */
 /* El texto entra un poco más adentro que el margen general (pedido de
    Patriccio, 24/09/2026): 7% del ancho, sin bajar del margen ni pasar de
    140 px. Sigue dentro de la franja oscura del scrim, que llega al 37%. */
@@ -1566,6 +1566,7 @@ body.en-hero .nav-cta:hover{ border-color:var(--text-primary) }
 @media (min-width:900px){ .claro{ border-radius:22px; margin-inline:var(--gutter) } }
 .claro h2,.claro h3{ color:var(--azul-noche) }
 .claro p,.claro li,.claro dd,.claro figcaption{ color:var(--tinta-2) }
+.claro .obra-slot figcaption:not(.pend){ color:var(--tinta-2) }   /* gana a la regla de .obra-slot (texto claro de la hoja oscura): 1,5:1 era ilegible */
 .claro .lead,.claro strong{ color:var(--azul-noche) }
 .claro .kicker,.claro .specs dt,.claro .obra-fecha,.claro .visitas-rotulo{ color:var(--azul-dia) }
 .claro a:not(.btn){ color:var(--azul-dia); text-decoration:underline; text-underline-offset:3px }
@@ -1720,4 +1721,15 @@ body.en-hero .nav-cta:hover{ border-color:var(--text-primary) }
   [data-vp] .obra-foto,[data-vp] > img,.paso[data-vp] .paso-n,.proyecto-pares [data-vp],.pasos-list::before{ transform:none; opacity:1 }
   [data-entrance^="mascara"] .w{ opacity:1; transform:none }
   .ubicacion-marco::after,.chat-head.vivo .chat-avatar svg{ animation:none }
+}
+/* 13/10/2026 (revisión previa a publicar): en celular acostado (alto ≤ 560 px) no hay solape de la hoja «Hoy»
+   sobre el final del hero (tapaba «Escríbeme por WhatsApp») y la banda final cuelga del borde superior, como
+   las demás bandas en esa altura, en vez de anclarse al 32 % del alto. */
+@media (orientation:landscape) and (max-height:560px){
+  .obra{ margin-top:0 }
+  /* en esta altura la banda final vuelve a la izquierda y ancha (como en main): a la derecha y angosta
+     los botones se partían en dos filas y la banda salía de pantalla (portada-test «celular acostado») */
+  .band-5{ left:clamp(var(--gutter),7vw,140px); right:var(--gutter); max-width:min(720px,84vw); top:max(16%, 76px); bottom:auto }
+  .scrim::before{ opacity:1 }
+  .scrim::after{ content:none }
 }
