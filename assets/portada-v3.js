@@ -3,7 +3,7 @@
    Todo se engancha ALREDEDOR del motor del hero (app.js §2: heroProgress,
    requestSeek, tick, cargarBlob, variante), sin tocarlo.
    1 · Gancho de progreso: CustomEvent "mml:hero-progress" {progress, frame}
-       en cada cambio de cuadro, calculado como lo hace el motor. Mientras el
+       en cada cambio de cuadro, calculado como lo hace el motor, y --hp en .hero. Mientras el
        hero está a la vista, body.en-hero: el botón del menú calla y el ámbar
        del hero queda en luna + palabra clave + botón del final (Manual §3.3).
    2 · Rail de capítulos (config.js → heroCapitulos): cinco puntos con el
@@ -49,6 +49,7 @@
     var f = Math.round(p * (CUADROS - 1));
     if (f === ultimoCuadro) return;
     ultimoCuadro = f;
+    if (hero) hero.style.setProperty('--hp', p.toFixed(3));   /* el scrim del cierre lo lee (styles.css) */
     document.dispatchEvent(new CustomEvent('mml:hero-progress', { detail: { progress: p, frame: f } }));
   }
   function alMover() { if (raf === null) raf = requestAnimationFrame(emitir); }

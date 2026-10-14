@@ -53,11 +53,11 @@ body{
 body::before{
   content:"";
   position:fixed; inset:-20vmax; z-index:-1; pointer-events:none;
-  /* 13/10/2026: el ambiente es el último cuadro del hero (v3 desde el 13/10, noche), teñido de Azul Noche: la página entera
+  /* 13/10/2026: el ambiente es el último cuadro del hero (v4 desde el 13/10, noche), teñido de Azul Noche: la página entera
      comparte la textura del video y el hero no «se acaba»: sigue debajo de las hojas */
   background:
     linear-gradient(rgba(15,42,68,.86), rgba(15,42,68,.93)),
-    url("hero-ending-v3.jpg") center/cover no-repeat;
+    url("hero-ending-v4.jpg") center/cover no-repeat;
   animation:ambiente 120s var(--ease-soft) -30s infinite alternate;
 }
 @keyframes ambiente{ from{ transform:translate3d(-2%,-1%,0) scale(1) } to{ transform:translate3d(2%,2%,0) scale(1.06) } }
@@ -180,13 +180,19 @@ a{ color:var(--text-primary) }
    mejor: no hay un cuadro en el que el texto pierda contraste. */
 .scrim{
   position:absolute; inset:0; pointer-events:none;
-  background:
-    linear-gradient(96deg,
-      rgba(6,16,28,.92) 0%,
-      rgba(6,16,28,.78) 20%,
-      rgba(6,16,28,.42) 38%,
-      rgba(6,16,28,0) 56%),
-    radial-gradient(ellipse 120% 90% at 50% 45%, rgba(8,20,34,0) 32%, rgba(8,20,34,.66) 100%);
+  background:radial-gradient(ellipse 120% 90% at 50% 45%, rgba(8,20,34,0) 32%, rgba(8,20,34,.66) 100%);
+}
+/* 13/10/2026 (hero v4): en el cierre el mercado queda a la izquierda del cuadro y el texto
+   final a la derecha. La franja oscura de la izquierda se apaga en el último tramo y entra
+   una franja espejo a la derecha; --hp (0 a 1) lo pone assets/portada-v3.js §1 sobre .hero. */
+.scrim::before,.scrim::after{ content:""; position:absolute; inset:0 }
+.scrim::before{
+  background:linear-gradient(96deg, rgba(6,16,28,.92) 0%, rgba(6,16,28,.78) 20%, rgba(6,16,28,.42) 38%, rgba(6,16,28,0) 56%);
+  opacity:calc(1 - clamp(0, (var(--hp, 0) - .82) * 7, 1));
+}
+.scrim::after{
+  background:linear-gradient(264deg, rgba(6,16,28,.92) 0%, rgba(6,16,28,.8) 18%, rgba(6,16,28,.46) 36%, rgba(6,16,28,0) 54%);
+  opacity:clamp(0, (var(--hp, 0) - .82) * 7, 1);
 }
 
 /* polvo en suspensión, a nivel susurro */
@@ -240,6 +246,11 @@ a{ color:var(--text-primary) }
 }
 .band .line-sub{ font-size:clamp(20px,3vw,32px); font-variation-settings:"wdth" 108; color:var(--text-primary) }
 .band-5{ top:auto; bottom:16%; max-width:min(720px,84vw) }
+/* 13/10/2026 (hero v4): el cierre deja el mercado en la mitad izquierda del cuadro; el título
+   final va a la derecha, sobre el lote vecino y el cerro, y ya no tapa la obra */
+@media (orientation:landscape){
+  .band-5{ left:auto; right:clamp(var(--gutter),7vw,140px); bottom:32%; max-width:min(620px,44vw) }
+}
 
 /* En pantalla ancha el texto se queda en la franja izquierda, más angosto.
    (Hasta el 24/09/2026 aquí la portada se ensanchaba al 114-120 %, pero el
@@ -247,7 +258,7 @@ a{ color:var(--text-primary) }
    cargar, el cuadro saltaba. Portada y video van ahora con el mismo encuadre.) */
 @media (min-width:1100px){
   .band{ max-width:min(440px,34vw) }
-  .band-5{ max-width:min(620px,48vw) }
+  .band-5{ max-width:min(620px,44vw) }   /* el título final conserva su ancho: dos líneas, a la derecha */
 }
 
 .band-5 .line-title{ font-size:clamp(36px,7vw,84px); letter-spacing:.005em }
@@ -332,6 +343,7 @@ a{ color:var(--text-primary) }
     bottom:auto; height:var(--caja);
     background:linear-gradient(to bottom, rgba(6,16,28,.62) 0%, rgba(6,16,28,0) 24%, rgba(6,16,28,0) 76%, var(--canvas-deep) 100%);
   }
+  .scrim::before,.scrim::after{ content:none }
   .dust{ bottom:auto; height:var(--caja) }
   .stage > .proyeccion{ top:var(--caja); bottom:auto; transform:translateY(-100%) }
   /* cada banda va centrada en la zona de texto, un poco por encima de la
@@ -388,7 +400,7 @@ a{ color:var(--text-primary) }
     display:block; position:relative; min-height:92svh;
     display:flex; flex-direction:column; justify-content:flex-end;
     padding:120px var(--gutter) 64px;
-    background:linear-gradient(to bottom, rgba(11,32,56,.35) 0%, rgba(11,32,56,.72) 55%, rgba(11,32,56,.95) 100%), url("hero-ending-v3.jpg") center/cover no-repeat;
+    background:linear-gradient(to bottom, rgba(11,32,56,.35) 0%, rgba(11,32,56,.72) 55%, rgba(11,32,56,.95) 100%), url("hero-ending-v4.jpg") center/cover no-repeat;
   }
   .static-title{ font-size:clamp(28px,7.6vw,44px); max-width:18ch; text-shadow:var(--tshadow); margin-bottom:.35em }
   .static-sub{ color:var(--text-primary); text-shadow:var(--tshadow); margin-bottom:1.4em }
@@ -935,7 +947,7 @@ body.en-embudo .wa-float{ opacity:0; visibility:hidden; pointer-events:none; tra
   max-width:none; padding-top:clamp(104px,14vh,152px); padding-bottom:clamp(48px,7vh,80px);
   background:
     linear-gradient(to bottom, rgba(11,32,56,.7) 0%, rgba(11,32,56,.88) 58%, var(--canvas) 100%),
-    url("hero-ending-v3.jpg") center/cover no-repeat;
+    url("hero-ending-v4.jpg") center/cover no-repeat;
 }
 .ev-hero-inner{ max-width:var(--maxw); margin-inline:auto; display:grid; gap:clamp(26px,4vw,40px) }
 .ev-hero h1{
@@ -1602,7 +1614,9 @@ body.en-hero .nav-cta:hover{ border-color:var(--text-primary) }
    escenario sigue pegado (los últimos 5 % de la pista, cuando la banda 5 ya se asentó) ---------- */
 .obra{ position:relative; z-index:3; margin-top:-30vh }            /* ~4 % de 700vh */
 /* la banda final sube con la hoja (solo transform) para que el título y los botones no queden tapados */
-.band-5{ transform:translateY(calc(-30vh * clamp(0, (var(--k, 0) - .75) * 4, 1))) }
+/* 13/10/2026 (hero v4): la banda final ya no se eleva con la hoja: vive a la derecha, con el pie a 32 % del alto,
+   por encima de los 30vh que sube la hoja «Hoy», y así el título queda sobre el lote vecino y nunca sobre la obra */
+.band-5{ transform:none }
 /* en vertical el hero compacto no se solapa: los botones del final van abajo y portada-test exige que reciban el toque */
 @media (orientation:portrait){ .obra{ margin-top:0 } .band-5{ transform:none } }
 .hablemos{ background:linear-gradient(180deg, rgba(11,32,56,.9), rgba(15,42,68,.96)) }   /* deja ver la textura de fondo */

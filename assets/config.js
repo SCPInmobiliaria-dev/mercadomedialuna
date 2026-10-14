@@ -347,25 +347,25 @@ window.MML = {
   /* ---- 5 · Video del hero -------------------------------------------------
      El timelapse de la construcción (entregado por Patriccio el 24/09/2026)
      recodificado desde el original HEVC de 10 bits: H.264 con un cuadro clave
-     cada 8 para que el scroll vaya y vuelva sin trabarse. El v3 (video IA sobre la
+     cada 8 para que el scroll vaya y vuelva sin trabarse. El v4 (video IA sobre la
      guía de Blender, 13/10/2026) va a CRF 23 en escritorio para no pasar de v2 + 20 %;
      el metraje fotorrealista pesa más que el render limpio.
      Cuando cambie el video, cambia el nombre del archivo: /assets/ guarda
      imágenes y videos 7 días en el navegador y un nombre repetido dejaría a
      quien ya visitó el sitio viendo el video viejo. */
-  video: 'assets/hero-scrub-v3.mp4',                  // 1920×1080 · v3 (13/10/2026): Blender V16 + Higgsfield Seedance 2.5 + revisión a ojo (informe en 08-web/review/rediseno-v3/)
-  videoLigero: 'assets/hero-scrub-v3-lite.mp4',       // 1280×720: solo con conexión lenta o ahorro de datos
-  videoBytes: 8456419,                                // respaldo cuando falta Content-Length
-  videoLigeroBytes: 3322220,
-  poster: 'assets/hero-poster-v3.jpg',                // primer cuadro del video, idéntico
+  video: 'assets/hero-scrub-v4.mp4',                  // 1920×1080 · v4 (13/10/2026): Blender V16 (cierre a la izquierda, sectores, barrio) + Seedance 2.5 + revisión a ojo (informe en 08-web/review/rediseno-v3/)
+  videoLigero: 'assets/hero-scrub-v4-lite.mp4',       // 1280×720: solo con conexión lenta o ahorro de datos
+  videoBytes: 8045549,                                // respaldo cuando falta Content-Length
+  videoLigeroBytes: 3249889,
+  poster: 'assets/hero-poster-v4.jpg',                // primer cuadro del video, idéntico
   /* En celular (vertical) el hero es compacto: un recorte cuadrado centrado
      en el mercado, que así se ve completo en el ancho del teléfono. */
-  videoMovil: 'assets/hero-scrub-v3-movil.mp4',       // 1080×1080
-  videoMovilLigero: 'assets/hero-scrub-v3-movil-lite.mp4', // 720×720
-  videoMovilBytes: 3999158,
-  videoMovilLigeroBytes: 1963398,
-  posterMovil: 'assets/hero-poster-v3-movil.jpg',
-  /* Volver a v2 = estas cuatro rutas y sus bytes (7100592 · 2947814 · 3422425 · 1639454) y los dos pósteres v2; los archivos v2 siguen en assets/. */
+  videoMovil: 'assets/hero-scrub-v4-movil.mp4',       // 1080×1080 (recorte centrado en el mercado, cx 0,40)
+  videoMovilLigero: 'assets/hero-scrub-v4-movil-lite.mp4', // 720×720
+  videoMovilBytes: 3800584,
+  videoMovilLigeroBytes: 1915037,
+  posterMovil: 'assets/hero-poster-v4-movil.jpg',
+  /* Volver a v3 = estas cuatro rutas con -v3 y sus bytes (8456419 · 3322220 · 3999158 · 1963398) y los pósteres v3; a v2 = -v2 (7100592 · 2947814 · 3422425 · 1639454); los archivos v2 y v3 siguen en assets/. */
 
   /* ---- 6 · Capítulos del hero (13/10/2026) ---------------------------------
      Una fila por banda de texto del hero, con el título TEXTUAL de la banda y
